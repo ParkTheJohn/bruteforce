@@ -1,4 +1,4 @@
-# bruteforce
+# Fit Track
 CSE115A Project
 
 Andy Le (Product Owner)
