@@ -7,6 +7,8 @@ Suhas Shekar
 Brad Kim
 Jongwoo Park
 
+Release/Sprint Plans: https://miro.com/app/board/o9J_lKpSDjY=/
+
 Scrum Times:
 Monday: 2:00 - 2:30
 Wednesday: 12:00 - 12:30
