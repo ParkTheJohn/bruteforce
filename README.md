@@ -1,4 +1,4 @@
-# Fit Track
+# FitRecur
 CSE115A Project
 
 Andy Le (Product Owner)
