@@ -7,7 +7,6 @@ Suhas Shekar
 Brad Kim
 Jongwoo Park
 
-
 Scrum Times:
 Monday: 2:00 - 2:30
 Wednesday: 12:00 - 12:30
