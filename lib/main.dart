@@ -1,19 +1,40 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  //FirebaseApp app = await Firebase.initializeApp();
   runApp(App());
 }
 
 class App extends StatelessWidget {
+  final Future<FirebaseApp> _fbApp = Firebase.initializeApp();
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'FitRecur v1',
-      theme: ThemeData(
-        primarySwatch: Colors.deepOrange,
-      ),
-      home: HomePage(title: 'FitRecur Home Page'),
-    );
+        title: 'FitRecur v1',
+        theme: ThemeData(
+          primarySwatch: Colors.deepOrange,
+        ),
+        home: FutureBuilder(
+          future: _fbApp,
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              print('Error with Future Builder! ${snapshot.error.toString()}');
+              return Text('Something is wrong with Builder');
+            } else if (snapshot.hasData) {
+              return HomePage(title: 'FitRecur Home Page');
+            } else {
+              //Loading Screen basically
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
+        )
+        //HomePage(title: 'FitRecur Home Page'),
+        );
   }
 }
 
@@ -28,21 +49,11 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   static const List<Widget> pages = <Widget>[
-    Text(
-      'Home Page'
-    ),
-    Text(
-        'My Workouts'
-    ),
-    Text(
-        'My Logs'
-    ),
-    Text(
-        'Settings'
-    ),
-    Text(
-        'Profile'
-    ),
+    Text('Home Page'),
+    Text('My Workout'),
+    Text('My Logs'),
+    Text('Settings'),
+    Text('Profile'),
   ];
 
   int currentPage = 0;
@@ -55,13 +66,17 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    // CollectionReference exercises =
+    //     FirebaseFirestore.instance.collection('Exercises');
+    var center = Center(
+      //child: Text("Hi"),
+      child: pages.elementAt(currentPage),
+    );
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: pages.elementAt(currentPage),
-      ),
+      body: center,
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -94,6 +109,38 @@ class _HomePageState extends State<HomePage> {
         selectedItemColor: Colors.orangeAccent,
         onTap: bottomNavBarClick,
       ),
+    );
+  }
+}
+
+class GetUserName extends StatelessWidget {
+  final String documentId;
+
+  GetUserName(this.documentId);
+
+  @override
+  Widget build(BuildContext context) {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+    return FutureBuilder<DocumentSnapshot>(
+      future: users.doc(documentId).get(),
+      builder:
+          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return Text("Something went wrong");
+        }
+
+        if (snapshot.hasData && !snapshot.data.exists) {
+          return Text("Document does not exist");
+        }
+
+        if (snapshot.connectionState == ConnectionState.done) {
+          Map<String, dynamic> data = snapshot.data.data();
+          return Text("Full Name: ${data['full_name']} ${data['last_name']}");
+        }
+
+        return Text("loading");
+      },
     );
   }
 }
