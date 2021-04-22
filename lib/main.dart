@@ -59,55 +59,28 @@ class _HomePageState extends State<HomePage> {
 
   int currentPage = 0;
   String exercise = "hello";
+  int currentExer = 0;
   void bottomNavBarClick(int index) {
     setState(() {
       currentPage = index;
     });
   }
 
-  void _incrementCounter() {
-    // FirebaseFirestore.instance
-    //   .collection('users')
-    //   .where('age', isGreaterThan: 20)
-    //   .get()
-    //   .then(...);
-
-    // FirebaseFirestore.instance
-    //     .collection('Exercises')
-    //     .doc()
-    //     .get()
-    //     .then((DocumentSnapshot documentSnapshot) {
-    //   if (documentSnapshot.exists) {
-    //     exercise = documentSnapshot.data()['name'];
-    //   } else {
-    //     debugPrint('Document does not exist on the database');
-    //   }
-    // });
-
-    FirebaseFirestore.instance
-        .collection('Exercises')
-        .get()
-        .then((QuerySnapshot querySnapshot) {
-      querySnapshot.docs.forEach((doc) {
-        debugPrint(doc["name"]);
-      });
-    });
-
-    //log('your message here');
-    //debugPrint("Test");
-    // DatabaseReference _testRef =
-    //     FirebaseDatabase.instance.reference().child("test");
-    // _testRef.set("Hello World ${Random().nextInt(100)}");
+  Future<void> _incrementCounter() async {
+    final QuerySnapshot result =
+        await Firestore.instance.collection('Exercises').getDocuments();
+    final List<DocumentSnapshot> documents = result.documents;
+    exercise = documents[currentExer]['name'];
     setState(() {
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below
       // so that the display can reflect the updated values. If we changed
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
-      if (currentPage == 4) {
-        currentPage--;
+      if (currentPage < 150) {
+        currentExer++;
       } else {
-        currentPage++;
+        currentExer--;
       }
     });
   }
@@ -163,7 +136,7 @@ class _HomePageState extends State<HomePage> {
         onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 }
