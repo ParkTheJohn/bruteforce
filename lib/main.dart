@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-Future<void> main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
   //FirebaseApp app = await Firebase.initializeApp();
   runApp(App());
@@ -49,7 +49,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   static const List<Widget> pages = <Widget>[
-    Text('Home Page'),
+    Text('Home Page', textAlign: TextAlign.center),
     Text('My Workout'),
     Text('My Logs'),
     Text('Settings'),
@@ -66,12 +66,14 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // CollectionReference exercises =
-    //     FirebaseFirestore.instance.collection('Exercises');
     var center = Center(
-      //child: Text("Hi"),
-      child: pages.elementAt(currentPage),
-    );
+        child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        pages.elementAt(currentPage),
+        Text("Hi"),
+      ],
+    ));
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
