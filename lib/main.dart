@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:developer';
+import 'exercises.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,8 +35,8 @@ class App extends StatelessWidget {
             }
           },
         )
-        //HomePage(title: 'FitRecur Home Page'),
-        );
+      //HomePage(title: 'FitRecur Home Page'),
+    );
   }
 }
 
@@ -49,8 +50,10 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  static const List<Widget> pages = <Widget>[
-    Text('Home Page', textAlign: TextAlign.center),
+  var toExercise = exercisesPage();
+
+  static List<Widget> pages = <Widget>[
+    exercisesPage(),
     Text('My Workout'),
     Text('My Logs'),
     Text('Settings'),
@@ -61,6 +64,9 @@ class _HomePageState extends State<HomePage> {
   String exercise = "hello";
   int currentExer = 0;
   void bottomNavBarClick(int index) {
+    if (index == 0) {
+      toExercise.exerciseClick();
+    }
     setState(() {
       currentPage = index;
     });
@@ -68,7 +74,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _incrementCounter() async {
     final QuerySnapshot result =
-        await Firestore.instance.collection('Exercises').getDocuments();
+    await Firestore.instance.collection('Exercises').getDocuments();
     final List<DocumentSnapshot> documents = result.documents;
     exercise = documents[currentExer]['name'];
     setState(() {
@@ -87,6 +93,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    /*
     var center = Center(
         child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -95,21 +102,29 @@ class _HomePageState extends State<HomePage> {
         Text(exercise),
       ],
     ));
+     */
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: center,
+      body: pages.elementAt(currentPage),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+            icon: Icon(Icons.search),
+            label: 'Exercises',
+            backgroundColor: Colors.deepOrange,
+          ),
+          BottomNavigationBarItem(
+            //icon: Icon(Icons.fitness_center),
+            icon: Icon(Icons.my_library_books),
+            label: 'My Plans',
             backgroundColor: Colors.deepOrange,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.fitness_center),
-            label: 'My Workouts',
+            label: 'Start Workout',
             backgroundColor: Colors.deepOrange,
           ),
           BottomNavigationBarItem(
@@ -118,13 +133,9 @@ class _HomePageState extends State<HomePage> {
             backgroundColor: Colors.deepOrange,
           ),
           BottomNavigationBarItem(
+            //icon: Icon(Icons.account_circle),
             icon: Icon(Icons.settings),
             label: 'Settings',
-            backgroundColor: Colors.deepOrange,
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
-            label: 'Profile',
             backgroundColor: Colors.deepOrange,
           ),
         ],
