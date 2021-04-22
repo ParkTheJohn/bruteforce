@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:developer';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -57,10 +58,57 @@ class _HomePageState extends State<HomePage> {
   ];
 
   int currentPage = 0;
-
+  String exercise = "hello";
   void bottomNavBarClick(int index) {
     setState(() {
       currentPage = index;
+    });
+  }
+
+  void _incrementCounter() {
+    // FirebaseFirestore.instance
+    //   .collection('users')
+    //   .where('age', isGreaterThan: 20)
+    //   .get()
+    //   .then(...);
+
+    // FirebaseFirestore.instance
+    //     .collection('Exercises')
+    //     .doc()
+    //     .get()
+    //     .then((DocumentSnapshot documentSnapshot) {
+    //   if (documentSnapshot.exists) {
+    //     exercise = documentSnapshot.data()['name'];
+    //   } else {
+    //     debugPrint('Document does not exist on the database');
+    //   }
+    // });
+
+    FirebaseFirestore.instance
+        .collection('Exercises')
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        debugPrint(doc["name"]);
+      });
+    });
+
+    //log('your message here');
+    //debugPrint("Test");
+    // DatabaseReference _testRef =
+    //     FirebaseDatabase.instance.reference().child("test");
+    // _testRef.set("Hello World ${Random().nextInt(100)}");
+    setState(() {
+      // This call to setState tells the Flutter framework that something has
+      // changed in this State, which causes it to rerun the build method below
+      // so that the display can reflect the updated values. If we changed
+      // _counter without calling setState(), then the build method would not be
+      // called again, and so nothing would appear to happen.
+      if (currentPage == 4) {
+        currentPage--;
+      } else {
+        currentPage++;
+      }
     });
   }
 
@@ -71,7 +119,7 @@ class _HomePageState extends State<HomePage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         pages.elementAt(currentPage),
-        Text("Hi"),
+        Text(exercise),
       ],
     ));
     return Scaffold(
@@ -111,6 +159,11 @@ class _HomePageState extends State<HomePage> {
         selectedItemColor: Colors.orangeAccent,
         onTap: bottomNavBarClick,
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _incrementCounter,
+        tooltip: 'Increment',
+        child: Icon(Icons.add),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
