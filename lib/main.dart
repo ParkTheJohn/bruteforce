@@ -35,8 +35,8 @@ class App extends StatelessWidget {
             }
           },
         )
-      //HomePage(title: 'FitRecur Home Page'),
-    );
+        //HomePage(title: 'FitRecur Home Page'),
+        );
   }
 }
 
@@ -65,7 +65,7 @@ class _HomePageState extends State<HomePage> {
   int currentExer = 0;
   void bottomNavBarClick(int index) {
     if (index == 0) {
-      toExercise.exerciseClick();
+      toExercise.getExerciseData();
     }
     setState(() {
       currentPage = index;
@@ -74,7 +74,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _incrementCounter() async {
     final QuerySnapshot result =
-    await Firestore.instance.collection('Exercises').getDocuments();
+        await Firestore.instance.collection('Exercises').getDocuments();
     final List<DocumentSnapshot> documents = result.documents;
     exercise = documents[currentExer]['name'];
     setState(() {
@@ -142,11 +142,6 @@ class _HomePageState extends State<HomePage> {
         currentIndex: currentPage,
         selectedItemColor: Colors.orangeAccent,
         onTap: bottomNavBarClick,
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
       ),
     );
   }
