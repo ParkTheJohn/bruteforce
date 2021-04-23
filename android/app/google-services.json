@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "329366474591",
+    "firebase_url": "https://firrecur-239b7-default-rtdb.firebaseio.com",
+    "project_id": "firrecur-239b7",
+    "storage_bucket": "firrecur-239b7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:329366474591:android:c12ea77837ded363a470ea",
+        "android_client_info": {
+          "package_name": "com.example.cse_115a"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "329366474591-n947hccdpl3io6aq30fli7c2m11u7rhh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANKp1zrCDCwBKpgqYA2brn1qoa_AVQvgU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "329366474591-n947hccdpl3io6aq30fli7c2m11u7rhh.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "329366474591-4sbhq70heo3c6rmbs53ii2calp3e2atm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.gaingang.fitrecur"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
