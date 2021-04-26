@@ -26,7 +26,7 @@ class exercisesPage extends StatelessWidget {
         if (!projectSnap.hasData) {
           return Container();
         } else {
-          print('project snapshot data is: ${projectSnap.data}');
+          //print('project snapshot data is: ${projectSnap.data}');
           return ListView.builder(
             itemCount: projectSnap.data.length,
             itemBuilder: (context, index) {

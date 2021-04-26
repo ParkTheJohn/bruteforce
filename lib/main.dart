@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:developer';
 import 'exercises.dart';
+import 'login.dart';
+import 'LoginTest/pages/newuser.page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -51,13 +53,23 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   var toExercise = exercisesPage();
-
+  var pageTitles = [
+    "Exercises",
+    "My Plans",
+    "My Workout",
+    "My Logs",
+    "Settings",
+    "Login Page"
+  ];
   static List<Widget> pages = <Widget>[
     exercisesPage(),
     Text('My Workout'),
     Text('My Logs'),
     Text('Settings'),
-    Text('Profile'),
+    //Text('Profile'),
+    NewUser(),
+
+    loginPage(),
   ];
 
   int currentPage = 0;
@@ -106,7 +118,7 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(pageTitles[currentPage]),
       ),
       body: pages.elementAt(currentPage),
       bottomNavigationBar: BottomNavigationBar(
@@ -137,6 +149,13 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(Icons.settings),
             label: 'Settings',
             backgroundColor: Colors.deepOrange,
+          ),
+          BottomNavigationBarItem(
+            //icon: Icon(Icons.account_circle),
+            icon: Icon(Icons.account_box),
+            label: 'Login',
+            backgroundColor: Colors.purple,
+            //I changed this purple, change back oragne "deepOrange"
           ),
         ],
         currentIndex: currentPage,
