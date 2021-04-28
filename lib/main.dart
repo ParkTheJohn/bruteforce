@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:developer';
 import 'exercises.dart';
+import 'searchBar.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,8 +56,8 @@ class _HomePageState extends State<HomePage> {
   static List<Widget> pages = <Widget>[
     exercisesPage(),
     Text('My Workout'),
-    Text('My Logs'),
-    Text('Settings'),
+    Text("My Logs"),
+    Search(),
     Text('Profile'),
   ];
 
