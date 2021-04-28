@@ -1,45 +1,86 @@
+import 'package:cse_115a/settingsPage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:developer';
+import 'package:provider/provider.dart';
+// import 'dart:developer';
 import 'exercises.dart';
+import 'LoginPage.dart';
+import 'LoginService.dart';
+//import 'LoginTest/pages/newuser.page.dart';
 import 'searchBar.dart';
 
-void main() {
+
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //FirebaseApp app = await Firebase.initializeApp();
+  await Firebase.initializeApp();
   runApp(App());
 }
 
 class App extends StatelessWidget {
-  final Future<FirebaseApp> _fbApp = Firebase.initializeApp();
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'FitRecur v1',
-        theme: ThemeData(
-          primarySwatch: Colors.deepOrange,
-        ),
-        home: FutureBuilder(
-          future: _fbApp,
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              print('Error with Future Builder! ${snapshot.error.toString()}');
-              return Text('Something is wrong with Builder');
-            } else if (snapshot.hasData) {
-              return HomePage(title: 'FitRecur Home Page');
-            } else {
-              //Loading Screen basically
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          },
-        )
-        //HomePage(title: 'FitRecur Home Page'),
-        );
+    return MultiProvider(
+        providers: [
+          Provider<LoginService>(
+            create: (_) => LoginService(FirebaseAuth.instance),
+          ),
+          StreamProvider(
+            create: (context) => context.read<LoginService>().authStateChanges,
+          ),
+        ],
+        child: MaterialApp(
+          title: 'FitRecur v1',
+          theme: ThemeData(
+            primarySwatch: Colors.deepOrange,
+          ),
+          home: AuthenticationWrapper(),
+        ));
   }
 }
+
+class AuthenticationWrapper extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final firebaseUser = context.watch<User>();
+
+    if (firebaseUser != null) {
+      return HomePage();
+    }
+
+    return LoginPage();
+  }
+}
+// class App extends StatelessWidget {
+//   final Future<FirebaseApp> _fbApp = Firebase.initializeApp();
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//         title: 'FitRecur v1',
+//         theme: ThemeData(
+//           primarySwatch: Colors.deepOrange,
+//         ),
+//         home: FutureBuilder(
+//           future: _fbApp,
+//           builder: (context, snapshot) {
+//             if (snapshot.hasError) {
+//               print('Error with Future Builder! ${snapshot.error.toString()}');
+//               return Text('Something is wrong with Builder');
+//             } else if (snapshot.hasData) {
+//               return HomePage(title: 'FitRecur Home Page');
+//             } else {
+//               //Loading Screen basically
+//               return Center(
+//                 child: CircularProgressIndicator(),
+//               );
+//             }
+//           },
+//         )
+//         //HomePage(title: 'FitRecur Home Page'),
+//         );
+//   }
+// }
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -52,17 +93,32 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   var toExercise = exercisesPage();
-
+  var pageTitles = [
+    "Exercises",
+    "My Plans",
+    "My Workout",
+    "My Logs",
+    "Settings",
+  ];
   static List<Widget> pages = <Widget>[
     exercisesPage(),
-    Text('My Workout'),
+
+    //fix this
+    Text('My Plans'),
+    Text('Start Workout'),
     Text("My Logs"),
     Search(),
+    settingsPage(),
     Text('Profile'),
+    //NewUser(),
+    LoginPage(),
+    
+
   ];
 
   int currentPage = 0;
-  String exercise = "hello";
+  // String exercise = "hello";
+  String exercise;
   int currentExer = 0;
   void bottomNavBarClick(int index) {
     if (index == 0) {
@@ -107,7 +163,7 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(pageTitles[currentPage]),
       ),
       body: pages.elementAt(currentPage),
       bottomNavigationBar: BottomNavigationBar(
@@ -139,6 +195,13 @@ class _HomePageState extends State<HomePage> {
             label: 'Settings',
             backgroundColor: Colors.deepOrange,
           ),
+          // BottomNavigationBarItem(
+          //   //icon: Icon(Icons.account_circle),
+          //   icon: Icon(Icons.account_box),
+          //   label: 'Login',
+          //   backgroundColor: Colors.deepOrange,
+          //   //I changed this purple, change back oragne "deepOrange"
+          // ),
         ],
         currentIndex: currentPage,
         selectedItemColor: Colors.orangeAccent,
@@ -148,34 +211,34 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class GetUserName extends StatelessWidget {
-  final String documentId;
+// class GetUserName extends StatelessWidget {
+//   final String documentId;
 
-  GetUserName(this.documentId);
+//   GetUserName(this.documentId);
 
-  @override
-  Widget build(BuildContext context) {
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
+//   @override
+//   Widget build(BuildContext context) {
+//     CollectionReference users = FirebaseFirestore.instance.collection('users');
 
-    return FutureBuilder<DocumentSnapshot>(
-      future: users.doc(documentId).get(),
-      builder:
-          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-        if (snapshot.hasError) {
-          return Text("Something went wrong");
-        }
+//     return FutureBuilder<DocumentSnapshot>(
+//       future: users.doc(documentId).get(),
+//       builder:
+//           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+//         if (snapshot.hasError) {
+//           return Text("Something went wrong");
+//         }
 
-        if (snapshot.hasData && !snapshot.data.exists) {
-          return Text("Document does not exist");
-        }
+//         if (snapshot.hasData && !snapshot.data.exists) {
+//           return Text("Document does not exist");
+//         }
 
-        if (snapshot.connectionState == ConnectionState.done) {
-          Map<String, dynamic> data = snapshot.data.data();
-          return Text("Full Name: ${data['full_name']} ${data['last_name']}");
-        }
+//         if (snapshot.connectionState == ConnectionState.done) {
+//           Map<String, dynamic> data = snapshot.data.data();
+//           return Text("Full Name: ${data['full_name']} ${data['last_name']}");
+//         }
 
-        return Text("loading");
-      },
-    );
-  }
-}
+//         return Text("loading");
+//       },
+//     );
+//   }
+//}
