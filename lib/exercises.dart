@@ -10,6 +10,8 @@ class exercisesPage extends StatelessWidget {
   List<String> exerciseNames = [];
   List<String> exerciseDescription = [];
   Future<void> getExerciseData() async {
+    if (exercises.length != 0) return exercises;
+
     final QuerySnapshot result =
         await FirebaseFirestore.instance.collection('Exercises').get();
     final List<DocumentSnapshot> documents = result.docs;
@@ -19,8 +21,8 @@ class exercisesPage extends StatelessWidget {
     for (int i = 0; i < documents.length; i++) {
       exerciseDescription.add(documents[i]['description']);
     }
-    exercises.add(exerciseNames);
-    exercises.add(exerciseDescription);
+    await exercises.add(exerciseNames);
+    await exercises.add(exerciseDescription);
 
     return exercises;
   }
@@ -31,18 +33,20 @@ class exercisesPage extends StatelessWidget {
         if (!projectSnap.hasData) {
           return Container();
         } else {
-          print('project snapshot data is: ${projectSnap.data[0]}');
-
+          print('project snapshot data is: ${exercises}');
+          //print('exercise length is: ${exercises[0].length}');
+          //print('${projectSnap.data[0].length}');
           return ListView.builder(
-            itemCount: projectSnap.data.length,
+            //itemCount: projectSnap.data.length,
+            itemCount: exercises[0].length,
             itemBuilder: (context, index) {
               //ProjectModel project = projectSnap.data[index];
               return Card(
                 child: ListTile(
-                  title: Text(projectSnap.data[0][index]),
-                  onTap: () => Scaffold
-                    .of(context)
-                    .showSnackBar(SnackBar(content: Text(projectSnap.data[1][index]))),
+                  //title: Text(projectSnap.data[0][index]),
+                  title: Text(exercises[0][index]),
+                  onTap: () => Scaffold.of(context).showSnackBar(
+                      SnackBar(content: Text(exercises[1][index]))),
                 ),
                 // color: Colors.amber[100],
                 // child: Center(child: Text(projectSnap.data[index])),
