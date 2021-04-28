@@ -38,12 +38,6 @@ class LoginPage extends StatelessWidget {
                 ),
                 RaisedButton(
                   onPressed: () {
-                    context.read<LoginService>().signOut();
-                  },
-                  child: Text("Sign out"),
-                ),
-                RaisedButton(
-                  onPressed: () {
                     context.read<LoginService>().signUp(
                           email: emailController.text.trim(),
                           password: passwordController.text.trim(),
