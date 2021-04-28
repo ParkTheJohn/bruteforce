@@ -1,46 +1,83 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
 import 'dart:developer';
 import 'exercises.dart';
-import 'login.dart';
+import 'LoginPage.dart';
+import 'LoginService.dart';
 import 'LoginTest/pages/newuser.page.dart';
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  //FirebaseApp app = await Firebase.initializeApp();
+  await Firebase.initializeApp();
   runApp(App());
 }
 
 class App extends StatelessWidget {
-  final Future<FirebaseApp> _fbApp = Firebase.initializeApp();
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'FitRecur v1',
-        theme: ThemeData(
-          primarySwatch: Colors.deepOrange,
-        ),
-        home: FutureBuilder(
-          future: _fbApp,
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              print('Error with Future Builder! ${snapshot.error.toString()}');
-              return Text('Something is wrong with Builder');
-            } else if (snapshot.hasData) {
-              return HomePage(title: 'FitRecur Home Page');
-            } else {
-              //Loading Screen basically
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          },
-        )
-        //HomePage(title: 'FitRecur Home Page'),
-        );
+    return MultiProvider(
+        providers: [
+          Provider<LoginService>(
+            create: (_) => LoginService(FirebaseAuth.instance),
+          ),
+          StreamProvider(
+            create: (context) => context.read<LoginService>().authStateChanges,
+          ),
+        ],
+        child: MaterialApp(
+          title: 'FitRecur v1',
+          theme: ThemeData(
+            primarySwatch: Colors.deepOrange,
+          ),
+          home: AuthenticationWrapper(),
+        ));
   }
 }
+
+class AuthenticationWrapper extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final firebaseUser = context.watch<User>();
+
+    if (firebaseUser != null) {
+      return HomePage();
+    }
+
+    return LoginPage();
+  }
+}
+// class App extends StatelessWidget {
+//   final Future<FirebaseApp> _fbApp = Firebase.initializeApp();
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//         title: 'FitRecur v1',
+//         theme: ThemeData(
+//           primarySwatch: Colors.deepOrange,
+//         ),
+//         home: FutureBuilder(
+//           future: _fbApp,
+//           builder: (context, snapshot) {
+//             if (snapshot.hasError) {
+//               print('Error with Future Builder! ${snapshot.error.toString()}');
+//               return Text('Something is wrong with Builder');
+//             } else if (snapshot.hasData) {
+//               return HomePage(title: 'FitRecur Home Page');
+//             } else {
+//               //Loading Screen basically
+//               return Center(
+//                 child: CircularProgressIndicator(),
+//               );
+//             }
+//           },
+//         )
+//         //HomePage(title: 'FitRecur Home Page'),
+//         );
+//   }
+// }
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -69,7 +106,7 @@ class _HomePageState extends State<HomePage> {
     //Text('Profile'),
     NewUser(),
 
-    loginPage(),
+    LoginPage(),
   ];
 
   int currentPage = 0;
