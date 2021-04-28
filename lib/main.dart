@@ -1,13 +1,14 @@
+import 'package:cse_115a/settingsPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
-import 'dart:developer';
+// import 'dart:developer';
 import 'exercises.dart';
 import 'LoginPage.dart';
 import 'LoginService.dart';
-import 'LoginTest/pages/newuser.page.dart';
+//import 'LoginTest/pages/newuser.page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -96,21 +97,21 @@ class _HomePageState extends State<HomePage> {
     "My Workout",
     "My Logs",
     "Settings",
-    "Login Page"
   ];
   static List<Widget> pages = <Widget>[
     exercisesPage(),
-    Text('My Workout'),
+    Text('My Plans'),
+    Text('Start Workout'),
     Text('My Logs'),
-    Text('Settings'),
-    //Text('Profile'),
-    NewUser(),
+    settingsPage(),
+    //NewUser(),
 
     LoginPage(),
   ];
 
   int currentPage = 0;
-  String exercise = "hello";
+  // String exercise = "hello";
+  String exercise;
   int currentExer = 0;
   void bottomNavBarClick(int index) {
     if (index == 0) {
@@ -187,13 +188,13 @@ class _HomePageState extends State<HomePage> {
             label: 'Settings',
             backgroundColor: Colors.deepOrange,
           ),
-          BottomNavigationBarItem(
-            //icon: Icon(Icons.account_circle),
-            icon: Icon(Icons.account_box),
-            label: 'Login',
-            backgroundColor: Colors.purple,
-            //I changed this purple, change back oragne "deepOrange"
-          ),
+          // BottomNavigationBarItem(
+          //   //icon: Icon(Icons.account_circle),
+          //   icon: Icon(Icons.account_box),
+          //   label: 'Login',
+          //   backgroundColor: Colors.deepOrange,
+          //   //I changed this purple, change back oragne "deepOrange"
+          // ),
         ],
         currentIndex: currentPage,
         selectedItemColor: Colors.orangeAccent,
@@ -203,34 +204,34 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-class GetUserName extends StatelessWidget {
-  final String documentId;
+// class GetUserName extends StatelessWidget {
+//   final String documentId;
 
-  GetUserName(this.documentId);
+//   GetUserName(this.documentId);
 
-  @override
-  Widget build(BuildContext context) {
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
+//   @override
+//   Widget build(BuildContext context) {
+//     CollectionReference users = FirebaseFirestore.instance.collection('users');
 
-    return FutureBuilder<DocumentSnapshot>(
-      future: users.doc(documentId).get(),
-      builder:
-          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-        if (snapshot.hasError) {
-          return Text("Something went wrong");
-        }
+//     return FutureBuilder<DocumentSnapshot>(
+//       future: users.doc(documentId).get(),
+//       builder:
+//           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+//         if (snapshot.hasError) {
+//           return Text("Something went wrong");
+//         }
 
-        if (snapshot.hasData && !snapshot.data.exists) {
-          return Text("Document does not exist");
-        }
+//         if (snapshot.hasData && !snapshot.data.exists) {
+//           return Text("Document does not exist");
+//         }
 
-        if (snapshot.connectionState == ConnectionState.done) {
-          Map<String, dynamic> data = snapshot.data.data();
-          return Text("Full Name: ${data['full_name']} ${data['last_name']}");
-        }
+//         if (snapshot.connectionState == ConnectionState.done) {
+//           Map<String, dynamic> data = snapshot.data.data();
+//           return Text("Full Name: ${data['full_name']} ${data['last_name']}");
+//         }
 
-        return Text("loading");
-      },
-    );
-  }
-}
+//         return Text("loading");
+//       },
+//     );
+//   }
+//}
