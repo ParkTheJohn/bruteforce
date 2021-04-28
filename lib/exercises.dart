@@ -6,18 +6,23 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 class exercisesPage extends StatelessWidget {
-  List<String> exerciseNames = List();
+  List<List<String>> exercises = [];
+  List<String> exerciseNames = [];
+  List<String> exerciseDescription = [];
   Future<void> getExerciseData() async {
     final QuerySnapshot result =
         await FirebaseFirestore.instance.collection('Exercises').get();
     final List<DocumentSnapshot> documents = result.docs;
-    List<String> exerciseNames = List();
     for (int i = 0; i < documents.length; i++) {
       exerciseNames.add(documents[i]['name']);
     }
+    for (int i = 0; i < documents.length; i++) {
+      exerciseDescription.add(documents[i]['description']);
+    }
+    exercises.add(exerciseNames);
+    exercises.add(exerciseDescription);
 
-    // exercise = documents[currentExer]['name'];
-    return exerciseNames;
+    return exercises;
   }
 
   Widget projectWidget() {
@@ -26,15 +31,20 @@ class exercisesPage extends StatelessWidget {
         if (!projectSnap.hasData) {
           return Container();
         } else {
-          print('project snapshot data is: ${projectSnap.data}');
+          print('project snapshot data is: ${projectSnap.data[0]}');
           return ListView.builder(
             itemCount: projectSnap.data.length,
             itemBuilder: (context, index) {
               //ProjectModel project = projectSnap.data[index];
-              return Column(
-                children: <Widget>[
-                  Text(projectSnap.data[index]),
-                ],
+              return Card(
+                child: ListTile(
+                  title: Text(projectSnap.data[0][index]),
+                  onTap: () => Scaffold
+                    .of(context)
+                    .showSnackBar(SnackBar(content: Text(projectSnap.data[1][index]))),
+                ),
+                // color: Colors.amber[100],
+                // child: Center(child: Text(projectSnap.data[index])),
               );
             },
           );
@@ -47,9 +57,6 @@ class exercisesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Exercises'),
-      ),
       body: projectWidget(),
     );
   }
