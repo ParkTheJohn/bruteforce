@@ -11,7 +11,6 @@ import 'LoginService.dart';
 //import 'LoginTest/pages/newuser.page.dart';
 import 'searchBar.dart';
 
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -102,18 +101,11 @@ class _HomePageState extends State<HomePage> {
   ];
   static List<Widget> pages = <Widget>[
     exercisesPage(),
-
-    //fix this
     Text('My Plans'),
     Text('Start Workout'),
-    Text("My Logs"),
     Search(),
     settingsPage(),
-    Text('Profile'),
-    //NewUser(),
-    LoginPage(),
-    
-
+    Text("My Logs"),
   ];
 
   int currentPage = 0;
