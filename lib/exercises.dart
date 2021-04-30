@@ -10,8 +10,9 @@ class exercisesPage extends StatelessWidget {
   List<String> exerciseNames = [];
   List<String> exerciseDescription = [];
   Future<void> getExerciseData() async {
+    if (exercises.length != 0) return exercises;
     final QuerySnapshot result =
-        await FirebaseFirestore.instance.collection('Exercises').get();
+        await FirebaseFirestore.instance.collection('Exercise_List').get();
     final List<DocumentSnapshot> documents = result.docs;
     for (int i = 0; i < documents.length; i++) {
       exerciseNames.add(documents[i]['name']);
@@ -31,17 +32,25 @@ class exercisesPage extends StatelessWidget {
         if (!projectSnap.hasData) {
           return Container();
         } else {
-          print('project snapshot data is: ${projectSnap.data[0]}');
+          // print('project snapshot data is: ${projectSnap.data[0]}');
           return ListView.builder(
-            itemCount: projectSnap.data.length,
+            itemCount: projectSnap.data[0].length,
             itemBuilder: (context, index) {
               //ProjectModel project = projectSnap.data[index];
               return Card(
                 child: ListTile(
                   title: Text(projectSnap.data[0][index]),
-                  onTap: () => Scaffold
-                    .of(context)
-                    .showSnackBar(SnackBar(content: Text(projectSnap.data[1][index]))),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Scaffold(
+                        appBar: new AppBar(
+                          title: Text(projectSnap.data[0][index]),
+                        ),
+                        body: Text(projectSnap.data[1][index]),
+                      )),
+                    );
+                  }
                 ),
                 // color: Colors.amber[100],
                 // child: Center(child: Text(projectSnap.data[index])),
@@ -61,3 +70,4 @@ class exercisesPage extends StatelessWidget {
     );
   }
 }
+
