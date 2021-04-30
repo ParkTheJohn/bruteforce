@@ -3,31 +3,47 @@ import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 
 class Search extends StatelessWidget {
+  final List<String> searchableList;
+
+  const Search({
+    @required this.searchableList,
+  });
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Search Bar App',
-      home: HomePage(),
+      home: HomePage(searchableList),
     );
   }
 }
 
 class HomePage extends StatefulWidget {
+
+  final List<String> searchableList;
+
+  const HomePage(List<String> _searchableList, {
+    @required this.searchableList,
+  });
+
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
   static const historyLength = 5;
-
   List<String> _searchHistory = [
     'flutter',
     'widgets',
   ];
-
   List<String> filteredSearchHistory;
-
   String selectedTerm;
+  final List<String> searchableList;
+
+  _HomePageState({
+    @required this.searchableList,
+  });
+
 
   List<String> filterSearchTerms({
     @required String filter,
@@ -89,12 +105,13 @@ class _HomePageState extends State<HomePage> {
         body: FloatingSearchBarScrollNotifier(
           child: SearchResultsListView(
             searchTerm: selectedTerm,
+            searchableList: searchableList,
           ),
         ),
         transition: CircularFloatingSearchBarTransition(),
         physics: BouncingScrollPhysics(),
         title: Text(
-          selectedTerm ?? 'The Search App',
+          selectedTerm ?? 'search',
           style: Theme.of(context).textTheme.headline6,
         ),
         hint: 'Search and find out...',
@@ -190,10 +207,12 @@ class _HomePageState extends State<HomePage> {
 
 class SearchResultsListView extends StatelessWidget {
   final String searchTerm;
+  final List<String> searchableList;
 
   const SearchResultsListView({
     Key key,
     @required this.searchTerm,
+    @required this.searchableList,
   }) : super(key: key);
 
   @override
@@ -221,9 +240,9 @@ class SearchResultsListView extends StatelessWidget {
     return ListView(
       padding: EdgeInsets.only(top: fsb.height + fsb.margins.vertical),
       children: List.generate(
-        50,
+        searchableList.length,
             (index) => ListTile(
-          title: Text('$searchTerm search result'),
+          title: Text(searchableList[index]),
           subtitle: Text(index.toString()),
         ),
       ),

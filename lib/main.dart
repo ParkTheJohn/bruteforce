@@ -103,7 +103,7 @@ class _HomePageState extends State<HomePage> {
     exercisesPage(),
     Text('My Plans'),
     Text('Start Workout'),
-    Search(),
+    Search( searchableList: ["0","1"]),
     settingsPage(),
     Text("My Logs"),
   ];
