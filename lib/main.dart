@@ -9,6 +9,11 @@ import 'exercises.dart';
 import 'LoginPage.dart';
 import 'LoginService.dart';
 //import 'LoginTest/pages/newuser.page.dart';
+<<<<<<< Updated upstream
+=======
+import 'searchBar.dart';
+import 'workoutPage.dart';
+>>>>>>> Stashed changes
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -100,7 +105,7 @@ class _HomePageState extends State<HomePage> {
   ];
   static List<Widget> pages = <Widget>[
     exercisesPage(),
-    Text('My Plans'),
+    workoutPage(),
     Text('Start Workout'),
     Text('My Logs'),
     settingsPage(),
