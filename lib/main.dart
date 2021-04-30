@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import 'exercises.dart';
 import 'LoginPage.dart';
 import 'LoginService.dart';
-import 'workoutPage.dart';
+import 'WorkoutPage.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -88,25 +88,6 @@ class _HomePageState extends State<HomePage> {
       currentPage = index;
     });
   }
-
-  // Future<void> _incrementCounter() async {
-  //   final QuerySnapshot result =
-  //       await Firestore.instance.collection('Exercises').getDocuments();
-  //   final List<DocumentSnapshot> documents = result.documents;
-  //   exercise = documents[currentExer]['name'];
-  //   setState(() {
-  //     // This call to setState tells the Flutter framework that something has
-  //     // changed in this State, which causes it to rerun the build method below
-  //     // so that the display can reflect the updated values. If we changed
-  //     // _counter without calling setState(), then the build method would not be
-  //     // called again, and so nothing would appear to happen.
-  //     if (currentPage < 150) {
-  //       currentExer++;
-  //     } else {
-  //       currentExer--;
-  //     }
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
