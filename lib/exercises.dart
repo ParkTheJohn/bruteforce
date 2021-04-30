@@ -1,9 +1,5 @@
 //library pages;
 
-<<<<<<< Updated upstream
-//import 'package:firebase_core/firebase_core.dart';
-=======
->>>>>>> Stashed changes
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,12 +7,9 @@ import 'package:flutter/cupertino.dart';
 class exercisesPage extends StatelessWidget {
   List<List<String>> exercises = [];
   Future<void> getExerciseData() async {
-<<<<<<< Updated upstream
-=======
     if (exercises.length != 0) return exercises;
     List<String> exerciseNames = [];
     List<String> exerciseDescription = [];
->>>>>>> Stashed changes
     final QuerySnapshot result =
         await FirebaseFirestore.instance.collection('Exercises').get();
     final List<DocumentSnapshot> documents = result.docs;
@@ -38,14 +31,9 @@ class exercisesPage extends StatelessWidget {
         if (!projectSnap.hasData) {
           return Container();
         } else {
-<<<<<<< Updated upstream
-          print('project snapshot data is: ${projectSnap.data[0]}');
-
-=======
           // print('project snapshot data is: ${exercises}');
           //print('exercise length is: ${exercises[0].length}');
           //print('${projectSnap.data[0].length}');
->>>>>>> Stashed changes
           return ListView.builder(
             itemCount: projectSnap.data.length,
             itemBuilder: (context, index) {
@@ -53,9 +41,8 @@ class exercisesPage extends StatelessWidget {
               return Card(
                 child: ListTile(
                   title: Text(projectSnap.data[0][index]),
-                  onTap: () => Scaffold
-                    .of(context)
-                    .showSnackBar(SnackBar(content: Text(projectSnap.data[1][index]))),
+                  onTap: () => Scaffold.of(context).showSnackBar(
+                      SnackBar(content: Text(projectSnap.data[1][index]))),
                 ),
                 // color: Colors.amber[100],
                 // child: Center(child: Text(projectSnap.data[index])),

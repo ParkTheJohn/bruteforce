@@ -9,11 +9,9 @@ import 'exercises.dart';
 import 'LoginPage.dart';
 import 'LoginService.dart';
 //import 'LoginTest/pages/newuser.page.dart';
-<<<<<<< Updated upstream
-=======
-import 'searchBar.dart';
+
+// import 'searchBar.dart';
 import 'workoutPage.dart';
->>>>>>> Stashed changes
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
