@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'LoginService.dart';
+import 'createWorkout.dart';
 
 class workoutPage extends StatelessWidget {
   Future<List<String>> getUserWorkoutPlans() async {
@@ -51,13 +52,19 @@ class workoutPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: projectWidget(),
-      floatingActionButton: FloatingActionButton(
-        tooltip: 'Increment Counter',
-        onPressed: () {},
-        child: const Icon(Icons.add),
+    return ListView(padding: const EdgeInsets.all(8), children: <Widget>[
+      Container(
+        child: projectWidget(),
       ),
-    );
+      Container(
+          child: ElevatedButton(
+              child: Text('Open route'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => createWorkoutPage()),
+                );
+              })),
+    ]);
   }
 }
