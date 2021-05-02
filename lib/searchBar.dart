@@ -216,6 +216,10 @@ class SearchResultsListView extends StatelessWidget {
     @required this.searchableList,
   }) : super(key: key);
 
+  bool caseinsensitivecontains(String term1, String term2){
+    return term1.toLowerCase().contains(term2.toLowerCase());
+  }
+
   @override
   Widget build(BuildContext context) {
     if (searchTerm == null) {
@@ -237,7 +241,10 @@ class SearchResultsListView extends StatelessWidget {
     }
 
     final fsb = FloatingSearchBar.of(context);
-    List<String> filteredList = searchableList.where((term) => term.contains(searchTerm)).toList();
+
+
+
+    List<String> filteredList = searchableList.where((term) => caseinsensitivecontains(term, searchTerm)).toList();
 
     return ListView(
       padding: EdgeInsets.only(top: fsb.height + fsb.margins.vertical),
