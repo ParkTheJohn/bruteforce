@@ -76,11 +76,11 @@ class exercisesPage extends StatelessWidget {
 
 class ExerciseSearch extends Search {
 
-  final List<String> exerciseList;
+  List<String> exerciseList;
 
-  const ExerciseSearch(List<String> _exerciseList, {
-    @required this.exerciseList,
-  });
+  ExerciseSearch(List<String> _exerciseList) {
+    this.exerciseList = _exerciseList;
+  }
 
   Widget build(BuildContext context) {
     return MaterialApp(

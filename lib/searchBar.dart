@@ -20,14 +20,15 @@ class Search extends StatelessWidget {
 
 class HomePage extends StatefulWidget {
 
-  final List<String> searchableList;
+  List<String> searchableList;
 
-  const HomePage(List<String> _searchableList, {
-    @required this.searchableList,
-  });
+  HomePage(List<String> _searchableList)
+  {
+    this.searchableList = _searchableList;
+  }
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _HomePageState createState() => _HomePageState(searchableList);
 }
 
 class _HomePageState extends State<HomePage> {
@@ -38,11 +39,11 @@ class _HomePageState extends State<HomePage> {
   ];
   List<String> filteredSearchHistory;
   String selectedTerm;
-  final List<String> searchableList;
+  List<String> searchableList;
 
-  _HomePageState({
-    @required this.searchableList,
-  });
+  _HomePageState(List<String> _searchableList) {
+    this.searchableList = _searchableList;
+  }
 
 
   List<String> filterSearchTerms({
