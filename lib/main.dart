@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:developer';
 import 'exercises.dart';
+import 'plans.dart';
 import 'searchBar.dart';
 
 void main() {
@@ -55,7 +56,7 @@ class _HomePageState extends State<HomePage> {
 
   static List<Widget> pages = <Widget>[
     exercisesPage(),
-    Text('My Workout'),
+    myPlansPage(),
     Text("My Logs"),
     Search(),
     Text('Profile'),
