@@ -207,10 +207,10 @@ class _HomePageState extends State<HomePage> {
 }
 
 class SearchResultsListView extends StatelessWidget {
-  final String searchTerm;
-  final List<String> searchableList;
+  String searchTerm;
+  List<String> searchableList;
 
-  const SearchResultsListView({
+  SearchResultsListView({
     Key key,
     @required this.searchTerm,
     @required this.searchableList,
@@ -237,13 +237,14 @@ class SearchResultsListView extends StatelessWidget {
     }
 
     final fsb = FloatingSearchBar.of(context);
+    List<String> filteredList = searchableList.where((term) => term.contains(searchTerm)).toList();
 
     return ListView(
       padding: EdgeInsets.only(top: fsb.height + fsb.margins.vertical),
       children: List.generate(
-        searchableList.length,
+        filteredList.length,
             (index) => ListTile(
-          title: Text(searchableList[index]),
+          title: Text(filteredList[index]),
           subtitle: Text(index.toString()),
         ),
       ),
