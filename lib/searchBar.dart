@@ -227,13 +227,10 @@ class SearchResultsListView extends StatelessWidget {
     return term1.toLowerCase().contains(term2.toLowerCase());
   }
 
-
-
-
   @override
   Widget build(BuildContext context) {
 
-    Widget _constructResults( BuildContext context, int index ){
+    Widget constructResults( BuildContext context, int index ){
       return Card(
         child: ListTile(
             title: Text(searchableList[index]),
@@ -259,7 +256,7 @@ class SearchResultsListView extends StatelessWidget {
           body: Container(
               padding: EdgeInsets.only(top: fsb.height + fsb.margins.vertical),
               child: ListView.builder(
-                itemBuilder: _constructResults,
+                itemBuilder: constructResults,
                 itemCount: searchableList.length,
               )
           )
@@ -268,21 +265,35 @@ class SearchResultsListView extends StatelessWidget {
     }
 
 
-    List<String> filteredList = searchableList.where((term) => term.contains(searchTerm)).toList();
-    filteredList = filteredList.where((term) => caseinsensitivecontains(term, searchTerm)).toList();
+    /*
+    searchableList = searchableList.where((term) => term.contains(searchTerm)).toList();
+    searchableList = searchableList.where((term) => caseinsensitivecontains(term, searchTerm)).toList();
+   */
 
-    Widget _reconstructResults( BuildContext context, int index ){
+    List<String> amendedSearchList = [];
+    List<String> amendedDescriptions = [];
+
+    for (int i =0; i < searchableList.length; i++)
+    {
+      if (searchableList[i].contains(searchTerm))
+      {
+        amendedSearchList.add(searchableList[i]);
+        amendedDescriptions.add(itemDescriptions[i]);
+      }
+    }
+
+    Widget reconstructResults( BuildContext context, int index ){
       return Card(
         child: ListTile(
-            title: Text(filteredList[index]),
+            title: Text(amendedSearchList[index]),
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => Scaffold(
                   appBar: new AppBar(
-                    title: Text(filteredList[index]),
+                    title: Text(amendedSearchList[index]),
                   ),
-                  body: Text(itemDescriptions[index]),
+                  body: Text(amendedDescriptions[index]),
                 )),
               );
             }
@@ -291,12 +302,13 @@ class SearchResultsListView extends StatelessWidget {
     }
 
 
+
     return Scaffold(
         body: Container(
             padding: EdgeInsets.only(top: fsb.height + fsb.margins.vertical),
             child: ListView.builder(
-              itemBuilder: _reconstructResults,
-              itemCount: filteredList.length,
+              itemBuilder: reconstructResults,
+              itemCount: amendedSearchList.length,
             )
         )
     );
