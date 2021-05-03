@@ -35,6 +35,7 @@ class workoutPage extends StatelessWidget {
           //print("workoutPlans.length ${projectSnap.data.length}");
           if (projectSnap.data.length == 0)
             return Text("You currently have no plans");
+          print("Plans: ${projectSnap.data.length}");
           return Row(children: [
             Expanded(
               child: SizedBox(
@@ -42,7 +43,12 @@ class workoutPage extends StatelessWidget {
                 child: new ListView.builder(
                   itemCount: projectSnap.data.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return new Card(child: Text(projectSnap.data[index]));
+                    return new Card(
+                      child: ListTile(
+                        title: Text(projectSnap.data[index]),
+                        //onTap: () => print("get rekt"),
+                      ),
+                    );
                   },
                 ),
               ),

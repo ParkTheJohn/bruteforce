@@ -35,7 +35,7 @@ class createWorkoutPage extends StatelessWidget {
         ),
         Container(
             child: ElevatedButton(
-                child: Text('Create'),
+                child: Text('Add Exercises'),
                 onPressed: () {
                   print(planNameController.text);
                   myPlanName = planNameController.text;
@@ -44,7 +44,7 @@ class createWorkoutPage extends StatelessWidget {
                       .doc(getFirebaseUser)
                       .collection('workoutPlans')
                       .doc(planNameController.text)
-                      .set({});
+                      .set({'name': planNameController.text});
                   FirebaseFirestore.instance
                       .collection('UserInfo')
                       .doc(getFirebaseUser)
