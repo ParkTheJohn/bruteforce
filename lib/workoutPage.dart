@@ -30,25 +30,24 @@ class workoutPage extends StatelessWidget {
       future: getUserWorkoutPlans(),
       builder: (context, projectSnap) {
         if (!projectSnap.hasData) {
-          return Container(
-              // child: Text(projectSnap.data.length),
-              );
+          return Container();
         } else {
-          print("workoutPlans.length ${projectSnap.data.length}");
+          //print("workoutPlans.length ${projectSnap.data.length}");
           if (projectSnap.data.length == 0)
             return Text("You currently have no plans");
-          return ListView.builder(
-            itemCount: projectSnap.data.length,
-            itemBuilder: (context, index) {
-              return Card(
-                child: ListTile(
-                  title: Text(projectSnap.data[index]),
-                  // onTap: () => Scaffold.of(context).showSnackBar(
-                  //     SnackBar(content: Text(exercises[1][index]))),
+          return Row(children: [
+            Expanded(
+              child: SizedBox(
+                height: 100000.0,
+                child: new ListView.builder(
+                  itemCount: projectSnap.data.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return new Card(child: Text(projectSnap.data[index]));
+                  },
                 ),
-              );
-            },
-          );
+              ),
+            ),
+          ]);
         }
       },
     );
@@ -58,9 +57,6 @@ class workoutPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(padding: const EdgeInsets.all(8), children: <Widget>[
       Container(
-        child: projectWidget(),
-      ),
-      Container(
           child: ElevatedButton(
               child: Text('Create Plan'),
               onPressed: () {
@@ -69,6 +65,9 @@ class workoutPage extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => createWorkoutPage()),
                 );
               })),
+      Container(
+        child: projectWidget(),
+      ),
     ]);
   }
 }
