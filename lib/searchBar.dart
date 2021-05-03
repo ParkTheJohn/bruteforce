@@ -267,12 +267,23 @@ class SearchResultsListView extends StatelessWidget {
 
     for (int i = 0; i < searchableList.length; i++)
     {
-      if (searchableList[i].contains(searchTerm) || searchableList[i].toLowerCase().contains(searchTerm.toLowerCase()))
-         //using the .contains() operator might prioritize inaccurate results over accurate ones
-        //Ex: Try searching "chin"
+      if (searchableList[i].contains(searchTerm))
       {
         amendedSearchList.add(searchableList[i]);
         amendedDescriptions.add(itemDescriptions[i]);
+      }
+    }
+
+
+    for (int i = 0; i <searchableList.length; i++)
+    {
+      if (searchableList[i].toLowerCase().contains(searchTerm.toLowerCase()))
+      {
+        if (!(amendedSearchList.contains(searchableList[i])))
+        {
+          amendedSearchList.add(searchableList[i]);
+          amendedDescriptions.add(itemDescriptions[i]);
+        }
       }
     }
 
