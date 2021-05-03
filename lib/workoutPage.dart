@@ -5,6 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'LoginService.dart';
 import 'createWorkout.dart';
 
+String myplan = "test";
+
 class workoutPage extends StatelessWidget {
   Future<List<String>> getUserWorkoutPlans() async {
     String currentUID = FirebaseAuth.instance.currentUser.uid;
@@ -18,7 +20,7 @@ class workoutPage extends StatelessWidget {
     final List<DocumentSnapshot> documents = result.docs;
     for (int i = 0; i < documents.length; i++) {
       workoutPlans.add(documents[i]['name']);
-      print('added ${workoutPlans[i]}');
+      debugPrint('added ${workoutPlans[i]}');
     }
     return workoutPlans;
   }
@@ -28,7 +30,9 @@ class workoutPage extends StatelessWidget {
       future: getUserWorkoutPlans(),
       builder: (context, projectSnap) {
         if (!projectSnap.hasData) {
-          return Container();
+          return Container(
+              // child: Text(projectSnap.data.length),
+              );
         } else {
           print("workoutPlans.length ${projectSnap.data.length}");
           if (projectSnap.data.length == 0)
@@ -58,7 +62,7 @@ class workoutPage extends StatelessWidget {
       ),
       Container(
           child: ElevatedButton(
-              child: Text('Open route'),
+              child: Text('Create Plan'),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -67,4 +71,8 @@ class workoutPage extends StatelessWidget {
               })),
     ]);
   }
+}
+
+String get getWorkoutPlan {
+  return myplan;
 }

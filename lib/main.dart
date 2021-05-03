@@ -1,14 +1,17 @@
+import 'package:cse_115a/searchBar.dart';
 import 'package:cse_115a/settingsPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
+import 'chooseExercise.dart';
 import 'exercises.dart';
 import 'LoginPage.dart';
 import 'LoginService.dart';
 import 'WorkoutPage.dart';
 
+String fireBaseUID = "null";
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -43,10 +46,15 @@ class AuthenticationWrapper extends StatelessWidget {
     final firebaseUser = context.watch<User>();
 
     if (firebaseUser != null) {
+      fireBaseUID = FirebaseAuth.instance.currentUser.uid;
       return HomePage();
     }
     return LoginPage();
   }
+}
+
+String get getFirebaseUser {
+  return fireBaseUID;
 }
 
 class HomePage extends StatefulWidget {
@@ -68,7 +76,7 @@ class _HomePageState extends State<HomePage> {
     "Settings",
   ];
   static List<Widget> pages = <Widget>[
-    exercisesPage(),
+    exercisesPage(), //ChooseExercise(),
     workoutPage(),
     Text('Start Workout'),
     Search(),
