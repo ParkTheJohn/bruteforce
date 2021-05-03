@@ -3,31 +3,52 @@ import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 
 class Search extends StatelessWidget {
+  final List<String> searchableList;
+  final List<String> itemDescriptions;
+
+  const Search({
+    @required this.searchableList,
+    @required this.itemDescriptions,
+  });
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Search Bar App',
-      home: HomePage(),
+      home: HomePage(searchableList, itemDescriptions),
     );
   }
 }
 
 class HomePage extends StatefulWidget {
+
+  List<String> searchableList;
+  List <String> itemDescriptions;
+
+  HomePage(List<String> _searchableList, List<String> _itemDescriptions)
+  {
+    this.searchableList = _searchableList;
+    this.itemDescriptions = _itemDescriptions;
+  }
+
   @override
-  _HomePageState createState() => _HomePageState();
+  _HomePageState createState() => _HomePageState(searchableList, itemDescriptions);
 }
 
 class _HomePageState extends State<HomePage> {
   static const historyLength = 5;
-
   List<String> _searchHistory = [
-    'flutter',
-    'widgets',
   ];
-
   List<String> filteredSearchHistory;
-
   String selectedTerm;
+  List<String> searchableList;
+  List<String> itemDescriptions;
+
+  _HomePageState(List<String> _searchableList, List<String> _itemDescriptions) {
+    this.searchableList = _searchableList;
+    this.itemDescriptions = _itemDescriptions;
+  }
+
 
   List<String> filterSearchTerms({
     @required String filter,
@@ -89,15 +110,17 @@ class _HomePageState extends State<HomePage> {
         body: FloatingSearchBarScrollNotifier(
           child: SearchResultsListView(
             searchTerm: selectedTerm,
+            searchableList: searchableList,
+            itemDescriptions: itemDescriptions,
           ),
         ),
         transition: CircularFloatingSearchBarTransition(),
         physics: BouncingScrollPhysics(),
         title: Text(
-          selectedTerm ?? 'The Search App',
+          selectedTerm ?? 'Search',
           style: Theme.of(context).textTheme.headline6,
         ),
-        hint: 'Search and find out...',
+        hint: 'Search for an exercise',
         actions: [
           FloatingSearchBarAction.searchToClear(),
         ],
@@ -189,44 +212,111 @@ class _HomePageState extends State<HomePage> {
 }
 
 class SearchResultsListView extends StatelessWidget {
-  final String searchTerm;
+  String searchTerm;
+  List<String> searchableList;
+  List<String> itemDescriptions;
 
-  const SearchResultsListView({
+  SearchResultsListView({
     Key key,
     @required this.searchTerm,
+    @required this.searchableList,
+    @required this.itemDescriptions
   }) : super(key: key);
+
 
   @override
   Widget build(BuildContext context) {
-    if (searchTerm == null) {
-      return Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.search,
-              size: 64,
-            ),
-            Text(
-              'Start searching',
-              style: Theme.of(context).textTheme.headline5,
-            )
-          ],
+
+    Widget constructFullResults( BuildContext context, int index ){
+      return Card(
+        child: ListTile(
+            title: Text(searchableList[index]),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Scaffold(
+                  appBar: new AppBar(
+                    title: Text(searchableList[index]),
+                  ),
+                  body: Text(itemDescriptions[index]),
+                )),
+              );
+            }
         ),
       );
     }
 
     final fsb = FloatingSearchBar.of(context);
 
-    return ListView(
-      padding: EdgeInsets.only(top: fsb.height + fsb.margins.vertical),
-      children: List.generate(
-        50,
-            (index) => ListTile(
-          title: Text('$searchTerm search result'),
-          subtitle: Text(index.toString()),
+    if (searchTerm == null) {
+      return Scaffold(
+          body: Container(
+              padding: EdgeInsets.only(top: fsb.height + fsb.margins.vertical),
+              child: ListView.builder(
+                itemBuilder: constructFullResults,
+                itemCount: searchableList.length,
+              )
+          )
+      );
+
+    }
+
+
+    List<String> amendedSearchList = [];
+    List<String> amendedDescriptions = [];
+
+    for (int i = 0; i < searchableList.length; i++)
+    {
+      if (searchableList[i].toLowerCase().startsWith(searchTerm.toLowerCase()))
+      {
+        amendedSearchList.add(searchableList[i]);
+        amendedDescriptions.add(itemDescriptions[i]);
+      }
+    }
+
+
+    for (int i = 0; i <searchableList.length; i++)
+    {
+      if (searchableList[i].toLowerCase().contains(searchTerm.toLowerCase()))
+      {
+        if (!(amendedSearchList.contains(searchableList[i])))
+        {
+          amendedSearchList.add(searchableList[i]);
+          amendedDescriptions.add(itemDescriptions[i]);
+        }
+      }
+    }
+
+
+    Widget constructFilteredResults( BuildContext context, int index ){
+      return Card(
+        child: ListTile(
+            title: Text(amendedSearchList[index]),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Scaffold(
+                  appBar: new AppBar(
+                    title: Text(amendedSearchList[index]),
+                  ),
+                  body: Text(amendedDescriptions[index]),
+                )),
+              );
+            }
         ),
-      ),
+      );
+    }
+
+
+
+    return Scaffold(
+        body: Container(
+            padding: EdgeInsets.only(top: fsb.height + fsb.margins.vertical),
+            child: ListView.builder(
+              itemBuilder: constructFilteredResults,
+              itemCount: amendedSearchList.length,
+            )
+        )
     );
   }
 }
