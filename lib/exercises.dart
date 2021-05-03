@@ -10,6 +10,7 @@ class exercisesPage extends StatelessWidget {
     if (exercises.length != 0) return exercises;
     List<String> exerciseNames = [];
     List<String> exerciseDescription = [];
+
     final QuerySnapshot result =
         await FirebaseFirestore.instance.collection('Exercises').get();
     final List<DocumentSnapshot> documents = result.docs;
@@ -19,8 +20,8 @@ class exercisesPage extends StatelessWidget {
     for (int i = 0; i < documents.length; i++) {
       exerciseDescription.add(documents[i]['description']);
     }
-    exercises.add(exerciseNames);
-    exercises.add(exerciseDescription);
+    await exercises.add(exerciseNames);
+    await exercises.add(exerciseDescription);
 
     return exercises;
   }
