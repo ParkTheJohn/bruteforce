@@ -267,7 +267,7 @@ class SearchResultsListView extends StatelessWidget {
 
     for (int i = 0; i < searchableList.length; i++)
     {
-      if (searchableList[i].contains(searchTerm))
+      if (searchableList[i].toLowerCase().startsWith(searchTerm.toLowerCase()))
       {
         amendedSearchList.add(searchableList[i]);
         amendedDescriptions.add(itemDescriptions[i]);
