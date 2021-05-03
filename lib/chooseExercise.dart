@@ -1,5 +1,6 @@
 //library pages;
 
+import 'package:cse_115a/createCustomExercise.dart';
 import 'package:cse_115a/main.dart';
 import 'package:cse_115a/slidable_widget.dart';
 import 'package:cse_115a/utils.dart';
@@ -25,12 +26,28 @@ class ExercisePage extends State<ChooseExercise> {
     final QuerySnapshot result =
         await FirebaseFirestore.instance.collection('Exercises').get();
     final List<DocumentSnapshot> documents = result.docs;
+
+    final QuerySnapshot result2 = await FirebaseFirestore.instance
+        .collection('UserInfo')
+        .doc(getFirebaseUser)
+        .collection('customExercises')
+        .get();
+    final List<DocumentSnapshot> customDoc = result2.docs;
+
+    //debugPrint(customDoc[0].get('category'));
+    for (int i = 0; i < customDoc.length; i++) {
+      exerciseNames.add("temp" + i.toString());
+    }
     for (int i = 0; i < documents.length; i++) {
       exerciseNames.add(documents[i]['name']);
     }
+    // for (int i = 0; i < customDoc.length; i++) {
+    //   exerciseDescription.add("Just testing names");
+    // }
     for (int i = 0; i < documents.length; i++) {
       exerciseDescription.add(documents[i]['description']);
     }
+
     exercises.add(exerciseNames);
     exercises.add(exerciseDescription);
 
@@ -116,6 +133,16 @@ class ExercisePage extends State<ChooseExercise> {
                 Icons.close,
               ))),
       body: projectWidget(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CustomWorkoutExercise()),
+          );
+        },
+        tooltip: 'Increment Counter',
+        child: const Icon(Icons.add),
+      ),
     );
   }
 }
