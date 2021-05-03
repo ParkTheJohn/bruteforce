@@ -223,14 +223,11 @@ class SearchResultsListView extends StatelessWidget {
     @required this.itemDescriptions
   }) : super(key: key);
 
-  bool caseinsensitivecontains(String term1, String term2){
-    return term1.toLowerCase().contains(term2.toLowerCase());
-  }
 
   @override
   Widget build(BuildContext context) {
 
-    Widget constructResults( BuildContext context, int index ){
+    Widget constructFullResults( BuildContext context, int index ){
       return Card(
         child: ListTile(
             title: Text(searchableList[index]),
@@ -256,7 +253,7 @@ class SearchResultsListView extends StatelessWidget {
           body: Container(
               padding: EdgeInsets.only(top: fsb.height + fsb.margins.vertical),
               child: ListView.builder(
-                itemBuilder: constructResults,
+                itemBuilder: constructFullResults,
                 itemCount: searchableList.length,
               )
           )
@@ -265,24 +262,22 @@ class SearchResultsListView extends StatelessWidget {
     }
 
 
-    /*
-    searchableList = searchableList.where((term) => term.contains(searchTerm)).toList();
-    searchableList = searchableList.where((term) => caseinsensitivecontains(term, searchTerm)).toList();
-   */
-
     List<String> amendedSearchList = [];
     List<String> amendedDescriptions = [];
 
-    for (int i =0; i < searchableList.length; i++)
+    for (int i = 0; i < searchableList.length; i++)
     {
-      if (searchableList[i].contains(searchTerm))
+      if (searchableList[i].contains(searchTerm) || searchableList[i].toLowerCase().contains(searchTerm.toLowerCase()))
+         //using the .contains() operator might prioritize inaccurate results over accurate ones
+        //Ex: Try searching "chin"
       {
         amendedSearchList.add(searchableList[i]);
         amendedDescriptions.add(itemDescriptions[i]);
       }
     }
 
-    Widget reconstructResults( BuildContext context, int index ){
+
+    Widget constructFilteredResults( BuildContext context, int index ){
       return Card(
         child: ListTile(
             title: Text(amendedSearchList[index]),
@@ -307,7 +302,7 @@ class SearchResultsListView extends StatelessWidget {
         body: Container(
             padding: EdgeInsets.only(top: fsb.height + fsb.margins.vertical),
             child: ListView.builder(
-              itemBuilder: reconstructResults,
+              itemBuilder: constructFilteredResults,
               itemCount: amendedSearchList.length,
             )
         )
