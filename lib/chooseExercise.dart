@@ -36,7 +36,7 @@ class ExercisePage extends State<ChooseExercise> {
 
     //debugPrint(customDoc[0].get('category'));
     for (int i = 0; i < customDoc.length; i++) {
-      exerciseNames.add("temp" + i.toString());
+      exerciseNames.add(customDoc[i]['name']);
     }
     for (int i = 0; i < documents.length; i++) {
       exerciseNames.add(documents[i]['name']);
@@ -44,6 +44,11 @@ class ExercisePage extends State<ChooseExercise> {
     // for (int i = 0; i < customDoc.length; i++) {
     //   exerciseDescription.add("Just testing names");
     // }
+
+    for (int i = 0; i < customDoc.length; i++) {
+      exerciseDescription.add(customDoc[i]['description']);
+    }
+
     for (int i = 0; i < documents.length; i++) {
       exerciseDescription.add(documents[i]['description']);
     }
