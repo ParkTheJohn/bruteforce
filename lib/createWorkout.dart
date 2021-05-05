@@ -11,7 +11,7 @@ button to save the workout and store it in
 the database (userinfo/currentUID/workoutplans).
 */
 
-String myPlanName = null;
+String myPlanName = "null_planname";
 
 class createWorkoutPage extends StatelessWidget {
   final TextEditingController planNameController = TextEditingController();

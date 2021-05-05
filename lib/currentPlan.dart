@@ -1,27 +1,30 @@
-import 'package:cse_115a/currentPlan.dart';
+import 'package:cse_115a/workoutPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'LoginService.dart';
-import 'createWorkout.dart';
 
-String myplan = "null2";
-
-class workoutPage extends StatelessWidget {
+class currentPlanPage extends StatelessWidget {
   Future<List<String>> getUserWorkoutPlans() async {
     String currentUID = FirebaseAuth.instance.currentUser.uid;
     List<String> workoutPlans = [];
-    print("This is currentUID: ${currentUID}");
     final QuerySnapshot result = await FirebaseFirestore.instance
         .collection('UserInfo')
         .doc(currentUID)
         .collection('workoutPlans')
+        .doc(getWorkoutPlan)
+        .collection('Exercises')
         .get();
+    debugPrint("WORKOUT PLAN IS: " + getWorkoutPlan);
+    var list = result.docs;
     final List<DocumentSnapshot> documents = result.docs;
+    debugPrint(list.toString());
+    debugPrint(
+        "Number of exercises in plan is: " + documents.length.toString());
+    debugPrint(documents[0]['Exercise Name']);
     for (int i = 0; i < documents.length; i++) {
-      workoutPlans.add(documents[i]['name']);
-      debugPrint('added ${workoutPlans[i]}');
+      workoutPlans.add(documents[i]['Exercise Name']);
+      debugPrint(documents[0]['Exercise Name']);
     }
     return workoutPlans;
   }
@@ -35,8 +38,8 @@ class workoutPage extends StatelessWidget {
         } else {
           //print("workoutPlans.length ${projectSnap.data.length}");
           if (projectSnap.data.length == 0)
-            return Text("You currently have no plans");
-          debugPrint("Plans: ${projectSnap.data.length}");
+            return Text("You currently have no exercises!");
+          debugPrint("Exercises: ${projectSnap.data.length}");
           return Row(children: [
             Expanded(
               child: SizedBox(
@@ -47,8 +50,8 @@ class workoutPage extends StatelessWidget {
                     return new Card(
                       child: ListTile(
                         title: Text(projectSnap.data[index]),
-                        onTap: () =>
-                            navigatePlanPage(context, projectSnap.data[index]),
+                        onTap: () => debugPrint(
+                            "Clicking ${projectSnap.data[index]} box"),
                       ),
                     );
                   },
@@ -63,41 +66,23 @@ class workoutPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(padding: const EdgeInsets.all(8), children: <Widget>[
-      Container(
-          child: ElevatedButton(
-              child: Text('Create Plan'),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => createWorkoutPage()),
-                );
-              })),
-      // Container(
-      //   child: ElevatedButton(child: Text('Plan 1'), onPressed: () {}),
-      // ),
-      Container(
-        child: projectWidget(),
-      ),
-    ]);
+    return Scaffold(
+        appBar: AppBar(
+          title: Text(getWorkoutPlan),
+        ),
+        body: ListView(padding: const EdgeInsets.all(8), children: <Widget>[
+          Container(
+              child: ElevatedButton(
+                  child: Text('Test'),
+                  onPressed: () {
+                    Text("Hi");
+                  })),
+          // Container(
+          //   child: ElevatedButton(child: Text('Plan 1'), onPressed: () {}),
+          // ),
+          Container(
+            child: projectWidget(),
+          ),
+        ]));
   }
-}
-
-String get getWorkoutPlan {
-  debugPrint("getWorkoutPlan name...." + myplan);
-  return myplan;
-}
-
-set setWorkoutPlan(String data) {
-  myplan = data;
-  debugPrint("setWorkoutPlan+++" + getWorkoutPlan);
-}
-
-void navigatePlanPage(BuildContext context, String data) {
-  setWorkoutPlan = data;
-  debugPrint("THE PLAN NAME IN WORKOUTPAGE IS: " + data);
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => currentPlanPage()),
-  );
 }
