@@ -54,9 +54,9 @@ class exercisesPage extends StatelessWidget {
 class ExerciseSearch extends Search {
 
   List<String> exerciseList;
-  List <String> itemDescriptions;
+  List<String> itemDescriptions;
 
-  ExerciseSearch(List<String> _exerciseList, List <String> _itemDescriptions) {
+  ExerciseSearch(List<String> _exerciseList, List<String> _itemDescriptions) {
     this.exerciseList = _exerciseList;
     this.itemDescriptions = _itemDescriptions;
   }
@@ -66,17 +66,5 @@ class ExerciseSearch extends Search {
       title: 'Search Bar App',
       home: HomePage(exerciseList, itemDescriptions),
     );
-    //return exerciseList;
-
-    // return ListView(
-    //   padding: EdgeInsets.only(top: fsb.height + fsb.margins.vertical),
-    //   children: List.generate(
-    //     50,
-    //         (index) => ListTile(
-    //       title: Text('$searchTerm search result'),
-    //       subtitle: Text(index.toString()),
-    //     ),
-    //   ),
-    // );
   }
 }

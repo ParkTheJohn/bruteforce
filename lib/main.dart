@@ -79,7 +79,7 @@ class _HomePageState extends State<HomePage> {
     exercisesPage(), //ChooseExercise(),
     workoutPage(),
     Text('Start Workout'),
-    Search(),
+    Search( searchableList: ["0","1"]),
     settingsPage(),
     LoginPage(),
   ];
