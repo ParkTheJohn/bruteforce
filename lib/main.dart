@@ -10,6 +10,7 @@ import 'exercises.dart';
 import 'LoginPage.dart';
 import 'LoginService.dart';
 import 'WorkoutPage.dart';
+import 'myLogs.dart';
 
 String fireBaseUID = "null";
 Future<void> main() async {
@@ -79,7 +80,8 @@ class _HomePageState extends State<HomePage> {
     exercisesPage(), //ChooseExercise(),
     workoutPage(),
     Text('Start Workout'),
-    Search( searchableList: ["0","1"]),
+    LogPage(),
+    //Search( searchableList: ["0","1"]),
     settingsPage(),
     LoginPage(),
   ];
