@@ -1,5 +1,6 @@
 import 'package:cse_115a/searchBar.dart';
 import 'package:cse_115a/settingsPage.dart';
+import 'package:cse_115a/startWorkoutPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -78,7 +79,7 @@ class _HomePageState extends State<HomePage> {
   static List<Widget> pages = <Widget>[
     exercisesPage(), //ChooseExercise(),
     workoutPage(),
-    Text('Start Workout'),
+    startWorkoutPage(),
     Search(),
     settingsPage(),
     LoginPage(),
