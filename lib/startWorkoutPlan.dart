@@ -1,3 +1,4 @@
+import 'package:cse_115a/main.dart';
 import 'package:cse_115a/workoutPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +6,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 class startWorkoutPlan extends StatelessWidget {
+  var textbox = 0;
+  List<List> sol = [];
   final String currentWorkout;
   startWorkoutPlan({Key key, @required this.currentWorkout}) : super(key: key);
 
@@ -24,7 +27,7 @@ class startWorkoutPlan extends StatelessWidget {
     print(currentWorkout);
     String currentUID = FirebaseAuth.instance.currentUser.uid;
     List<String> workoutPlans = [];
-    List<List> sol = [];
+    List<List> workoutData = [];
     final QuerySnapshot result = await FirebaseFirestore.instance
         .collection('UserInfo')
         .doc(currentUID)
@@ -39,8 +42,27 @@ class startWorkoutPlan extends StatelessWidget {
     debugPrint(
         "Number of exercises in plan is: " + documents.length.toString());
     //debugPrint(documents[0]['Exercise Name']);
+    print(documents.length);
     for (int i = 0; i < documents.length; i++) {
-      workoutPlans.add(documents[i]['Exercise Name']);
+      for (int j = 0; j < documents[i]["Exercise Data"].length; j++) {
+        print("test after 48");
+        workoutPlans.add(documents[i]['Exercise Name']);
+        print("test after 48");
+        workoutData.add([
+          documents[i]["Exercise Data"][j]["reps"],
+          documents[i]["Exercise Data"][j]["sets"],
+          documents[i]["Exercise Data"][j]["weight"]
+        ]);
+        print("The reps are: " +
+            documents[i]["Exercise Data"][j]["reps"].toString());
+        _sets[textbox].text =
+            documents[i]["Exercise Data"][j]["sets"].toString();
+        _reps[textbox].text =
+            documents[i]["Exercise Data"][j]["reps"].toString();
+        _weight[textbox].text =
+            documents[i]["Exercise Data"][j]["weight"].toString();
+        textbox++;
+      }
 
       //debugPrint(documents[0]['Exercise Name']);
     }
@@ -75,6 +97,7 @@ class startWorkoutPlan extends StatelessWidget {
     // debugPrint(
     //     "exercise data 2 : " + documents[0]["Exercise Data"][1].toString());
     sol.add(workoutPlans);
+    sol.add(workoutData);
     return sol;
   }
 
@@ -100,6 +123,7 @@ class startWorkoutPlan extends StatelessWidget {
                         child: Column(children: <Widget>[
                       ListTile(
                           title: Text(projectSnap.data[0][index]),
+                          trailing: Icon(Icons.check),
                           onTap: () => debugPrint(
                               "Clicking ${projectSnap.data[0][index]} box")),
                       //new Row(
@@ -136,18 +160,21 @@ class startWorkoutPlan extends StatelessWidget {
                           TextButton(
                               child: Text("New Set"),
                               onPressed: () {
-                                print("Test");
+                                print("Pressed New Set Button");
                               }),
                           TextButton(
-                            child: const Text('BTN1'),
+                            child: const Text('Print'),
                             onPressed: () {
                               print(_sets[index].text);
                               print(_reps[index].text);
+                              print(_weight[index].text);
                             },
                           ),
                           TextButton(
-                            child: const Text('BTN2'),
-                            onPressed: () {/* ... */},
+                            child: const Text('Delete'),
+                            onPressed: () {
+                              print("Pressed Delete Button");
+                            },
                           ),
                         ],
                       ),
@@ -169,7 +196,52 @@ class startWorkoutPlan extends StatelessWidget {
     );
   }
 
-  void saveToExercise() {}
+  void saveToExercise() {
+    print(sol);
+    for (int i = 0; i < sol[0].length; i++) {
+      if (i == 0 || sol[0][i] != sol[0][i - 1]) {
+        FirebaseFirestore.instance
+            .collection('UserInfo')
+            .doc(getFirebaseUser)
+            .collection('workoutPlans')
+            .doc(currentWorkout)
+            .collection('Exercises')
+            .doc(sol[0][i])
+            .set(
+          {
+            'Exercise Name': sol[0][i],
+            'Exercise Data': FieldValue.arrayUnion([
+              {
+                "reps": int.parse(_reps[i].text),
+                "sets": int.parse(_sets[i].text),
+                "weight": int.parse(_weight[i].text)
+              }
+            ])
+          },
+        );
+      } else {
+        FirebaseFirestore.instance
+            .collection('UserInfo')
+            .doc(getFirebaseUser)
+            .collection('workoutPlans')
+            .doc(currentWorkout)
+            .collection('Exercises')
+            .doc(sol[0][i])
+            .update({
+          'Exercise Data': FieldValue.arrayUnion([
+            {
+              "reps": int.parse(_reps[i].text),
+              "sets": int.parse(_sets[i].text),
+              "weight": int.parse(_weight[i].text)
+            }
+          ])
+        });
+      }
+    }
+    for (int i = 0; i < textbox; i++) {
+      print(_sets[0].text);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -179,7 +251,7 @@ class startWorkoutPlan extends StatelessWidget {
           actions: <Widget>[
             TextButton(
                 onPressed: () {
-                  print("TEST");
+                  saveToExercise();
                 },
                 child: Text(
                   'Finish',
