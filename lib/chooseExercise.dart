@@ -117,7 +117,12 @@ class ExercisePage extends State<ChooseExercise> {
             .doc(getNewPlanName)
             .collection('Exercises')
             .doc(exercises[0][index])
-            .set({'Exercise Name': exercises[0][index]});
+            .set({
+          'Exercise Name': exercises[0][index],
+          'Exercise Data': [
+            {"reps": 0, "sets": 0, "weight": 0}
+          ]
+        });
         Utils.showSnackBar(context,
             exercises[0][index] + 'has been added to ' + getNewPlanName + ' !');
         break;
