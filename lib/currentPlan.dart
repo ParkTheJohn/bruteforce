@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cse_115a/workoutPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +7,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 class currentPlanPage extends StatelessWidget {
+  // This is used so that the Navigator in workoutPage.dart can send the name of
+  // the plan the was clicked by the button onPressed()
+  final String currentPlanName;
+  currentPlanPage({Key key, @required this.currentPlanName}) : super(key: key);
+
   Future<List<String>> getUserWorkoutPlans() async {
     String currentUID = FirebaseAuth.instance.currentUser.uid;
     List<String> workoutPlans = [];
@@ -12,10 +19,10 @@ class currentPlanPage extends StatelessWidget {
         .collection('UserInfo')
         .doc(currentUID)
         .collection('workoutPlans')
-        .doc(getWorkoutPlan)
+        .doc(currentPlanName)
         .collection('Exercises')
         .get();
-    debugPrint("WORKOUT PLAN IS: " + getWorkoutPlan);
+    debugPrint("WORKOUT PLAN IS: " + currentPlanName);
     var list = result.docs;
     final List<DocumentSnapshot> documents = result.docs;
     debugPrint(list.toString());
@@ -68,7 +75,7 @@ class currentPlanPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(getWorkoutPlan),
+          title: Text(currentPlanName),
         ),
         body: ListView(padding: const EdgeInsets.all(8), children: <Widget>[
           Container(

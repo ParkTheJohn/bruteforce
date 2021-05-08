@@ -5,8 +5,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'LoginService.dart';
 import 'createWorkout.dart';
+import 'currentPlan.dart';
 
-String myplan = "null2";
+//String myplan = "null2";
 
 class workoutPage extends StatelessWidget {
   Future<List<String>> getUserWorkoutPlans() async {
@@ -73,9 +74,6 @@ class workoutPage extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => createWorkoutPage()),
                 );
               })),
-      // Container(
-      //   child: ElevatedButton(child: Text('Plan 1'), onPressed: () {}),
-      // ),
       Container(
         child: projectWidget(),
       ),
@@ -83,21 +81,12 @@ class workoutPage extends StatelessWidget {
   }
 }
 
-String get getWorkoutPlan {
-  debugPrint("getWorkoutPlan name...." + myplan);
-  return myplan;
-}
-
-set setWorkoutPlan(String data) {
-  myplan = data;
-  debugPrint("setWorkoutPlan+++" + getWorkoutPlan);
-}
-
+// Changes the current screen to a new screen displaying the name of the workout
+// plan that was pressed and it's exercises.
 void navigatePlanPage(BuildContext context, String data) {
-  setWorkoutPlan = data;
-  debugPrint("THE PLAN NAME IN WORKOUTPAGE IS: " + data);
   Navigator.push(
     context,
-    MaterialPageRoute(builder: (context) => currentPlanPage()),
+    MaterialPageRoute(
+        builder: (context) => currentPlanPage(currentPlanName: data)),
   );
 }
