@@ -83,7 +83,12 @@ class CustomWorkoutExercise extends StatelessWidget {
                       .doc(getNewPlanName)
                       .collection('Exercises')
                       .doc(exerciseNameController.text)
-                      .set({'Exercise Name': exerciseNameController.text});
+                      .set({
+                    'Exercise Name': exerciseNameController.text,
+                    'Exercise Data': [
+                      {"reps": 0, "sets": 0, "weight": 0}
+                    ]
+                  });
                   // Utils.showSnackBar(
                   //     context,
                   //     exerciseNameController.text +
