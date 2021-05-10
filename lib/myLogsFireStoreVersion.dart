@@ -3,46 +3,46 @@ import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 
 
-class Sales {
-  final int saleVal;
-  final String saleYear;
+class WorkoutInfo {
+  final int weight;
+  final String timestamp;
   final String colorVal;
-  Sales(this.saleVal,this.saleYear,this.colorVal);
+  WorkoutInfo(this.weight,this.timestamp,this.colorVal);
 
-  Sales.fromMap(Map<String, dynamic> map)
-      : assert(map['saleVal'] != null),
-        assert(map['saleYear'] != null),
+  WorkoutInfo.fromMap(Map<String, dynamic> map)
+      : assert(map['weight'] != null),
+        assert(map['timestamp'] != null),
         assert(map['colorVal'] != null),
-        saleVal = map['saleVal'],
+        weight = map['weight'],
         colorVal = map['colorVal'],
-        saleYear=map['saleYear'];
+        timestamp=map['timestamp'];
 
   @override
-  String toString() => "Record<$saleVal:$saleYear:$colorVal>";
+  String toString() => "Record<$weight:$timestamp:$colorVal>";
 }
 
 
-class SalesHomePage extends StatefulWidget {
+class WorkoutInfoHomePage extends StatefulWidget {
   @override
-  _SalesHomePageState createState() {
-    return _SalesHomePageState();
+  _WorkoutInfoHomePageState createState() {
+    return _WorkoutInfoHomePageState();
   }
 }
 
-class _SalesHomePageState extends State<SalesHomePage> {
-  List<charts.Series<Sales, String>> _seriesBarData;
-  List<Sales> mydata;
+class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
+  List<charts.Series<WorkoutInfo, String>> _seriesBarData;
+  List<WorkoutInfo> mydata;
   _generateData(mydata) {
-    _seriesBarData = List<charts.Series<Sales, String>>();
+    _seriesBarData = List<charts.Series<WorkoutInfo, String>>();
     _seriesBarData.add(
       charts.Series(
-        domainFn: (Sales sales, _) => sales.saleYear.toString(),
-        measureFn: (Sales sales, _) => sales.saleVal,
-        colorFn: (Sales sales, _) =>
-            charts.ColorUtil.fromDartColor(Color(0xff990099)),
-        id: 'Sales',
+        domainFn: (WorkoutInfo info, _) => info.timestamp.toString(),
+        measureFn: (WorkoutInfo info, _) => info.weight,
+        colorFn: (WorkoutInfo info, _) =>
+            charts.ColorUtil.fromDartColor(Color(int.parse(info.colorVal))),
+        id: 'WorkoutDetails',
         data: mydata,
-        labelAccessorFn: (Sales row, _) => "${row.saleYear}",
+        labelAccessorFn: (WorkoutInfo row, _) => "${row.timestamp}",
       ),
     );
   }
@@ -51,28 +51,28 @@ class _SalesHomePageState extends State<SalesHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Sales')),
+      appBar: AppBar(title: Text('Workout Details')),
       body: _buildBody(context),
     );
   }
 
   Widget _buildBody(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance.collection('sales').snapshots(),
+      stream: FirebaseFirestore.instance.collection('test_workout_info').snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return LinearProgressIndicator();
         } else {
-          List<Sales> sales = snapshot.data.documents
-              .map((documentSnapshot) => Sales.fromMap(documentSnapshot.data))
+          List<WorkoutInfo> info = snapshot.data.docs
+              .map((documentSnapshot) => WorkoutInfo.fromMap(documentSnapshot.data()))
               .toList();
-          return _buildChart(context, sales);
+          return _buildChart(context, info);
         }
       },
     );
   }
-  Widget _buildChart(BuildContext context, List<Sales> saledata) {
-    mydata = saledata;
+  Widget _buildChart(BuildContext context, List<WorkoutInfo> infodata) {
+    mydata = infodata;
     _generateData(mydata);
     return Padding(
       padding: EdgeInsets.all(8.0),
@@ -81,7 +81,7 @@ class _SalesHomePageState extends State<SalesHomePage> {
           child: Column(
             children: <Widget>[
               Text(
-                'Sales by Year',
+                'Highest weight lifted this week (lbs)',
                 style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
               ),
               SizedBox(
@@ -90,15 +90,8 @@ class _SalesHomePageState extends State<SalesHomePage> {
               Expanded(
                 child: charts.BarChart(_seriesBarData,
                   animate: true,
-                  animationDuration: Duration(seconds:5),
-                  behaviors: [
-                    new charts.DatumLegend(
-                      entryTextStyle: charts.TextStyleSpec(
-                          color: charts.MaterialPalette.purple.shadeDefault,
-                          fontFamily: 'Georgia',
-                          fontSize: 18),
-                    )
-                  ],
+                  animationDuration: Duration(seconds:1),
+
                 ),
               ),
             ],
@@ -108,4 +101,11 @@ class _SalesHomePageState extends State<SalesHomePage> {
     );
   }
 }
+
+
+
+
+
+
+
 
