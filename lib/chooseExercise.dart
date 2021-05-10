@@ -15,7 +15,7 @@ class ChooseExercise extends StatefulWidget {
   ExercisePage createState() => ExercisePage();
 }
 
-String exercise = "test";
+String exercise = "nullChooseExercise";
 
 class ExercisePage extends State<ChooseExercise> {
   List<List<String>> exercises = [];
@@ -150,7 +150,7 @@ class ExercisePage extends State<ChooseExercise> {
             MaterialPageRoute(builder: (context) => CustomWorkoutExercise()),
           );
         },
-        tooltip: 'Increment Counter',
+        tooltip: 'Create a custom Exercise',
         child: const Icon(Icons.add),
       ),
     );

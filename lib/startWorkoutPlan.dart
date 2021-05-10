@@ -1,3 +1,5 @@
+import 'package:cse_115a/chooseExercise.dart';
+import 'package:cse_115a/createWorkout.dart';
 import 'package:cse_115a/main.dart';
 import 'package:cse_115a/slidable_widget.dart';
 import 'package:cse_115a/utils.dart';
@@ -41,14 +43,31 @@ class _startWorkoutPlan extends //StatelessWidget {
     _listFuture = getUserWorkoutPlans();
   }
 
-  void refreshList(int index) {
-    setState(() {
-      _listFuture = getList(index);
-    });
+  void refreshList(int index, String action) {
+    if (action == "add") {
+      setState(() {
+        _listFuture = addList(index);
+      });
+    } else if (action == "remove") {
+      setState(() {
+        _listFuture = removeList(index);
+      });
+    }
   }
 
-  Future<List<List>> getList(int index) async {
-    print(sol[0]);
+  Future<List<List>> removeList(int index) async {
+    sol[0].removeAt(index);
+    sol[1].removeAt(index);
+    textbox--;
+    _sets.removeAt(index);
+    _reps.removeAt(index);
+    _weight.removeAt(index);
+
+    return sol;
+  }
+
+  Future<List<List>> addList(int index) async {
+    //print(sol[0]);
     sol[0].insert(index + 1, sol[0][index]);
     sol[1].insert(index + 1, [0, 0, 0]);
     _sets.insert(index + 1, TextEditingController());
@@ -59,7 +78,7 @@ class _startWorkoutPlan extends //StatelessWidget {
     _reps[index + 1].text = sol[1][index + 1][1].toString();
     _weight[index + 1].text = sol[1][index + 1][2].toString();
 
-    print(sol);
+    //print(sol);
     return sol;
   }
 
@@ -163,7 +182,11 @@ class _startWorkoutPlan extends //StatelessWidget {
                         ListTile(
                           title: Text(projectSnap.data[0][index]),
                           trailing: Icon(Icons.check),
-                          onTap: () => debugPrint("Finished exercise"),
+                          onTap: () => Utils.showSnackBar(
+                              context,
+                              'Exercise ' +
+                                  projectSnap.data[0][index] +
+                                  ' has been finished'),
                         ),
                         //new Row(
                         //mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -199,7 +222,7 @@ class _startWorkoutPlan extends //StatelessWidget {
                             TextButton(
                                 child: Text("New Set"),
                                 onPressed: () {
-                                  print("Pressed New Set Button");
+                                  refreshList(index, "add");
                                 }),
                             TextButton(
                               child: const Text('Print'),
@@ -212,7 +235,7 @@ class _startWorkoutPlan extends //StatelessWidget {
                             TextButton(
                               child: const Text('Delete'),
                               onPressed: () {
-                                print("Pressed Delete Button");
+                                refreshList(index, "remove");
                               },
                             ),
                           ],
@@ -252,17 +275,19 @@ class _startWorkoutPlan extends //StatelessWidget {
       //   Utils.showSnackBar(context, 'Chat has been shared');
       //   break;
       case SlidableAction.more:
-        Utils.showSnackBar(context, 'Selected more');
+        print("Assuming this is delete button for now");
+        refreshList(index, "remove");
+        //Utils.showSnackBar(context, 'Selected more');
         break;
       case SlidableAction.add:
         //Utils.showSnackBar(context, 'pressed add');
-        refreshList(index);
+        refreshList(index, "add");
         break;
     }
   }
 
   void saveToExercise() {
-    print(sol);
+    //print(sol);
     for (int i = 0; i < sol[0].length; i++) {
       if (i == 0 || sol[0][i] != sol[0][i - 1]) {
         FirebaseFirestore.instance
@@ -303,9 +328,8 @@ class _startWorkoutPlan extends //StatelessWidget {
         });
       }
     }
-    for (int i = 0; i < textbox; i++) {
-      print(_sets[0].text);
-    }
+
+    Navigator.pop(context);
   }
 
   @override
@@ -328,19 +352,28 @@ class _startWorkoutPlan extends //StatelessWidget {
           ],
         ),
         body: ListView(padding: const EdgeInsets.all(8), children: <Widget>[
+          Container(),
           Container(
-              // child: ElevatedButton(
-              //     child: Text('Test'),
-              //     onPressed: () {
-              //       Text("Hi");
-              // })
-              ),
-          // Container(
-          //   child: ElevatedButton(child: Text('Plan 1'), onPressed: () {}),
-          // ),
+            child: ElevatedButton(
+                child: Text('Add new Exercise'),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ChooseExercise()),
+                  );
+                }),
+          ),
           Container(
             child: projectWidget(),
           ),
         ]));
+  }
+
+  void addExercise() {
+    //setNewPlanName(currentWorkout);
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ChooseExercise()),
+    );
   }
 }
