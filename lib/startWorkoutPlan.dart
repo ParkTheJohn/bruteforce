@@ -1,15 +1,26 @@
 import 'package:cse_115a/main.dart';
+import 'package:cse_115a/slidable_widget.dart';
+import 'package:cse_115a/utils.dart';
 import 'package:cse_115a/workoutPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
-class startWorkoutPlan extends StatelessWidget {
-  var textbox = 0;
-  List<List> sol = [];
+class startWorkoutPlan extends StatefulWidget {
   final String currentWorkout;
   startWorkoutPlan({Key key, @required this.currentWorkout}) : super(key: key);
+  @override
+  _startWorkoutPlan createState() => _startWorkoutPlan();
+}
+
+class _startWorkoutPlan extends //StatelessWidget {
+    State<startWorkoutPlan> {
+  Future<List<List>> _listFuture;
+  var textbox = 0;
+  List<List> sol = [];
+  final String currentWorkout = "reptest3";
+  //_startWorkoutPlan({Key key, @required this.currentWorkout}) : super(key: key);
 
   List<TextEditingController> _sets = [
     for (int i = 1; i < 75; i++) TextEditingController()
@@ -22,6 +33,35 @@ class startWorkoutPlan extends StatelessWidget {
   List<TextEditingController> _weight = [
     for (int i = 1; i < 75; i++) TextEditingController()
   ];
+
+  @override
+  void initState() {
+    super.initState();
+
+    _listFuture = getUserWorkoutPlans();
+  }
+
+  void refreshList(int index) {
+    setState(() {
+      _listFuture = getList(index);
+    });
+  }
+
+  Future<List<List>> getList(int index) async {
+    print(sol[0]);
+    sol[0].insert(index + 1, sol[0][index]);
+    sol[1].insert(index + 1, [0, 0, 0]);
+    _sets.insert(index + 1, TextEditingController());
+    _reps.insert(index + 1, TextEditingController());
+    _weight.insert(index + 1, TextEditingController());
+    textbox++;
+    _sets[index + 1].text = sol[1][index + 1][0].toString();
+    _reps[index + 1].text = sol[1][index + 1][1].toString();
+    _weight[index + 1].text = sol[1][index + 1][2].toString();
+
+    print(sol);
+    return sol;
+  }
 
   Future<List<List>> getUserWorkoutPlans() async {
     print(currentWorkout);
@@ -45,9 +85,7 @@ class startWorkoutPlan extends StatelessWidget {
     print(documents.length);
     for (int i = 0; i < documents.length; i++) {
       for (int j = 0; j < documents[i]["Exercise Data"].length; j++) {
-        print("test after 48");
         workoutPlans.add(documents[i]['Exercise Name']);
-        print("test after 48");
         workoutData.add([
           documents[i]["Exercise Data"][j]["reps"],
           documents[i]["Exercise Data"][j]["sets"],
@@ -102,9 +140,9 @@ class startWorkoutPlan extends StatelessWidget {
   }
 
   Widget projectWidget() {
-    return FutureBuilder(
-      future: getUserWorkoutPlans(),
-      builder: (context, projectSnap) {
+    return new FutureBuilder<List<List>>(
+      future: _listFuture,
+      builder: (BuildContext context, AsyncSnapshot<List<List>> projectSnap) {
         if (!projectSnap.hasData) {
           return Container();
         } else {
@@ -119,72 +157,76 @@ class startWorkoutPlan extends StatelessWidget {
                 child: new ListView.builder(
                   itemCount: projectSnap.data[0].length,
                   itemBuilder: (BuildContext context, int index) {
-                    return new Card(
-                        child: Column(children: <Widget>[
-                      ListTile(
+                    return SlidableWidget(
+                      child: Card(
+                          child: Column(children: <Widget>[
+                        ListTile(
                           title: Text(projectSnap.data[0][index]),
                           trailing: Icon(Icons.check),
-                          onTap: () => debugPrint(
-                              "Clicking ${projectSnap.data[0][index]} box")),
-                      //new Row(
-                      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //children: <Widget>[
-                      Row(children: <Widget>[
-                        new Flexible(
-                            child: TextFormField(
-                          controller: _sets[index],
-                          decoration: InputDecoration(
-                              border: UnderlineInputBorder(),
-                              labelText: 'Enter sets'),
-                        )),
-                        new Flexible(
-                            child: TextFormField(
-                          controller: _reps[index],
-                          decoration: InputDecoration(
-                              border: UnderlineInputBorder(),
-                              labelText: 'Enter reps'),
-                        )),
-                        new Flexible(
-                            child: TextFormField(
-                          controller: _weight[index],
-                          decoration: InputDecoration(
-                              border: UnderlineInputBorder(),
-                              labelText: 'Enter Weight'),
-                        )),
-                      ]),
+                          onTap: () => debugPrint("Finished exercise"),
+                        ),
+                        //new Row(
+                        //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //children: <Widget>[
+                        Row(children: <Widget>[
+                          new Flexible(
+                              child: TextFormField(
+                            controller: _sets[index],
+                            decoration: InputDecoration(
+                                border: UnderlineInputBorder(),
+                                labelText: 'Enter sets'),
+                          )),
+                          new Flexible(
+                              child: TextFormField(
+                            controller: _reps[index],
+                            decoration: InputDecoration(
+                                border: UnderlineInputBorder(),
+                                labelText: 'Enter reps'),
+                          )),
+                          new Flexible(
+                              child: TextFormField(
+                            controller: _weight[index],
+                            decoration: InputDecoration(
+                                border: UnderlineInputBorder(),
+                                labelText: 'Enter Weight'),
+                          )),
+                        ]),
 
-                      //]),
+                        //]),
 
-                      Row(
-                        children: <Widget>[
-                          TextButton(
-                              child: Text("New Set"),
+                        Row(
+                          children: <Widget>[
+                            TextButton(
+                                child: Text("New Set"),
+                                onPressed: () {
+                                  print("Pressed New Set Button");
+                                }),
+                            TextButton(
+                              child: const Text('Print'),
                               onPressed: () {
-                                print("Pressed New Set Button");
-                              }),
-                          TextButton(
-                            child: const Text('Print'),
-                            onPressed: () {
-                              print(_sets[index].text);
-                              print(_reps[index].text);
-                              print(_weight[index].text);
-                            },
+                                print(_sets[index].text);
+                                print(_reps[index].text);
+                                print(_weight[index].text);
+                              },
+                            ),
+                            TextButton(
+                              child: const Text('Delete'),
+                              onPressed: () {
+                                print("Pressed Delete Button");
+                              },
+                            ),
+                          ],
+                        ),
+                      ])
+                          // child: ListTile(
+                          //   title: Text(projectSnap.data[index]),
+                          //   onTap: () => debugPrint(
+                          //       "Clicking ${projectSnap.data[index]} box"),
+                          // ),
                           ),
-                          TextButton(
-                            child: const Text('Delete'),
-                            onPressed: () {
-                              print("Pressed Delete Button");
-                            },
-                          ),
-                        ],
-                      ),
-                    ])
-                        // child: ListTile(
-                        //   title: Text(projectSnap.data[index]),
-                        //   onTap: () => debugPrint(
-                        //       "Clicking ${projectSnap.data[index]} box"),
-                        // ),
-                        );
+                      onDismissed: (action) =>
+                          dismissSlidableItem(context, index, action),
+                    );
                   },
                 ),
               ),
@@ -194,6 +236,29 @@ class startWorkoutPlan extends StatelessWidget {
         }
       },
     );
+  }
+
+  void dismissSlidableItem(
+      BuildContext context, int index, SlidableAction action) {
+    setState(() {
+      //exercises.removeAt([0][index]);
+    });
+
+    switch (action) {
+      // case SlidableAction.archive:
+      //   Utils.showSnackBar(context, 'Chat has been archived');
+      //   break;
+      // case SlidableAction.share:
+      //   Utils.showSnackBar(context, 'Chat has been shared');
+      //   break;
+      case SlidableAction.more:
+        Utils.showSnackBar(context, 'Selected more');
+        break;
+      case SlidableAction.add:
+        //Utils.showSnackBar(context, 'pressed add');
+        refreshList(index);
+        break;
+    }
   }
 
   void saveToExercise() {
