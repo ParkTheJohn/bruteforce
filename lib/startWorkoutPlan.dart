@@ -16,12 +16,12 @@ class startWorkoutPlan extends StatefulWidget {
   _startWorkoutPlan createState() => _startWorkoutPlan();
 }
 
-class _startWorkoutPlan extends //StatelessWidget {
-    State<startWorkoutPlan> {
+class _startWorkoutPlan extends State<startWorkoutPlan> {
+  @override
   Future<List<List>> _listFuture;
   var textbox = 0;
   List<List> sol = [];
-  final String currentWorkout = "reptest3";
+  //String currentWorkout;
   //_startWorkoutPlan({Key key, @required this.currentWorkout}) : super(key: key);
 
   List<TextEditingController> _sets = [
@@ -83,7 +83,7 @@ class _startWorkoutPlan extends //StatelessWidget {
   }
 
   Future<List<List>> getUserWorkoutPlans() async {
-    print(currentWorkout);
+    print(widget.currentWorkout);
     String currentUID = FirebaseAuth.instance.currentUser.uid;
     List<String> workoutPlans = [];
     List<List> workoutData = [];
@@ -91,10 +91,10 @@ class _startWorkoutPlan extends //StatelessWidget {
         .collection('UserInfo')
         .doc(currentUID)
         .collection('workoutPlans')
-        .doc(currentWorkout)
+        .doc(widget.currentWorkout)
         .collection('Exercises')
         .get();
-    debugPrint("WORKOUT PLAN IS: " + currentWorkout);
+    debugPrint("WORKOUT PLAN IS: " + widget.currentWorkout);
     var list = result.docs;
     final List<DocumentSnapshot> documents = result.docs;
     //debugPrint(list.toString());
@@ -294,7 +294,7 @@ class _startWorkoutPlan extends //StatelessWidget {
             .collection('UserInfo')
             .doc(getFirebaseUser)
             .collection('workoutPlans')
-            .doc(currentWorkout)
+            .doc(widget.currentWorkout)
             .collection('Exercises')
             .doc(sol[0][i])
             .set(
@@ -314,7 +314,7 @@ class _startWorkoutPlan extends //StatelessWidget {
             .collection('UserInfo')
             .doc(getFirebaseUser)
             .collection('workoutPlans')
-            .doc(currentWorkout)
+            .doc(widget.currentWorkout)
             .collection('Exercises')
             .doc(sol[0][i])
             .update({
@@ -336,7 +336,7 @@ class _startWorkoutPlan extends //StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("PLAN: " + currentWorkout),
+          title: Text("PLAN: " + widget.currentWorkout),
           actions: <Widget>[
             TextButton(
                 onPressed: () {
