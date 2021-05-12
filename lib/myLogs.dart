@@ -5,7 +5,7 @@
 /// be provided to override this with any custom color.
 ///
 ///
-/*
+
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -84,18 +84,9 @@ class _LogPageState extends State<LogPage> {
                         Expanded(
                           child: charts.LineChart(
                               _seriesLineData,
-                              defaultRenderer: new charts.LineRendererConfig(
-                                  includeArea: true, stacked: true),
                               animate: true,
                               animationDuration: Duration(seconds: 1),
-                              behaviors: [
-                                new charts.ChartTitle('Weeks',
-                                    behaviorPosition: charts.BehaviorPosition.bottom,
-                                    titleOutsideJustification:charts.OutsideJustification.middleDrawArea),
-                                new charts.ChartTitle('Workouts',
-                                    behaviorPosition: charts.BehaviorPosition.start,
-                                    titleOutsideJustification: charts.OutsideJustification.middleDrawArea),
-                              ]
+
                           ),
                         ),
                       ],
@@ -153,4 +144,4 @@ class Workouts {
   int timeframe;
 
   Workouts(this.workouts_completed, this.timeframe);
-} */
+}
