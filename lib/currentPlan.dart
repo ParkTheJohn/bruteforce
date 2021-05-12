@@ -61,52 +61,31 @@ class _editWorkouts extends State<currentPlanPage> {
           print(projectSnap.data);
           if (projectSnap.data.length == 0)
             return Text("You currently have no exercises!");
-          if (edit == false)
-            return Row(children: [
-              Expanded(
+          return Row(children: [
+            Expanded(
                 child: SizedBox(
-                  height: 100000.0,
-                  child: new ListView.builder(
-                    itemCount: projectSnap.data.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return new Card(
-                        child: ListTile(
-                          title: Text(projectSnap.data[index]),
-                          onTap: () => debugPrint(
-                              "Clicking ${projectSnap.data[index]} box"),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-            ]);
-          else
-            return Row(children: [
-              Expanded(
-                  child: SizedBox(
-                      height: 100000.0,
-                      child: ListView.builder(
-                        itemCount: projectSnap.data.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return SlidableWidget(
-                              child: Card(
-                                child: ListTile(
-                                  title: Text(projectSnap.data[index]),
-                                  onTap: () => Scaffold.of(context)
-                                      .showSnackBar(SnackBar(
-                                          content:
-                                              Text(projectSnap.data[index]))),
-                                ),
+                    height: 100000.0,
+                    child: ListView.builder(
+                      itemCount: projectSnap.data.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return SlidableWidget(
+                            child: Card(
+                              child: ListTile(
+                                title: Text(projectSnap.data[index]),
+                                onTap: () => Scaffold.of(context).showSnackBar(
+                                    SnackBar(
+                                        content:
+                                            Text(projectSnap.data[index]))),
                               ),
-                              onDismissed: (action) {
-                                //exercises.removeAt(index);
-                                dismissSlidableItem(context, index);
-                              });
-                          //);
-                        },
-                      )))
-            ]);
+                            ),
+                            onDismissed: (action) {
+                              //exercises.removeAt(index);
+                              dismissSlidableItem(context, index);
+                            });
+                        //);
+                      },
+                    )))
+          ]);
         }
       },
     );
