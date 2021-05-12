@@ -64,7 +64,6 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
   }
 
 
-  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -85,8 +84,8 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
               body: TabBarView(
                   children:[
 
-                  _buildBodyChart(context), _buildBodyLine(context)
-                    
+                    _buildBodyChart(context), _buildBodyLine(context)
+
                   ]),
             )));
   }
@@ -128,14 +127,14 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
                 height: 10.0,
               ),
               Expanded(
-                child: charts.TimeSeriesChart(
-                  _seriesData,
-                  defaultRenderer: new charts.LineRendererConfig(
-                      includeArea: true, stacked: true),
-                  animate: true,
-                  animationDuration: Duration(seconds: 1),
+                  child: charts.TimeSeriesChart(
+                    _seriesData,
+                    defaultRenderer: new charts.LineRendererConfig(
+                        includeArea: true, stacked: true),
+                    animate: true,
+                    animationDuration: Duration(seconds: 1),
 
-                )
+                  )
 
               ),
             ],
@@ -144,7 +143,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
       ),
     );
   }
-  
+
 
   Widget _buildBodyChart(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
@@ -157,7 +156,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
         } else {
           List<WorkoutInfo> info = snapshot.data.docs
               .map((documentSnapshot) =>
-                  WorkoutInfo.fromMap(documentSnapshot.data()))
+              WorkoutInfo.fromMap(documentSnapshot.data()))
               .toList();
           return _buildChart(context, info);
         }
