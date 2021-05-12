@@ -31,8 +31,7 @@ class WorkoutInfoHomePage extends StatefulWidget {
 }
 
 class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
-  List<charts.Series<WorkoutInfo, DateTime>> _seriesBarData;
-  List<charts.Series<WorkoutInfo, DateTime>> _seriesLineData;
+  List<charts.Series<WorkoutInfo, DateTime>> _seriesData;
 
 
   List<WorkoutInfo> myData;
@@ -49,9 +48,9 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
   }
 */
   _generateData(myData) {
-    _seriesBarData = <charts.Series<WorkoutInfo, DateTime>>[];
+    _seriesData = <charts.Series<WorkoutInfo, DateTime>>[];
 
-    _seriesBarData.add(
+    _seriesData.add(
       charts.Series(
         domainFn: (WorkoutInfo info, _) => info.realTimeStamp,
         measureFn: (WorkoutInfo info, _) => info.weight,
@@ -63,6 +62,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
     );
 
   }
+
 
   
   @override
@@ -129,7 +129,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
               ),
               Expanded(
                 child: charts.TimeSeriesChart(
-                  _seriesLineData,
+                  _seriesData,
                   defaultRenderer: new charts.LineRendererConfig(
                       includeArea: true, stacked: true),
                   animate: true,
@@ -183,7 +183,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
               ),
               Expanded(
                 child: charts.TimeSeriesChart(
-                  _seriesBarData,
+                  _seriesData,
                   defaultRenderer: new charts.BarRendererConfig<DateTime>(),
                   animate: true,
                   animationDuration: Duration(seconds: 1),
