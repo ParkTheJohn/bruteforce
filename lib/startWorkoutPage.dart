@@ -1,4 +1,5 @@
 import 'package:cse_115a/currentPlan.dart';
+import 'package:cse_115a/startWorkoutPlan.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,7 +10,7 @@ import 'currentPlan.dart';
 
 //String myplan = "null2";
 
-class workoutPage extends StatelessWidget {
+class startWorkoutPage extends StatelessWidget {
   Future<List<String>> getUserWorkoutPlans() async {
     String currentUID = FirebaseAuth.instance.currentUser.uid;
     List<String> workoutPlans = [];
@@ -67,12 +68,9 @@ class workoutPage extends StatelessWidget {
     return ListView(padding: const EdgeInsets.all(8), children: <Widget>[
       Container(
           child: ElevatedButton(
-              child: Text('Create Plan'),
+              child: Text('Select a Random Workout!'),
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => createWorkoutPage()),
-                );
+                print("Need to add functionality");
               })),
       Container(
         child: projectWidget(),
@@ -87,6 +85,6 @@ void navigatePlanPage(BuildContext context, String data) {
   Navigator.push(
     context,
     MaterialPageRoute(
-        builder: (context) => currentPlanPage(currentPlanName: data)),
+        builder: (context) => startWorkoutPlan(currentWorkout: data)),
   );
 }
