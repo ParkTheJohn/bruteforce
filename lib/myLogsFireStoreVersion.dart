@@ -7,23 +7,20 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class WorkoutInfo {
   final int weight;
   final DateTime realTimeStamp;
-  final String timestamp;
   final String colorVal;
 
-  WorkoutInfo(this.weight, this.realTimeStamp, this.timestamp, this.colorVal);
+  WorkoutInfo(this.weight, this.realTimeStamp, this.colorVal);
 
   WorkoutInfo.fromMap(Map<String, dynamic> map)
       : assert(map['weight'] != null),
         assert(map['realTimeStamp']!=null),
-        assert(map['timestamp'] != null),
         assert(map['colorVal'] != null),
         weight = map['weight'],
         realTimeStamp = map['realTimeStamp'].toDate(),
-        colorVal = map['colorVal'],
-        timestamp = map['timestamp'];
+        colorVal = map['colorVal'];
 
   @override
-  String toString() => "Record<$weight:$realTimeStamp:$timestamp:$colorVal>";
+  String toString() => "Record<$weight:$realTimeStamp:$colorVal>";
 }
 
 class WorkoutInfoHomePage extends StatefulWidget {
@@ -34,7 +31,7 @@ class WorkoutInfoHomePage extends StatefulWidget {
 }
 
 class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
-  List<charts.Series<WorkoutInfo, String>> _seriesBarData;
+  List<charts.Series<WorkoutInfo, DateTime>> _seriesBarData;
   List<charts.Series<WorkoutInfo, DateTime>> _seriesLineData;
 
 
@@ -51,40 +48,19 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
         .get();
   }
 */
-  _generateBarData(myData) {
-    _seriesBarData = <charts.Series<WorkoutInfo, String>>[];
+  _generateData(myData) {
+    _seriesBarData = <charts.Series<WorkoutInfo, DateTime>>[];
 
     _seriesBarData.add(
-      charts.Series(
-        domainFn: (WorkoutInfo info, _) => info.timestamp,
-        measureFn: (WorkoutInfo info, _) => info.weight,
-        colorFn: (WorkoutInfo info, _) =>
-            charts.ColorUtil.fromDartColor(Color(int.parse(info.colorVal))),
-        id: 'WorkoutDetails',
-        data: myData,
-        labelAccessorFn: (WorkoutInfo row, _) => "${row.timestamp}",
-      ),
-    );
-
-  }
-
-  _generateLineData(myData)
-  {
-
-
-    _seriesLineData = <charts.Series<WorkoutInfo, DateTime>>[];
-
-    _seriesLineData.add(
       charts.Series(
         domainFn: (WorkoutInfo info, _) => info.realTimeStamp,
         measureFn: (WorkoutInfo info, _) => info.weight,
         colorFn: (WorkoutInfo info, _) =>
             charts.ColorUtil.fromDartColor(Color(int.parse(info.colorVal))),
-        id: 'WorkoutDetail',
+        id: 'WorkoutDetails',
         data: myData,
       ),
     );
-
 
   }
 
@@ -137,7 +113,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
 
   Widget _buildLine(BuildContext context, List<WorkoutInfo> infoData) {
     myData = infoData;
-    _generateLineData(myData);
+    _generateData(myData);
     return Padding(
       padding: EdgeInsets.all(8.0),
       child: Container(
@@ -154,8 +130,11 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
               Expanded(
                 child: charts.TimeSeriesChart(
                   _seriesLineData,
+                  defaultRenderer: new charts.LineRendererConfig(
+                      includeArea: true, stacked: true),
                   animate: true,
                   animationDuration: Duration(seconds: 1),
+
                 )
 
               ),
@@ -188,7 +167,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
 
   Widget _buildChart(BuildContext context, List<WorkoutInfo> infoData) {
     myData = infoData;
-    _generateBarData(myData);
+    _generateData(myData);
     return Padding(
       padding: EdgeInsets.all(8.0),
       child: Container(
@@ -203,8 +182,9 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
                 height: 10.0,
               ),
               Expanded(
-                child: charts.BarChart(
+                child: charts.TimeSeriesChart(
                   _seriesBarData,
+                  defaultRenderer: new charts.BarRendererConfig<DateTime>(),
                   animate: true,
                   animationDuration: Duration(seconds: 1),
                 ),
