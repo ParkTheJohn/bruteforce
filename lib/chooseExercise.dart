@@ -22,7 +22,7 @@ class ExercisePage extends State<ChooseExercise> {
     List<String> exerciseNames = [];
     List<String> exerciseDescription = [];
     final QuerySnapshot result =
-        await FirebaseFirestore.instance.collection('Exercises').get();
+        await FirebaseFirestore.instance.collection('Exercise_List').get();
     final List<DocumentSnapshot> documents = result.docs;
 
     final QuerySnapshot result2 = await FirebaseFirestore.instance
