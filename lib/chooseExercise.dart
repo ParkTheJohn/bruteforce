@@ -4,12 +4,10 @@ import 'package:cse_115a/createCustomExercise.dart';
 import 'package:cse_115a/main.dart';
 import 'package:cse_115a/slidable_widget.dart';
 import 'package:cse_115a/utils.dart';
-import 'package:cse_115a/workoutPage.dart';
 import 'package:cse_115a/createWorkout.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 
 class ChooseExercise extends StatefulWidget {
   ExercisePage createState() => ExercisePage();
@@ -97,14 +95,21 @@ class ExercisePage extends State<ChooseExercise> {
     });
 
     switch (action) {
-      // case SlidableAction.archive:
-      //   Utils.showSnackBar(context, 'Chat has been archived');
-      //   break;
-      // case SlidableAction.share:
-      //   Utils.showSnackBar(context, 'Chat has been shared');
-      //   break;
-      case SlidableAction.more:
-        Utils.showSnackBar(context, 'Selected more');
+      case SlidableAction.delete:
+        FirebaseFirestore.instance
+            .collection('UserInfo')
+            .doc(getFirebaseUser)
+            .collection('workoutPlans')
+            .doc(getNewPlanName)
+            .collection('Exercises')
+            .doc(exercises[0][index])
+            .delete();
+        Utils.showSnackBar(
+            context,
+            exercises[0][index] +
+                'has been removed from ' +
+                getNewPlanName +
+                '!');
         break;
       case SlidableAction.add:
         print(exercises[0][index]);
@@ -126,6 +131,9 @@ class ExercisePage extends State<ChooseExercise> {
         Utils.showSnackBar(context,
             exercises[0][index] + 'has been added to ' + getNewPlanName + ' !');
         break;
+      // case SlidableAction.details:
+      //   print('pressed details');
+      //   break;
     }
   }
 

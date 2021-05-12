@@ -274,7 +274,7 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
       // case SlidableAction.share:
       //   Utils.showSnackBar(context, 'Chat has been shared');
       //   break;
-      case SlidableAction.more:
+      case SlidableAction.delete:
         print("Assuming this is delete button for now");
         refreshList(index, "remove");
         //Utils.showSnackBar(context, 'Selected more');
