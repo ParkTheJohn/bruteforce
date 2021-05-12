@@ -23,7 +23,7 @@ class Search extends StatelessWidget {
 class HomePage extends StatefulWidget {
 
   List<String> searchableList;
-  List <String> itemDescriptions;
+  List<String> itemDescriptions;
 
   HomePage(List<String> _searchableList, List<String> _itemDescriptions)
   {
@@ -223,6 +223,9 @@ class SearchResultsListView extends StatelessWidget {
     @required this.itemDescriptions
   }) : super(key: key);
 
+  bool caseinsensitivecontains(String term1, String term2){
+    return term1.toLowerCase().contains(term2.toLowerCase());
+  }
 
   @override
   Widget build(BuildContext context) {
