@@ -18,7 +18,6 @@ class currentPlanPage extends StatefulWidget {
 
 class _editWorkouts extends State<currentPlanPage> {
   Future<List<String>> _listFuture;
-  bool edit = true;
   List<String> exercises = [];
 
   @override
@@ -51,7 +50,7 @@ class _editWorkouts extends State<currentPlanPage> {
   }
 
   Widget projectWidget() {
-    print(exercises);
+    //print(exercises);
     return FutureBuilder(
       future: getUserWorkoutPlans(),
       builder: (context, projectSnap) {
@@ -79,7 +78,6 @@ class _editWorkouts extends State<currentPlanPage> {
                               ),
                             ),
                             onDismissed: (action) {
-                              //exercises.removeAt(index);
                               dismissSlidableItem(context, index);
                             });
                         //);
