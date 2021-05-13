@@ -19,7 +19,7 @@ class currentPlanPage extends StatefulWidget {
 class _editWorkouts extends State<currentPlanPage> {
   Future<List<String>> _listFuture;
   List<String> exercises = [];
-
+  List<String> exerciseDescriptions = [];
   @override
   void initState() {
     super.initState();
@@ -46,11 +46,17 @@ class _editWorkouts extends State<currentPlanPage> {
     for (int i = 0; i < documents.length; i++) {
       exercises.add(documents[i]['Exercise Name']);
     }
+    for (int i = 0; i < exercises.length; i++) {
+      final DocumentSnapshot result = await FirebaseFirestore.instance
+          .collection('Exercise_List')
+          .doc(exercises[i])
+          .get();
+      exerciseDescriptions.add(result['description']);
+    }
     return exercises;
   }
 
   Widget projectWidget() {
-    //print(exercises);
     return FutureBuilder(
       future: getUserWorkoutPlans(),
       builder: (context, projectSnap) {
@@ -74,7 +80,7 @@ class _editWorkouts extends State<currentPlanPage> {
                                 onTap: () => Scaffold.of(context).showSnackBar(
                                     SnackBar(
                                         content:
-                                            Text(projectSnap.data[index]))),
+                                            Text(exerciseDescriptions[index]))),
                               ),
                             ),
                             onDismissed: (action) {
