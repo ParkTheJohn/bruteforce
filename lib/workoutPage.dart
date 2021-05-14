@@ -11,13 +11,13 @@ import 'utils.dart';
 enum _SlidableAction { delete }
 
 class workoutPage extends StatefulWidget {
-  String currentUID = FirebaseAuth.instance.currentUser.uid;
   _workoutPage createState() => _workoutPage();
 }
 
 class _workoutPage extends State<workoutPage> {
   Future<List<String>> _listFuture;
   List<String> workoutPlans = [];
+  String currentUID = FirebaseAuth.instance.currentUser.uid;
 
   @override
   void initState() {
@@ -33,10 +33,10 @@ class _workoutPage extends State<workoutPage> {
 
   Future<List<String>> getUserWorkoutPlans() async {
     List<String> workoutPlans = [];
-    print("This is currentUID: ${widget.currentUID}");
+    print("This is currentUID: ${currentUID}");
     final QuerySnapshot result = await FirebaseFirestore.instance
         .collection('UserInfo')
-        .doc(widget.currentUID)
+        .doc(currentUID)
         .collection('workoutPlans')
         .get();
     final List<DocumentSnapshot> documents = result.docs;
