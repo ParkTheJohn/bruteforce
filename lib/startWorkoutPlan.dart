@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:uuid/uuid.dart';
 
 class startWorkoutPlan extends StatefulWidget {
   final String currentWorkout;
@@ -24,7 +25,7 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
   List<List> sol = [];
   //String currentWorkout;
   //_startWorkoutPlan({Key key, @required this.currentWorkout}) : super(key: key);
-
+  var uuid = Uuid();
   List<TextEditingController> _sets = [
     for (int i = 1; i < 75; i++) TextEditingController()
   ];
@@ -50,14 +51,19 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
       setState(() {
         _listFuture = addList(index);
       });
+      saveToExercise();
     } else if (action == "remove") {
+      //sol[1][index][4] = 1;
+      //saveToExercise();
       setState(() {
         _listFuture = removeList(index);
       });
+      saveToExercise();
     } else if (action == "finish") {
       setState(() {
         _listFuture = finishedExercise(index);
       });
+      saveToExercise();
     }
   }
 
@@ -73,20 +79,27 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
   }
 
   Future<List<List>> removeList(int index) async {
+    // var previousIndex = index - 1;
+    // var nextIndex = index + 1;
+    // if (((sol.length > nextIndex) && (sol[0][nextIndex] == sol[0][index])) ||
+    //     ((previousIndex > 0) && (sol[0][previousIndex] == sol[0][index]))) {
     sol[0].removeAt(index);
     sol[1].removeAt(index);
     textbox--;
     _sets.removeAt(index);
     _reps.removeAt(index);
     _weight.removeAt(index);
+    // }
+    // else {
 
+    // }
     return sol;
   }
 
   Future<List<List>> addList(int index) async {
     //print(sol[0]);
     sol[0].insert(index + 1, sol[0][index]);
-    sol[1].insert(index + 1, [0, 0, 0, 0]);
+    sol[1].insert(index + 1, [0, 0, 0, 0, 0]);
     _sets.insert(index + 1, TextEditingController());
     _reps.insert(index + 1, TextEditingController());
     _weight.insert(index + 1, TextEditingController());
@@ -127,6 +140,7 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
           documents[i]["Exercise Data"][j]["sets"],
           documents[i]["Exercise Data"][j]["weight"],
           documents[i]["Exercise Data"][j]["finished"],
+          0,
         ]);
         print("This exercise is " +
             documents[i]["Exercise Data"][j]["finished"].toString());
@@ -393,21 +407,28 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
                               controller: _sets[index],
                               decoration: InputDecoration(
                                   border: UnderlineInputBorder(),
-                                  labelText: 'Enter sets_else'),
+                                  labelText: 'Sets',
+                                  filled: true),
+                              enabled: false,
                             )),
                             new Flexible(
                                 child: TextFormField(
-                                    controller: _reps[index],
-                                    decoration: InputDecoration(
-                                        border: UnderlineInputBorder(),
-                                        labelText: 'Enter reps'),
-                                    readOnly: true)),
+                              controller: _reps[index],
+                              decoration: InputDecoration(
+                                  border: UnderlineInputBorder(),
+                                  labelText: 'Reps',
+                                  filled: true),
+                              enabled: false,
+                            )),
                             new Flexible(
                                 child: TextFormField(
                               controller: _weight[index],
                               decoration: InputDecoration(
-                                  border: UnderlineInputBorder(),
-                                  labelText: 'Enter Weight'),
+                                border: UnderlineInputBorder(),
+                                labelText: 'Weight',
+                                filled: true,
+                              ),
+                              enabled: false,
                             )),
                           ]),
 
@@ -477,32 +498,12 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
     }
   }
 
-  void saveToExercise() {
+  void saveToExercise() async {
+    print(sol[1]);
     print("Save to Exercise");
     for (int i = 0; i < sol[0].length; i++) {
-      if (i == 0 || sol[0][i] != sol[0][i - 1]) {
-        FirebaseFirestore.instance
-            .collection('UserInfo')
-            .doc(getFirebaseUser)
-            .collection('workoutPlans')
-            .doc(widget.currentWorkout)
-            .collection('Exercises')
-            .doc(sol[0][i])
-            .set(
-          {
-            'Exercise Name': sol[0][i],
-            'Exercise Data': FieldValue.arrayUnion([
-              {
-                "reps": int.parse(_reps[i].text),
-                "sets": int.parse(_sets[i].text),
-                "weight": int.parse(_weight[i].text),
-                "finished": sol[1][i][3],
-              }
-            ])
-          },
-        );
-      } else {
-        FirebaseFirestore.instance
+      if (sol[1][i][4] == 1) {
+        await FirebaseFirestore.instance
             .collection('UserInfo')
             .doc(getFirebaseUser)
             .collection('workoutPlans')
@@ -510,14 +511,58 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
             .collection('Exercises')
             .doc(sol[0][i])
             .update({
-          'Exercise Data': FieldValue.arrayUnion([
+          'Exercise Data': FieldValue.arrayRemove([
             {
               "reps": int.parse(_reps[i].text),
               "sets": int.parse(_sets[i].text),
-              "weight": int.parse(_weight[i].text)
+              "weight": int.parse(_weight[i].text),
+              "finished": sol[1][i][3],
             }
           ])
         });
+      } else {
+        if (i == 0 || sol[0][i] != sol[0][i - 1]) {
+          FirebaseFirestore.instance
+              .collection('UserInfo')
+              .doc(getFirebaseUser)
+              .collection('workoutPlans')
+              .doc(widget.currentWorkout)
+              .collection('Exercises')
+              .doc(sol[0][i])
+              .set(
+            {
+              'Exercise Name': sol[0][i],
+              'Exercise Data': FieldValue.arrayUnion([
+                {
+                  "reps": int.parse(_reps[i].text),
+                  "sets": int.parse(_sets[i].text),
+                  "weight": int.parse(_weight[i].text),
+                  "finished": sol[1][i][3],
+                  "uuid": uuid.v4(),
+                }
+              ])
+            },
+          );
+        } else {
+          FirebaseFirestore.instance
+              .collection('UserInfo')
+              .doc(getFirebaseUser)
+              .collection('workoutPlans')
+              .doc(widget.currentWorkout)
+              .collection('Exercises')
+              .doc(sol[0][i])
+              .update({
+            'Exercise Data': FieldValue.arrayUnion([
+              {
+                "reps": int.parse(_reps[i].text),
+                "sets": int.parse(_sets[i].text),
+                "weight": int.parse(_weight[i].text),
+                "finished": sol[1][i][3],
+                "uuid": uuid.v4(),
+              }
+            ])
+          });
+        }
       }
     }
 
