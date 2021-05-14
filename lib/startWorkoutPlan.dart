@@ -19,6 +19,7 @@ class startWorkoutPlan extends StatefulWidget {
 class _startWorkoutPlan extends State<startWorkoutPlan> {
   @override
   Future<List<List>> _listFuture;
+  var tempVar = 6;
   var textbox = 0;
   List<List> sol = [];
   //String currentWorkout;
@@ -41,6 +42,7 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
     super.initState();
 
     _listFuture = getUserWorkoutPlans();
+    //_sets[0].addListener(saveToExercise);
   }
 
   void refreshList(int index, String action) {
@@ -52,7 +54,22 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
       setState(() {
         _listFuture = removeList(index);
       });
+    } else if (action == "finish") {
+      setState(() {
+        _listFuture = finishedExercise(index);
+      });
     }
+  }
+
+  void completedExercise(int index) {
+    // Utils.showSnackBar(
+    //     context, 'Exercise ' + sol[0][index] + ' has been finished');
+    refreshList(index, "finish");
+  }
+
+  Future<List<List>> finishedExercise(int index) async {
+    sol[1][index][3] = 1;
+    return sol;
   }
 
   Future<List<List>> removeList(int index) async {
@@ -69,7 +86,7 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
   Future<List<List>> addList(int index) async {
     //print(sol[0]);
     sol[0].insert(index + 1, sol[0][index]);
-    sol[1].insert(index + 1, [0, 0, 0]);
+    sol[1].insert(index + 1, [0, 0, 0, 0]);
     _sets.insert(index + 1, TextEditingController());
     _reps.insert(index + 1, TextEditingController());
     _weight.insert(index + 1, TextEditingController());
@@ -108,10 +125,13 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
         workoutData.add([
           documents[i]["Exercise Data"][j]["reps"],
           documents[i]["Exercise Data"][j]["sets"],
-          documents[i]["Exercise Data"][j]["weight"]
+          documents[i]["Exercise Data"][j]["weight"],
+          documents[i]["Exercise Data"][j]["finished"],
         ]);
-        print("The reps are: " +
-            documents[i]["Exercise Data"][j]["reps"].toString());
+        print("This exercise is " +
+            documents[i]["Exercise Data"][j]["finished"].toString());
+        // print("The reps are: " +
+        //     documents[i]["Exercise Data"][j]["reps"].toString());
         _sets[textbox].text =
             documents[i]["Exercise Data"][j]["sets"].toString();
         _reps[textbox].text =
@@ -261,6 +281,177 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
     );
   }
 
+  Widget projectWidget2() {
+    return new FutureBuilder<List<List>>(
+      future: _listFuture,
+      builder: (BuildContext context, AsyncSnapshot<List<List>> projectSnap) {
+        if (!projectSnap.hasData) {
+          return Container();
+        } else {
+          //print("workoutPlans.length ${projectSnap.data.length}");
+          if (projectSnap.data[0].length == 0)
+            return Text("You currently have no exercises!");
+          // debugPrint("Exercises: ${projectSnap.data.length}");
+          return Row(children: [
+            Expanded(
+              child: SizedBox(
+                height: 100000.0,
+                child: new ListView.builder(
+                  itemCount: projectSnap.data[0].length,
+                  itemBuilder: (BuildContext context, int index) {
+                    if (projectSnap.data[1][index][3] == 0) {
+                      return SlidableWidget(
+                        child: Card(
+                            child: Column(children: <Widget>[
+                          ListTile(
+                            title: Text(projectSnap.data[0][index]),
+                            trailing: Icon(Icons.check),
+                            onTap: () => completedExercise(index),
+                          ),
+                          //new Row(
+                          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //children: <Widget>[
+                          Row(children: <Widget>[
+                            new Flexible(
+                                child: TextFormField(
+                              onChanged: (text) {
+                                if (num.tryParse(text) != null) {
+                                  saveToExercise();
+                                }
+                              },
+                              controller: _sets[index],
+                              decoration: InputDecoration(
+                                  border: UnderlineInputBorder(),
+                                  labelText: 'Enter sets'),
+                            )),
+                            new Flexible(
+                                child: TextFormField(
+                              controller: _reps[index],
+                              decoration: InputDecoration(
+                                  border: UnderlineInputBorder(),
+                                  labelText: 'Enter reps'),
+                            )),
+                            new Flexible(
+                                child: TextFormField(
+                              controller: _weight[index],
+                              decoration: InputDecoration(
+                                  border: UnderlineInputBorder(),
+                                  labelText: 'Enter Weight'),
+                            )),
+                          ]),
+
+                          //]),
+
+                          Row(
+                            children: <Widget>[
+                              TextButton(
+                                  child: Text("New Set"),
+                                  onPressed: () {
+                                    refreshList(index, "add");
+                                  }),
+                              TextButton(
+                                child: const Text('Print'),
+                                onPressed: () {
+                                  print(_sets[index].text);
+                                  print(_reps[index].text);
+                                  print(_weight[index].text);
+                                },
+                              ),
+                              TextButton(
+                                child: const Text('Delete'),
+                                onPressed: () {
+                                  refreshList(index, "remove");
+                                },
+                              ),
+                            ],
+                          ),
+                        ])),
+                        onDismissed: (action) =>
+                            dismissSlidableItem(context, index, action),
+                      );
+                    } else {
+                      return SlidableWidget(
+                        child: Card(
+                            child: Column(children: <Widget>[
+                          ListTile(
+                            title: Text(projectSnap.data[0][index],
+                                style: TextStyle(
+                                    decoration: TextDecoration.lineThrough)),
+                            trailing: Icon(Icons.check),
+                            onTap: () => Utils.showSnackBar(
+                                context,
+                                'Exercise ' +
+                                    projectSnap.data[0][index] +
+                                    ' is already completed'),
+                          ),
+                          //new Row(
+                          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //children: <Widget>[
+                          Row(children: <Widget>[
+                            new Flexible(
+                                child: TextFormField(
+                              controller: _sets[index],
+                              decoration: InputDecoration(
+                                  border: UnderlineInputBorder(),
+                                  labelText: 'Enter sets_else'),
+                            )),
+                            new Flexible(
+                                child: TextFormField(
+                                    controller: _reps[index],
+                                    decoration: InputDecoration(
+                                        border: UnderlineInputBorder(),
+                                        labelText: 'Enter reps'),
+                                    readOnly: true)),
+                            new Flexible(
+                                child: TextFormField(
+                              controller: _weight[index],
+                              decoration: InputDecoration(
+                                  border: UnderlineInputBorder(),
+                                  labelText: 'Enter Weight'),
+                            )),
+                          ]),
+
+                          //]),
+
+                          Row(
+                            children: <Widget>[
+                              TextButton(
+                                  child: Text("New Set"),
+                                  onPressed: () {
+                                    refreshList(index, "add");
+                                  }),
+                              TextButton(
+                                child: const Text('Print'),
+                                onPressed: () {
+                                  print(_sets[index].text);
+                                  print(_reps[index].text);
+                                  print(_weight[index].text);
+                                },
+                              ),
+                              TextButton(
+                                child: const Text('Delete'),
+                                onPressed: () {
+                                  refreshList(index, "remove");
+                                },
+                              ),
+                            ],
+                          ),
+                        ])),
+                        onDismissed: (action) =>
+                            dismissSlidableItem(context, index, action),
+                      );
+                    }
+                  },
+                ),
+              ),
+            ),
+            //Text(Test)
+          ]);
+        }
+      },
+    );
+  }
+
   void dismissSlidableItem(
       BuildContext context, int index, SlidableAction action) {
     setState(() {
@@ -287,7 +478,7 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
   }
 
   void saveToExercise() {
-    //print(sol);
+    print("Save to Exercise");
     for (int i = 0; i < sol[0].length; i++) {
       if (i == 0 || sol[0][i] != sol[0][i - 1]) {
         FirebaseFirestore.instance
@@ -304,7 +495,8 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
               {
                 "reps": int.parse(_reps[i].text),
                 "sets": int.parse(_sets[i].text),
-                "weight": int.parse(_weight[i].text)
+                "weight": int.parse(_weight[i].text),
+                "finished": sol[1][i][3],
               }
             ])
           },
@@ -329,7 +521,7 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
       }
     }
 
-    Navigator.pop(context);
+    //Navigator.pop(context);
   }
 
   @override
@@ -343,7 +535,7 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
                   saveToExercise();
                 },
                 child: Text(
-                  'Finish',
+                  'Save Progress',
                   style: TextStyle(
                       fontFamily: 'Futura',
                       fontSize: 15,
@@ -352,7 +544,6 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
           ],
         ),
         body: ListView(padding: const EdgeInsets.all(8), children: <Widget>[
-          Container(),
           Container(
             child: ElevatedButton(
                 child: Text('Add new Exercise'),
@@ -364,7 +555,7 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
                 }),
           ),
           Container(
-            child: projectWidget(),
+            child: projectWidget2(),
           ),
         ]));
   }

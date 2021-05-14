@@ -86,8 +86,9 @@ class CustomWorkoutExercise extends StatelessWidget {
                       .set({
                     'Exercise Name': exerciseNameController.text,
                     'Exercise Data': [
-                      {"reps": 0, "sets": 0, "weight": 0}
-                    ]
+                      {"reps": 0, "sets": 0, "weight": 0, "finished": 0}
+                    ],
+                    'Finished': false,
                   });
                   // Utils.showSnackBar(
                   //     context,

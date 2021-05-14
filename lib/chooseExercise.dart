@@ -125,8 +125,9 @@ class ExercisePage extends State<ChooseExercise> {
             .set({
           'Exercise Name': exercises[0][index],
           'Exercise Data': [
-            {"reps": 0, "sets": 0, "weight": 0}
-          ]
+            {"reps": 0, "sets": 0, "weight": 0, "finished": 0}
+          ],
+          'Finished': false,
         });
         Utils.showSnackBar(context,
             exercises[0][index] + 'has been added to ' + getNewPlanName + ' !');
