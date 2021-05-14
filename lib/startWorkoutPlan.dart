@@ -340,6 +340,11 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
                             )),
                             new Flexible(
                                 child: TextFormField(
+                              onChanged: (text1) {
+                                if (num.tryParse(text1) != null) {
+                                  saveToExercise();
+                                }
+                              },
                               controller: _reps[index],
                               decoration: InputDecoration(
                                   border: UnderlineInputBorder(),
@@ -347,6 +352,11 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
                             )),
                             new Flexible(
                                 child: TextFormField(
+                              onChanged: (text2) {
+                                if (num.tryParse(text2) != null) {
+                                  saveToExercise();
+                                }
+                              },
                               controller: _weight[index],
                               decoration: InputDecoration(
                                   border: UnderlineInputBorder(),
@@ -499,7 +509,7 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
   }
 
   void saveToExercise() async {
-    print(sol[1]);
+    print(_sets[0].text + " " + _reps[0].text + " " + _weight[0].text);
     print("Save to Exercise");
     for (int i = 0; i < sol[0].length; i++) {
       if (sol[1][i][4] == 1) {
