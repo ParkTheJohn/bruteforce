@@ -23,6 +23,7 @@ class ExercisePage extends State<ChooseExercise> {
     if (exercises.length != 0) return exercises;
     List<String> exerciseNames = [];
     List<String> exerciseDescription = [];
+    List<String> exerciseCategory = [];
     final QuerySnapshot result =
         await FirebaseFirestore.instance.collection('Exercises').get();
     final List<DocumentSnapshot> documents = result.docs;
@@ -48,8 +49,19 @@ class ExercisePage extends State<ChooseExercise> {
       exerciseDescription.add(documents[i]['description']);
     }
 
+    debugPrint(customDoc[0]['category']['name']);
+
+    for (int i = 0; i < customDoc.length; i++) {
+      exerciseCategory.add(customDoc[i]['category']['name']);
+    }
+
+    for (int i = 0; i < documents.length; i++) {
+      exerciseCategory.add(documents[i]['category']['name']);
+    }
+
     exercises.add(exerciseNames);
     exercises.add(exerciseDescription);
+    exercises.add(exerciseCategory);
 
     return exercises;
   }

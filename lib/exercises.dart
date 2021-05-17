@@ -11,6 +11,7 @@ class exercisesPage extends StatelessWidget {
     if (exercises.length != 0) return exercises;
     List<String> exerciseNames = [];
     List<String> exerciseDescription = [];
+    List<String> exerciseCategory = [];
 
 
     final QuerySnapshot result =
@@ -22,8 +23,21 @@ class exercisesPage extends StatelessWidget {
     for (int i = 0; i < documents.length; i++) {
       exerciseDescription.add(documents[i]['description']);
     }
+
+    for (int i = 0; i < customDoc.length; i++) {
+      exerciseCategory.add("placeholder");
+    }
+    // for (int i = 0; i < customDoc.length; i++) {
+    //   exerciseCategory.add(customDoc[i]['category']['name']);
+    // }
+
+    for (int i = 0; i < documents.length; i++) {
+      exerciseCategory.add(documents[i]['category']['name']);
+    }
+
     await exercises.add(exerciseNames);
     await exercises.add(exerciseDescription);
+    await exercises.add(exerciseCategory);
 
     return exercises;
   }
@@ -34,7 +48,7 @@ class exercisesPage extends StatelessWidget {
         if (!projectSnap.hasData) {
           return Container();
         } else {
-          return ExerciseSearch(exercises[0], exercises[1]);
+          return ExerciseSearch(exercises);
         }
       },
       future: getExerciseData(),
@@ -52,19 +66,16 @@ class exercisesPage extends StatelessWidget {
 }
 
 class ExerciseSearch extends Search {
+  List<List<String>> exerciseList;
 
-  List<String> exerciseList;
-  List<String> itemDescriptions;
-
-  ExerciseSearch(List<String> _exerciseList, List<String> _itemDescriptions) {
+  ExerciseSearch(List<List<String>> _exerciseList) {
     this.exerciseList = _exerciseList;
-    this.itemDescriptions = _itemDescriptions;
   }
 
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Search Bar App',
-      home: HomePage(exerciseList, itemDescriptions),
+      home: HomePage(exerciseList),
     );
   }
 }
