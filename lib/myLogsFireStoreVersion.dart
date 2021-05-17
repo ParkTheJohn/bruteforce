@@ -27,7 +27,7 @@ class WorkoutInfo {
         realTimeStamp = map['realTimeStamp'].toDate();
 
   @override
-  String toString() => "Record<$weight:$realTimeStamp>";
+  String toString() => "Record<$weight:$reps:$sets:$realTimeStamp>";
 }
 
 class WorkoutInfoHomePage extends StatefulWidget {
@@ -108,7 +108,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => DisplayCompletedLogs()),
+                      builder: (context) => buildLoggedExerciseList(context)),
                 );
               })),
     ]);
@@ -123,7 +123,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => DisplayYAxisOptions()),
+                      builder: (context) => displayYAxisOptionPage(context)),
                 );
               })),
     ]);
@@ -151,7 +151,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
 
                 SizedBox(
                     width: 320.0,
-                    height: 371.0,
+                    height: 325.0,
                     child: DefaultTabController(
                         length: 2,
                         child: Scaffold(
@@ -365,33 +365,24 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
       ),
     );
   }
-}
-
-class DisplayYAxisOptions extends StatelessWidget
-{
 
   final List<String> optionsYAxis = ["Weight", "Reps", "Sets"];
 
 
-  @override
-  Widget build(BuildContext context) {
+
+  Widget displayYAxisOptionPage(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Select a measurement"),
-        leading: new IconButton(
-            icon: new Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.of(context).push( MaterialPageRoute(builder: (context) => WorkoutInfoHomePage()),
-              );}
-        ),
+
       ),
       body:
-             Container(
-                child: ListView.builder(
-                    itemBuilder: displayYAxisCards,
-                    itemCount: 3
-                )
-            ),
+      Container(
+          child: ListView.builder(
+              itemBuilder: displayYAxisCards,
+              itemCount: 3
+          )
+      ),
 
 
     );
@@ -410,16 +401,16 @@ class DisplayYAxisOptions extends StatelessWidget
                 SnackBar(content: Text( "Selected measurement to be displayed: " +optionsYAxis[index])));
             selectedYAxisOption = optionsYAxis[index];
             selectedYAxisOption.toLowerCase();
+            setState(() {
+
+            });
           }
       ),
     );
   }
 
-}
 
-class DisplayCompletedLogs extends StatelessWidget {
-
- final List<String> completedExercises = [];
+  final List<String> completedExercises = [];
 
 
   Future<void> getCompletedExercises() async {
@@ -433,7 +424,9 @@ class DisplayCompletedLogs extends StatelessWidget {
     final List<DocumentSnapshot> customDoc = result.docs;
 
     for (int i = 0; i < customDoc.length; i++) {
-      completedExercises.add(customDoc[i]["Name"]);
+      if (!completedExercises.contains(customDoc[i]["Name"])) {
+        completedExercises.add(customDoc[i]["Name"]);
+      }
     }
 
     return completedExercises;
@@ -441,33 +434,27 @@ class DisplayCompletedLogs extends StatelessWidget {
   }
 
 
-  @override
-  Widget build(BuildContext context) {
+  Widget buildLoggedExerciseList(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Select a logged exercise"),
-          leading: new IconButton(
-            icon: new Icon(Icons.arrow_back),
-            onPressed: () {
-            Navigator.of(context).push( MaterialPageRoute(builder: (context) => WorkoutInfoHomePage()),
-                );}
-          ),
-        ),
-        body: FutureBuilder(
+      appBar: AppBar(
+        title: Text("Select a logged exercise"),
+
+      ),
+      body: FutureBuilder(
         builder: (context, projectSnap) {
-      if (!projectSnap.hasData) {
-        return Container();
-      } else {
-        return Container(
-            child: ListView.builder(
-                itemBuilder: displayLogCards,
-                itemCount: completedExercises.length
-            )
-        );
-      }
-    },
-    future: getCompletedExercises(),
-    ),
+          if (!projectSnap.hasData) {
+            return Container();
+          } else {
+            return Container(
+                child: ListView.builder(
+                    itemBuilder: displayLogCards,
+                    itemCount: completedExercises.length
+                )
+            );
+          }
+        },
+        future: getCompletedExercises(),
+      ),
 
 
 
@@ -482,15 +469,21 @@ class DisplayCompletedLogs extends StatelessWidget {
     return Card(
       child: ListTile(
           title: Text(completedExercises[index]),
-        onTap: ()
+          onTap: ()
           {
             Scaffold.of(context).showSnackBar(
                 SnackBar(content: Text( "Selected exercise to be displayed: " +completedExercises[index])));
-                selectedExercise = completedExercises[index];
-          }
+            selectedExercise = completedExercises[index];
+            setState(() {
+
+            });  }
       ),
     );
   }
 
+
 }
+
+
+
 
