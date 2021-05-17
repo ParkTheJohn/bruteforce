@@ -1,5 +1,6 @@
 import 'package:cse_115a/searchBar.dart';
 import 'package:cse_115a/settingsPage.dart';
+import 'package:cse_115a/startWorkoutPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import 'exercises.dart';
 import 'LoginPage.dart';
 import 'LoginService.dart';
 import 'WorkoutPage.dart';
+import 'myLogsFireStoreVersion.dart';
 
 String fireBaseUID = "null";
 Future<void> main() async {
@@ -78,8 +80,8 @@ class _HomePageState extends State<HomePage> {
   static List<Widget> pages = <Widget>[
     exercisesPage(), //ChooseExercise(),
     workoutPage(),
-    Text('Start Workout'),
-    Search( searchableList: ["0","1"]),
+    startWorkoutPage(),
+    WorkoutInfoHomePage(),
     settingsPage(),
     LoginPage(),
   ];

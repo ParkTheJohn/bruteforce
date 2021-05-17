@@ -1,12 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cse_115a/chooseExercise.dart';
-import 'package:cse_115a/createWorkout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-import 'main.dart';
-
-enum SlidableAction { more, add }
+enum SlidableAction { delete, add }
 
 class SlidableWidget<T> extends StatelessWidget {
   final Widget child;
@@ -23,29 +18,13 @@ class SlidableWidget<T> extends StatelessWidget {
         actionPane: SlidableDrawerActionPane(),
         child: child,
 
-        /// left side
-        // actions: <Widget>[
-        //   IconSlideAction(
-        //     caption: 'Archive',
-        //     color: Colors.blue,
-        //     icon: Icons.archive,
-        //     onTap: () => onDismissed(SlidableAction.archive),
-        //   ),
-        //   IconSlideAction(
-        //     caption: 'Share',
-        //     color: Colors.indigo,
-        //     icon: Icons.share,
-        //     onTap: () => onDismissed(SlidableAction.share),
-        //   ),
-        // ],
-
         /// right side
         secondaryActions: <Widget>[
           IconSlideAction(
-            caption: 'More',
+            caption: 'Delete',
             color: Colors.black45,
-            icon: Icons.more_horiz,
-            onTap: () => onDismissed(SlidableAction.more),
+            icon: Icons.delete,
+            onTap: () => onDismissed(SlidableAction.delete),
           ),
           IconSlideAction(
             caption: 'Add',
@@ -56,33 +35,3 @@ class SlidableWidget<T> extends StatelessWidget {
         ],
       );
 }
-
-/*
-Future<IconData> findIcon() async {
-  IconData exists;
-  await try {
-    FirebaseFirestore.instance
-        .collection('UserInfo')
-        .doc(getFirebaseUser)
-        .collection('workoutPlans')
-        .doc(getNewPlanName)
-        .collection('Exercises')
-        .doc(getExercise)
-        .get()
-        .then((doc) {
-      if (doc.exists)
-        exists = Icons.remove;
-      else
-        exists = Icons.add;
-    });
-    return exists;
-  } catch (e) {
-    return Icons.add;
-  }
-
-  // if (getExercise == 'Axe Hold') {
-  //   return Icons.mail;
-  // }
-  // return Icons.add;
-}
-*/
