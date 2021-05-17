@@ -6,16 +6,24 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'workoutPage.dart';
 
+String selectedExercise = "UNINITIALIZED";
+String selectedYAxisOption = "Weight";
 class WorkoutInfo {
   final int weight;
+  final int reps;
+  final int sets;
   final DateTime realTimeStamp;
 
-  WorkoutInfo(this.weight, this.realTimeStamp);
+  WorkoutInfo(this.weight, this.reps, this.sets, this.realTimeStamp);
 
   WorkoutInfo.fromMap(Map<String, dynamic> map)
       : assert(map['weight'] != null),
+        assert(map['reps'] != null),
+        assert(map['sets'] != null),
         assert(map['realTimeStamp'] != null),
         weight = map['weight'],
+        reps = map['reps'],
+        sets = map['sets'],
         realTimeStamp = map['realTimeStamp'].toDate();
 
   @override
@@ -46,7 +54,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
         .get();
   }
 */
-  _generateData(myData) {
+  _generateDataWeight(myData) {
     _seriesData = <charts.Series<WorkoutInfo, DateTime>>[];
 
     _seriesData.add(
@@ -61,7 +69,37 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
     );
   }
 
-  Widget buildButton(BuildContext context) {
+  _generateDataReps(myData) {
+    _seriesData = <charts.Series<WorkoutInfo, DateTime>>[];
+
+    _seriesData.add(
+      charts.Series(
+        domainFn: (WorkoutInfo info, _) => info.realTimeStamp,
+        measureFn: (WorkoutInfo info, _) => info.reps,
+        colorFn: (_, __) =>
+        charts.MaterialPalette.blue.shadeDefault,
+        id: 'WorkoutDetails',
+        data: myData,
+      ),
+    );
+  }
+
+  _generateDataSets(myData) {
+    _seriesData = <charts.Series<WorkoutInfo, DateTime>>[];
+
+    _seriesData.add(
+      charts.Series(
+        domainFn: (WorkoutInfo info, _) => info.realTimeStamp,
+        measureFn: (WorkoutInfo info, _) => info.sets,
+        colorFn: (_, __) =>
+        charts.MaterialPalette.blue.shadeDefault,
+        id: 'WorkoutDetails',
+        data: myData,
+      ),
+    );
+  }
+
+  Widget toggleExerciseDisplayed(BuildContext context) {
     return ListView(padding: const EdgeInsets.all(1), children: <Widget>[
       Container(
           child: ElevatedButton(
@@ -76,61 +114,132 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
     ]);
   }
 
+  Widget toggleYAxis(BuildContext context) {
+    return ListView(padding: const EdgeInsets.all(1), children: <Widget>[
+      Container(
+          child: ElevatedButton(
+              child: Text('Toggle Y-Axis'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => DisplayYAxisOptions()),
+                );
+              })),
+    ]);
+  }
+
 
   @override
   Widget build(BuildContext context) {
 
+    if(selectedExercise != 'UNINITIALIZED') {
       return MaterialApp(
 
         home: Scaffold(
+          body: ListView(
+
+              children: <Widget>[
+
+                SizedBox(
+                    width: 50,
+                    height: 50,
+                    child: toggleExerciseDisplayed(context)
+
+                ),
+
+
+                SizedBox(
+                    width: 320.0,
+                    height: 371.0,
+                    child: DefaultTabController(
+                        length: 2,
+                        child: Scaffold(
+                          appBar: AppBar(
+                            flexibleSpace: TabBar(
+                              indicatorColor: Color(0xff9962D0),
+                              tabs: [
+                                Tab(
+                                  icon: Icon(FontAwesomeIcons.solidChartBar),
+                                ),
+                                Tab(icon: Icon(FontAwesomeIcons.chartLine)),
+                              ],
+                            ),
+                          ),
+                          body: TabBarView(
+                              children: [
+
+                                _buildBodyChart(context),
+                                _buildBodyLine(context)
+
+                              ]),
+                        ))),
+
+                SizedBox(
+                    width: 50,
+                    height: 50,
+                    child: toggleYAxis(context)
+
+                )
+              ]
+          ),
+        ),
+
+      );
+    }
+
+    else
+      {
+        return MaterialApp(
+
+          home: Scaffold(
             body: ListView(
 
                 children: <Widget>[
 
                   SizedBox(
-                    width: 50,
-                    height: 50,
-                    child: buildButton(context)
+                      width: 50,
+                      height: 50,
+                      child: toggleExerciseDisplayed(context)
 
                   ),
 
+                  SizedBox(
+                      width: 320.0,
+                      height: 371.0,
+                      child: DefaultTabController(
+                          length: 2,
+                          child: Scaffold(
+                            appBar: AppBar(
+                              flexibleSpace: TabBar(
+                                indicatorColor: Color(0xff9962D0),
+                                tabs: [
+                                  Tab(
+                                    icon: Icon(FontAwesomeIcons.solidChartBar),
+                                  ),
+                                  Tab(icon: Icon(FontAwesomeIcons.chartLine)),
+                                ],
+                              ),
+                            ),
+                            body: Text("Select an exercise to display it here!"),
+                          )))
 
-
-                SizedBox(
-                    width: 320.0,
-                    height:371.0,
-                    child: DefaultTabController(
-                length: 2,
-                child: Scaffold(
-                  appBar: AppBar(
-                    flexibleSpace: TabBar(
-                      indicatorColor: Color(0xff9962D0),
-                      tabs: [
-                        Tab(
-                          icon: Icon(FontAwesomeIcons.solidChartBar),
-                        ),
-                        Tab(icon: Icon(FontAwesomeIcons.chartLine)),
-                      ],
-                    ),
-                  ),
-                  body: TabBarView(
-                      children: [
-
-                        _buildBodyChart(context), _buildBodyLine(context)
-
-                      ]),
-                )))
                 ]
-        ),
-        ),
+            ),
+          ),
 
-      );
+        );
+      }
   }
 
   Widget _buildBodyLine(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
-          .collection('test_workout_info')
+          .collection('test_user_info')
+          .doc('placeholder_uid')
+          .collection('completedLogs')
+          .doc(selectedExercise)
+          .collection('Details')
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
@@ -148,15 +257,27 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
 
   Widget _buildLine(BuildContext context, List<WorkoutInfo> infoData) {
     myData = infoData;
-    _generateData(myData);
-    return Padding(
+
+    if (selectedYAxisOption.toLowerCase() == "reps") {
+      _generateDataReps(myData);
+    }
+    else if (selectedYAxisOption.toLowerCase() == "sets") {
+      _generateDataSets(myData);
+
+    }
+    else {
+      _generateDataWeight(myData);
+
+    }
+
+      return Padding(
       padding: EdgeInsets.all(8.0),
       child: Container(
         child: Center(
           child: Column(
             children: <Widget>[
               Text(
-                'Heaviest Bench Press lifted this week (lbs)',
+                'Progress of ' + selectedYAxisOption.toLowerCase() + ' for ' + selectedExercise,
                 style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
               ),
               SizedBox(
@@ -184,7 +305,11 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
   Widget _buildBodyChart(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
-          .collection('test_workout_info')
+          .collection('test_user_info')
+          .doc('placeholder_uid')
+          .collection('completedLogs')
+          .doc(selectedExercise)
+          .collection('Details')
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
@@ -202,7 +327,17 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
 
   Widget _buildChart(BuildContext context, List<WorkoutInfo> infoData) {
     myData = infoData;
-    _generateData(myData);
+    if (selectedYAxisOption.toLowerCase() == "reps") {
+      _generateDataReps(myData);
+    }
+    else if (selectedYAxisOption.toLowerCase() == "sets") {
+      _generateDataSets(myData);
+
+    }
+    else {
+      _generateDataWeight(myData);
+
+    }
     return Padding(
       padding: EdgeInsets.all(8.0),
       child: Container(
@@ -210,7 +345,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
           child: Column(
             children: <Widget>[
               Text(
-                'Heaviest Bench Press lifted this week (lbs)',
+                'Progress of ' + selectedYAxisOption.toLowerCase() + ' for ' + selectedExercise,
                 style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
               ),
               SizedBox(
@@ -230,6 +365,56 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
       ),
     );
   }
+}
+
+class DisplayYAxisOptions extends StatelessWidget
+{
+
+  final List<String> optionsYAxis = ["Weight", "Reps", "Sets"];
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Select a measurement"),
+        leading: new IconButton(
+            icon: new Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.of(context).push( MaterialPageRoute(builder: (context) => WorkoutInfoHomePage()),
+              );}
+        ),
+      ),
+      body:
+             Container(
+                child: ListView.builder(
+                    itemBuilder: displayYAxisCards,
+                    itemCount: 3
+                )
+            ),
+
+
+    );
+
+
+  }
+
+
+  Widget displayYAxisCards( BuildContext context, int index ){
+    return Card(
+      child: ListTile(
+          title: Text(optionsYAxis[index]),
+          onTap: ()
+          {
+            Scaffold.of(context).showSnackBar(
+                SnackBar(content: Text( "Selected measurement to be displayed: " +optionsYAxis[index])));
+            selectedYAxisOption = optionsYAxis[index];
+            selectedYAxisOption.toLowerCase();
+          }
+      ),
+    );
+  }
+
 }
 
 class DisplayCompletedLogs extends StatelessWidget {
@@ -261,6 +446,12 @@ class DisplayCompletedLogs extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           title: Text("Select a logged exercise"),
+          leading: new IconButton(
+            icon: new Icon(Icons.arrow_back),
+            onPressed: () {
+            Navigator.of(context).push( MaterialPageRoute(builder: (context) => WorkoutInfoHomePage()),
+                );}
+          ),
         ),
         body: FutureBuilder(
         builder: (context, projectSnap) {
@@ -295,6 +486,7 @@ class DisplayCompletedLogs extends StatelessWidget {
           {
             Scaffold.of(context).showSnackBar(
                 SnackBar(content: Text( "Selected exercise to be displayed: " +completedExercises[index])));
+                selectedExercise = completedExercises[index];
           }
       ),
     );
