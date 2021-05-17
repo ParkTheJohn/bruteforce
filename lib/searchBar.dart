@@ -3,36 +3,32 @@ import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
 
 class Search extends StatelessWidget {
-  final List<String> searchableList;
-  final List<String> itemDescriptions;
+  final List<List<String>> searchableList;
 
   const Search({
     @required this.searchableList,
-    @required this.itemDescriptions,
   });
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Search Bar App',
-      home: HomePage(searchableList, itemDescriptions),
+      home: HomePage(searchableList),
     );
   }
 }
 
 class HomePage extends StatefulWidget {
 
-  List<String> searchableList;
-  List<String> itemDescriptions;
+  List<List<String>> searchableList;
 
-  HomePage(List<String> _searchableList, List<String> _itemDescriptions)
+  HomePage(List<List<String>> _searchableList)
   {
     this.searchableList = _searchableList;
-    this.itemDescriptions = _itemDescriptions;
   }
 
   @override
-  _HomePageState createState() => _HomePageState(searchableList, itemDescriptions);
+  _HomePageState createState() => _HomePageState(searchableList);
 }
 
 class _HomePageState extends State<HomePage> {
@@ -41,12 +37,10 @@ class _HomePageState extends State<HomePage> {
   ];
   List<String> filteredSearchHistory;
   String selectedTerm;
-  List<String> searchableList;
-  List<String> itemDescriptions;
+  List<List<String>> searchableList;
 
-  _HomePageState(List<String> _searchableList, List<String> _itemDescriptions) {
+  _HomePageState(List<List<String>> _searchableList) {
     this.searchableList = _searchableList;
-    this.itemDescriptions = _itemDescriptions;
   }
 
 
@@ -111,7 +105,6 @@ class _HomePageState extends State<HomePage> {
           child: SearchResultsListView(
             searchTerm: selectedTerm,
             searchableList: searchableList,
-            itemDescriptions: itemDescriptions,
           ),
         ),
         transition: CircularFloatingSearchBarTransition(),
@@ -213,19 +206,14 @@ class _HomePageState extends State<HomePage> {
 
 class SearchResultsListView extends StatelessWidget {
   String searchTerm;
-  List<String> searchableList;
+  List<List<String>> searchableList;
   List<String> itemDescriptions;
 
   SearchResultsListView({
     Key key,
     @required this.searchTerm,
     @required this.searchableList,
-    @required this.itemDescriptions
   }) : super(key: key);
-
-  bool caseinsensitivecontains(String term1, String term2){
-    return term1.toLowerCase().contains(term2.toLowerCase());
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -233,15 +221,15 @@ class SearchResultsListView extends StatelessWidget {
     Widget constructFullResults( BuildContext context, int index ){
       return Card(
         child: ListTile(
-            title: Text(searchableList[index]),
+            title: Text(searchableList[0][index]),
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => Scaffold(
                   appBar: new AppBar(
-                    title: Text(searchableList[index]),
+                    title: Text(searchableList[0][index]),
                   ),
-                  body: Text(itemDescriptions[index]),
+                  body: Text(searchableList[1][index]),
                 )),
               );
             }
@@ -257,7 +245,7 @@ class SearchResultsListView extends StatelessWidget {
               padding: EdgeInsets.only(top: fsb.height + fsb.margins.vertical),
               child: ListView.builder(
                 itemBuilder: constructFullResults,
-                itemCount: searchableList.length,
+                itemCount: searchableList[0].length,
               )
           )
       );
@@ -265,59 +253,52 @@ class SearchResultsListView extends StatelessWidget {
     }
 
 
-    List<String> amendedSearchList = [];
+    List<List<String>> amendedSearchList = [];
+    List<String> amendedTitles = [];
     List<String> amendedDescriptions = [];
+    List<String> amendedCategories = [];
 
-    for (int i = 0; i < searchableList.length; i++)
+    for (int i = 0; i < searchableList[0].length; i++)
     {
-      if (searchableList[i].toLowerCase().startsWith(searchTerm.toLowerCase()))
+      if (searchableList[0][i].toLowerCase().contains(searchTerm.toLowerCase())
+      ||  searchableList[2][i].toLowerCase().contains(searchTerm.toLowerCase()))
       {
-        amendedSearchList.add(searchableList[i]);
-        amendedDescriptions.add(itemDescriptions[i]);
+          amendedTitles.add(searchableList[0][i]);
+          amendedDescriptions.add(searchableList[1][i]);
+          amendedCategories.add(searchableList[2][i]);
       }
     }
-
-
-    for (int i = 0; i <searchableList.length; i++)
-    {
-      if (searchableList[i].toLowerCase().contains(searchTerm.toLowerCase()))
-      {
-        if (!(amendedSearchList.contains(searchableList[i])))
-        {
-          amendedSearchList.add(searchableList[i]);
-          amendedDescriptions.add(itemDescriptions[i]);
-        }
-      }
-    }
+    amendedSearchList.add(amendedTitles);
+    amendedSearchList.add(amendedDescriptions);
+    amendedSearchList.add(amendedCategories);
 
 
     Widget constructFilteredResults( BuildContext context, int index ){
       return Card(
         child: ListTile(
-            title: Text(amendedSearchList[index]),
+            title: Text(amendedSearchList[0][index]),
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => Scaffold(
                   appBar: new AppBar(
-                    title: Text(amendedSearchList[index]),
+                    title: Text(amendedSearchList[0][index]),
                   ),
-                  body: Text(amendedDescriptions[index]),
+                  body: Text(amendedSearchList[1][index]),
                 )),
               );
             }
         ),
       );
     }
-
-
+    
 
     return Scaffold(
         body: Container(
             padding: EdgeInsets.only(top: fsb.height + fsb.margins.vertical),
             child: ListView.builder(
               itemBuilder: constructFilteredResults,
-              itemCount: amendedSearchList.length,
+              itemCount: amendedSearchList[0].length,
             )
         )
     );
