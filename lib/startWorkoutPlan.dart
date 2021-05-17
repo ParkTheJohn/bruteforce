@@ -64,12 +64,87 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
         _listFuture = finishedExercise(index);
       });
       saveToExercise();
+    } else if (action == "reset") {
+      resetProgress();
+      setState(() {
+        _listFuture = getUserWorkoutPlans();
+      });
     }
   }
 
-  void completedExercise(int index) {
+  // void refreshList(int index, String action) {
+  //   if (action == "add") {
+  //     addList(index);
+  //     saveToExercise();
+  //     setState(() {
+  //       _listFuture = getUserWorkoutPlans();
+  //     });
+  //     saveToExercise();
+  //   } else if (action == "remove") {
+  //     //sol[1][index][4] = 1;
+  //     //saveToExercise();
+  //     setState(() {
+  //       _listFuture = removeList(index);
+  //     });
+  //     saveToExercise();
+  //   } else if (action == "finish") {
+  //     setState(() {
+  //       _listFuture = finishedExercise(index);
+  //     });
+  //     saveToExercise();
+  //   } else if (action == "reset") {
+  //     resetProgress();
+  //     setState(() {
+  //       _listFuture = getUserWorkoutPlans();
+  //     });
+  //   }
+  //   saveToExercise();
+  // }
+
+  Future<void> completedExercise(int index) async {
     // Utils.showSnackBar(
     //     context, 'Exercise ' + sol[0][index] + ' has been finished');
+
+    final snapShot = await FirebaseFirestore.instance
+        .collection('UserInfo')
+        .doc(getFirebaseUser)
+        .collection('ExerciseInfo')
+        .doc(sol[0][index])
+        .get();
+
+    if (snapShot == null || !snapShot.exists) {
+      FirebaseFirestore.instance
+          .collection('UserInfo')
+          .doc(getFirebaseUser)
+          .collection('ExerciseInfo')
+          .doc(sol[0][index])
+          .set({
+        'Data': FieldValue.arrayUnion([
+          {
+            "time": DateTime.now(),
+            "reps": int.parse(_reps[index].text),
+            "sets": int.parse(_sets[index].text),
+            "weight": int.parse(_weight[index].text),
+          }
+        ])
+      });
+    } else {
+      FirebaseFirestore.instance
+          .collection('UserInfo')
+          .doc(getFirebaseUser)
+          .collection('ExerciseInfo')
+          .doc(sol[0][index])
+          .update({
+        'Data': FieldValue.arrayUnion([
+          {
+            "time": DateTime.now(),
+            "reps": int.parse(_reps[index].text),
+            "sets": int.parse(_sets[index].text),
+            "weight": int.parse(_weight[index].text),
+          }
+        ])
+      });
+    }
     refreshList(index, "finish");
   }
 
@@ -113,6 +188,7 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
   }
 
   Future<List<List>> getUserWorkoutPlans() async {
+    sol = [];
     print(widget.currentWorkout);
     String currentUID = FirebaseAuth.instance.currentUser.uid;
     List<String> workoutPlans = [];
@@ -141,9 +217,10 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
           documents[i]["Exercise Data"][j]["weight"],
           documents[i]["Exercise Data"][j]["finished"],
           0,
+          documents[i]["Exercise Data"][j]["uuid"],
         ]);
         print("This exercise is " +
-            documents[i]["Exercise Data"][j]["finished"].toString());
+            documents[i]["Exercise Data"][j]["uuid"].toString());
         // print("The reps are: " +
         //     documents[i]["Exercise Data"][j]["reps"].toString());
         _sets[textbox].text =
@@ -508,6 +585,78 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
     }
   }
 
+  void resetProgress() async {
+    print(sol);
+    print("Reset Progress");
+    for (int i = 0; i < sol[0].length; i++) {
+      print("TEST RESET PROGRESS");
+      if (sol[1][i][4] == 1) {
+        await FirebaseFirestore.instance
+            .collection('UserInfo')
+            .doc(getFirebaseUser)
+            .collection('workoutPlans')
+            .doc(widget.currentWorkout)
+            .collection('Exercises')
+            .doc(sol[0][i])
+            .update({
+          'Exercise Data': FieldValue.arrayRemove([
+            {
+              "reps": int.parse(_reps[i].text),
+              "sets": int.parse(_sets[i].text),
+              "weight": int.parse(_weight[i].text),
+              "finished": 0,
+            }
+          ])
+        });
+      } else {
+        if (i == 0 || sol[0][i] != sol[0][i - 1]) {
+          FirebaseFirestore.instance
+              .collection('UserInfo')
+              .doc(getFirebaseUser)
+              .collection('workoutPlans')
+              .doc(widget.currentWorkout)
+              .collection('Exercises')
+              .doc(sol[0][i])
+              .set(
+            {
+              'Exercise Name': sol[0][i],
+              'Exercise Data': FieldValue.arrayUnion([
+                {
+                  "reps": int.parse(_reps[i].text),
+                  "sets": int.parse(_sets[i].text),
+                  "weight": int.parse(_weight[i].text),
+                  "finished": 0,
+                  "uuid": uuid.v4(),
+                }
+              ])
+            },
+          );
+        } else {
+          FirebaseFirestore.instance
+              .collection('UserInfo')
+              .doc(getFirebaseUser)
+              .collection('workoutPlans')
+              .doc(widget.currentWorkout)
+              .collection('Exercises')
+              .doc(sol[0][i])
+              .update({
+            'Exercise Data': FieldValue.arrayUnion([
+              {
+                "reps": int.parse(_reps[i].text),
+                "sets": int.parse(_sets[i].text),
+                "weight": int.parse(_weight[i].text),
+                "finished": 0,
+                "uuid": uuid.v4(),
+              }
+            ])
+          });
+        }
+      }
+    }
+
+    Navigator.pop(context);
+  }
+
   void saveToExercise() async {
     print(_sets[0].text + " " + _reps[0].text + " " + _weight[0].text);
     print("Save to Exercise");
@@ -527,6 +676,7 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
               "sets": int.parse(_sets[i].text),
               "weight": int.parse(_weight[i].text),
               "finished": sol[1][i][3],
+              "uuid": sol[1][i][5],
             }
           ])
         });
@@ -587,10 +737,10 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
           actions: <Widget>[
             TextButton(
                 onPressed: () {
-                  saveToExercise();
+                  refreshList(0, "reset");
                 },
                 child: Text(
-                  'Save Progress',
+                  'Reset',
                   style: TextStyle(
                       fontFamily: 'Futura',
                       fontSize: 15,
