@@ -278,7 +278,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
             children: <Widget>[
               Text(
                 'Progress of ' + selectedYAxisOption.toLowerCase() + ' for ' + selectedExercise,
-                style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
               ),
               SizedBox(
                 height: 10.0,
@@ -346,7 +346,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
             children: <Widget>[
               Text(
                 'Progress of ' + selectedYAxisOption.toLowerCase() + ' for ' + selectedExercise,
-                style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
               ),
               SizedBox(
                 height: 10.0,
