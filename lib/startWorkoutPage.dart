@@ -46,12 +46,16 @@ class startWorkoutPage extends StatelessWidget {
                 child: new ListView.builder(
                   itemCount: projectSnap.data.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return new Card(
-                      child: ListTile(
-                        title: Text(projectSnap.data[index]),
-                        onTap: () =>
-                            navigatePlanPage(context, projectSnap.data[index]),
+                    return SlidableWidget(
+                      child: Card(
+                        child: ListTile(
+                          title: Text(projectSnap.data[index]),
+                          onTap: () => navigatePlanPage(
+                              context, projectSnap.data[index]),
+                        ),
                       ),
+                      onDismissed: (action) =>
+                          dismissSlidableItem(context, index, action),
                     );
                   },
                 ),
@@ -61,6 +65,20 @@ class startWorkoutPage extends StatelessWidget {
         }
       },
     );
+  }
+
+  void dismissSlidableItem(
+      BuildContext context, int index, SlidableAction action) {
+    //setState(() {
+    //exercises.removeAt([0][index]);
+    //});
+
+    switch (action) {
+      case SlidableAction.delete:
+        print("Assuming this is delete button for now");
+
+        break;
+    }
   }
 
   @override
