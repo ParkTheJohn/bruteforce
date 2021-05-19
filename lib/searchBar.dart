@@ -215,6 +215,46 @@ class SearchResultsListView extends StatelessWidget {
     @required this.searchableList,
   }) : super(key: key);
 
+
+  String numtoalpha(String str){
+    str = str.replaceAll(RegExp(r'0'), 'zero');
+    str = str.replaceAll(RegExp(r'1'), 'one');
+    str = str.replaceAll(RegExp(r'2'), 'two');
+    str = str.replaceAll(RegExp(r'3'), 'three');
+    str = str.replaceAll(RegExp(r'4'), 'four');
+    str = str.replaceAll(RegExp(r'5'), 'five');
+    str = str.replaceAll(RegExp(r'6'), 'six');
+    str = str.replaceAll(RegExp(r'7'), 'seven');
+    str = str.replaceAll(RegExp(r'8'), 'eight');
+    str = str.replaceAll(RegExp(r'9'), 'nine');
+
+    return str;
+  }
+
+  String ignorenonalpha(String str){
+    str = str.replaceAll(RegExp(r'[^a-z]'), "");
+    return str;
+  }
+
+  bool flexibleSearch(String str1, String str2){
+    //trim whitespace
+    str1 = str1.trim();
+    str2 = str2.trim();
+    //case insensitivity
+    str1 = str1.toLowerCase();
+    str2 = str2.toLowerCase();
+    //numeric insensitivity (2 = two)
+    str1 = numtoalpha(str1);
+    str2 = numtoalpha(str2);
+    //ignore non-alphabetical characters
+    str1 = ignorenonalpha(str1);
+    str2 = ignorenonalpha(str2);
+
+    return (str1.contains(str2));
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
 
@@ -260,14 +300,27 @@ class SearchResultsListView extends StatelessWidget {
 
     for (int i = 0; i < searchableList[0].length; i++)
     {
-      if (searchableList[0][i].toLowerCase().contains(searchTerm.toLowerCase())
-      ||  searchableList[2][i].toLowerCase().contains(searchTerm.toLowerCase()))
+      if (flexibleSearch(searchableList[0][i], searchTerm)
+       || flexibleSearch(searchableList[2][i], searchTerm))
       {
-          amendedTitles.add(searchableList[0][i]);
-          amendedDescriptions.add(searchableList[1][i]);
-          amendedCategories.add(searchableList[2][i]);
+        amendedTitles.add(searchableList[0][i]);
+        amendedDescriptions.add(searchableList[1][i]);
+        amendedCategories.add(searchableList[2][i]);
       }
     }
+
+    // for (int i = 0; i < searchableList[0].length; i++)
+    // {
+    //   if (searchableList[0][i].toLowerCase().contains(searchTerm.toLowerCase())
+    //       ||  searchableList[2][i].toLowerCase().contains(searchTerm.toLowerCase()))
+    //   {
+    //     amendedTitles.add(searchableList[0][i]);
+    //     amendedDescriptions.add(searchableList[1][i]);
+    //     amendedCategories.add(searchableList[2][i]);
+    //   }
+    // }
+
+
     amendedSearchList.add(amendedTitles);
     amendedSearchList.add(amendedDescriptions);
     amendedSearchList.add(amendedCategories);
