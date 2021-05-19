@@ -216,37 +216,36 @@ class SearchResultsListView extends StatelessWidget {
   }) : super(key: key);
 
 
-  String subnumchar(String str){
-    str.replaceAll("0", "zero");
-    str.replaceAll("1", "one");
-    str.replaceAll("2", "two");
-    str.replaceAll("3", "three");
-    str.replaceAll("4", "four");
-    str.replaceAll("5", "five");
-    str.replaceAll("6", "six");
-    str.replaceAll("7", "seven");
-    str.replaceAll("8", "eight");
-    str.replaceAll("9", "nine");
+  String numtoalpha(String str){
+    str = str.replaceAll(RegExp(r'0'), 'zero');
+    str = str.replaceAll(RegExp(r'1'), 'one');
+    str = str.replaceAll(RegExp(r'2'), 'two');
+    str = str.replaceAll(RegExp(r'3'), 'three');
+    str = str.replaceAll(RegExp(r'4'), 'four');
+    str = str.replaceAll(RegExp(r'5'), 'five');
+    str = str.replaceAll(RegExp(r'6'), 'six');
+    str = str.replaceAll(RegExp(r'7'), 'seven');
+    str = str.replaceAll(RegExp(r'8'), 'eight');
+    str = str.replaceAll(RegExp(r'9'), 'nine');
 
     return str;
   }
 
   String ignorenonalpha(String str){
-    str.replaceAll(RegExp(r'^a-z'), "");
+    str = str.replaceAll(RegExp(r'[^a-z]'), "");
     return str;
   }
 
-
   bool flexibleSearch(String str1, String str2){
     //trim whitespace
-    str1.trim();
-    str2.trim();
+    str1 = str1.trim();
+    str2 = str2.trim();
     //case insensitivity
-    str1.toLowerCase();
-    str2.toLowerCase();
+    str1 = str1.toLowerCase();
+    str2 = str2.toLowerCase();
     //numeric insensitivity (2 = two)
-    str1 = subnumchar(str1);
-    str2 = subnumchar(str2);
+    str1 = numtoalpha(str1);
+    str2 = numtoalpha(str2);
     //ignore non-alphabetical characters
     str1 = ignorenonalpha(str1);
     str2 = ignorenonalpha(str2);
