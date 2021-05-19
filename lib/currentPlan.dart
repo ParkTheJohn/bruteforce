@@ -5,6 +5,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
+import 'chooseExercise.dart';
+import 'main.dart';
+
 enum SlidableAction { delete }
 
 class currentPlanPage extends StatefulWidget {
@@ -18,9 +21,8 @@ class currentPlanPage extends StatefulWidget {
 
 class _editWorkouts extends State<currentPlanPage> {
   Future<List<String>> _listFuture;
-  bool edit = true;
   List<String> exercises = [];
-
+  List<String> exerciseDescriptions = [];
   @override
   void initState() {
     super.initState();
@@ -47,11 +49,18 @@ class _editWorkouts extends State<currentPlanPage> {
     for (int i = 0; i < documents.length; i++) {
       exercises.add(documents[i]['Exercise Name']);
     }
+    for (int i = 0; i < exercises.length; i++) {
+      final DocumentSnapshot result = await FirebaseFirestore.instance
+          .collection('Exercise_List')
+          .doc(exercises[i])
+          .get();
+      if (result['description'] != null)
+        exerciseDescriptions.add(result['description']);
+    }
     return exercises;
   }
 
   Widget projectWidget() {
-    print(exercises);
     return FutureBuilder(
       future: getUserWorkoutPlans(),
       builder: (context, projectSnap) {
@@ -61,52 +70,30 @@ class _editWorkouts extends State<currentPlanPage> {
           print(projectSnap.data);
           if (projectSnap.data.length == 0)
             return Text("You currently have no exercises!");
-          if (edit == false)
-            return Row(children: [
-              Expanded(
+          return Row(children: [
+            Expanded(
                 child: SizedBox(
-                  height: 100000.0,
-                  child: new ListView.builder(
-                    itemCount: projectSnap.data.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return new Card(
-                        child: ListTile(
-                          title: Text(projectSnap.data[index]),
-                          onTap: () => debugPrint(
-                              "Clicking ${projectSnap.data[index]} box"),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-            ]);
-          else
-            return Row(children: [
-              Expanded(
-                  child: SizedBox(
-                      height: 100000.0,
-                      child: ListView.builder(
-                        itemCount: projectSnap.data.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return SlidableWidget(
-                              child: Card(
-                                child: ListTile(
-                                  title: Text(projectSnap.data[index]),
-                                  onTap: () => Scaffold.of(context)
-                                      .showSnackBar(SnackBar(
-                                          content:
-                                              Text(projectSnap.data[index]))),
-                                ),
+                    height: 100000.0,
+                    child: ListView.builder(
+                      itemCount: projectSnap.data.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return SlidableWidget(
+                            child: Card(
+                              child: ListTile(
+                                title: Text(projectSnap.data[index]),
+                                onTap: () => Scaffold.of(context).showSnackBar(
+                                    SnackBar(
+                                        content:
+                                            Text(exerciseDescriptions[index]))),
                               ),
-                              onDismissed: (action) {
-                                //exercises.removeAt(index);
-                                dismissSlidableItem(context, index);
-                              });
-                          //);
-                        },
-                      )))
-            ]);
+                            ),
+                            onDismissed: (action) {
+                              dismissSlidableItem(context, index);
+                            });
+                        //);
+                      },
+                    )))
+          ]);
         }
       },
     );
@@ -119,6 +106,16 @@ class _editWorkouts extends State<currentPlanPage> {
           title: Text(widget.currentPlanName),
         ),
         body: ListView(padding: const EdgeInsets.all(8), children: <Widget>[
+          Container(
+              child: ElevatedButton(
+                  child: Text('Add Exercises'),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ChooseExercise(
+                                currentPlanName: widget.currentPlanName)));
+                  })),
           Container(
             child: projectWidget(),
           ),

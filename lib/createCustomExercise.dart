@@ -10,6 +10,10 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:uuid/uuid.dart';
 
 class CustomWorkoutExercise extends StatelessWidget {
+  final String currentPlanName;
+  CustomWorkoutExercise({Key key, @required this.currentPlanName})
+      : super(key: key);
+
   final TextEditingController exerciseNameController = TextEditingController();
   final TextEditingController exerciseField1 = TextEditingController();
   var uuid = Uuid();
@@ -80,14 +84,15 @@ class CustomWorkoutExercise extends StatelessWidget {
                       .collection('UserInfo')
                       .doc(getFirebaseUser)
                       .collection('workoutPlans')
-                      .doc(getNewPlanName)
+                      .doc(currentPlanName)
                       .collection('Exercises')
                       .doc(exerciseNameController.text)
                       .set({
                     'Exercise Name': exerciseNameController.text,
                     'Exercise Data': [
-                      {"reps": 0, "sets": 0, "weight": 0}
-                    ]
+                      {"reps": 0, "sets": 0, "weight": 0, "finished": 0}
+                    ],
+                    'Finished': false,
                   });
                   // Utils.showSnackBar(
                   //     context,

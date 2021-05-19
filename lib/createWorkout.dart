@@ -3,15 +3,7 @@ import 'package:cse_115a/chooseExercise.dart';
 import 'package:cse_115a/main.dart';
 import 'package:flutter/material.dart';
 
-/*
-TODO: Create a button that would pull up a dialog/drawer that would display 
-all the exercises similar to the exercises page. On press, add the exercise to
-the list and display it in the createWorkout Listview. Add a 'save workout'
-button to save the workout and store it in 
-the database (userinfo/currentUID/workoutplans).
-*/
-
-String myPlanName = "reptest3";
+//String myPlanName = "reptest3";
 
 class createWorkoutPage extends StatelessWidget {
   final TextEditingController planNameController = TextEditingController();
@@ -38,7 +30,7 @@ class createWorkoutPage extends StatelessWidget {
                 child: Text('Add Exercises'),
                 onPressed: () {
                   print(planNameController.text);
-                  myPlanName = planNameController.text;
+                  //myPlanName = planNameController.text;
                   FirebaseFirestore.instance
                       .collection('UserInfo')
                       .doc(getFirebaseUser)
@@ -52,19 +44,20 @@ class createWorkoutPage extends StatelessWidget {
                       .doc(planNameController.text)
                       .collection('Exercises');
                   Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ChooseExercise()),
-                  );
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ChooseExercise(
+                              currentPlanName: planNameController.text)));
                 })),
       ]),
     );
   }
 }
 
-String get getNewPlanName {
-  return myPlanName;
-}
+// String get getNewPlanName {
+//   return myPlanName;
+// }
 
-set setNewPlanName(String string) {
-  myPlanName = string;
-}
+// set setNewPlanName(String string) {
+//   myPlanName = string;
+// }
