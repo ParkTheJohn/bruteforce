@@ -5,6 +5,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
+import 'chooseExercise.dart';
+import 'main.dart';
+
 enum SlidableAction { delete }
 
 class currentPlanPage extends StatefulWidget {
@@ -103,6 +106,16 @@ class _editWorkouts extends State<currentPlanPage> {
           title: Text(widget.currentPlanName),
         ),
         body: ListView(padding: const EdgeInsets.all(8), children: <Widget>[
+          Container(
+              child: ElevatedButton(
+                  child: Text('Add Exercises'),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ChooseExercise(
+                                currentPlanName: widget.currentPlanName)));
+                  })),
           Container(
             child: projectWidget(),
           ),

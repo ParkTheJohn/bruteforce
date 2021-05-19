@@ -8,14 +8,13 @@ import 'searchBar.dart';
 
 class exercisesPage extends StatelessWidget {
   List<List<String>> exercises = [];
+  List<String> baseExercisesNames = [];
+  List<String> baseExercisesDescriptions = [];
   Future<void> getExerciseData() async {
-    if (exercises.length != 0) return exercises;
+    if (exercises.isNotEmpty) if (exercises[0].length == 212) return exercises;
+    // if (exercises.length == 2) if (exercises[0].length == 212) return exercises;
     List<String> exerciseNames = [];
     List<String> exerciseDescription = [];
-
-    final QuerySnapshot result =
-        await FirebaseFirestore.instance.collection('Exercise_List').get();
-    final List<DocumentSnapshot> documents = result.docs;
 
     final QuerySnapshot result2 = await FirebaseFirestore.instance
         .collection('UserInfo')
@@ -23,26 +22,38 @@ class exercisesPage extends StatelessWidget {
         .collection('customExercises')
         .get();
     final List<DocumentSnapshot> customDoc = result2.docs;
-
     for (int i = 0; i < customDoc.length; i++) {
       exerciseNames.add(customDoc[i]['name']);
-    }
-
-    for (int i = 0; i < documents.length; i++) {
-      exerciseNames.add(documents[i]['name']);
-    }
-
-    for (int i = 0; i < customDoc.length; i++) {
       exerciseDescription.add(customDoc[i]['description']);
     }
 
-    for (int i = 0; i < documents.length; i++) {
-      exerciseDescription.add(documents[i]['description']);
+    if (exercises.length == 0 || exercises[0].length != 212) {
+      final QuerySnapshot result =
+          await FirebaseFirestore.instance.collection('Exercise_List').get();
+      final List<DocumentSnapshot> documents = result.docs;
+
+      for (int i = 0; i < documents.length; i++) {
+        baseExercisesNames.add(documents[i]['name']);
+        baseExercisesDescriptions.add(documents[i]['description']);
+        //exerciseNames.add(documents[i]['name']);
+        //exerciseDescription.add(documents[i]['description']);
+      }
     }
 
-    await exercises.add(exerciseNames);
-    await exercises.add(exerciseDescription);
+    // for (int i = 0; i < customDoc.length; i++) {
+    //   exerciseDescription.add(customDoc[i]['description']);
+    // }
 
+    // for (int i = 0; i < documents.length; i++) {
+    //   exerciseDescription.add(documents[i]['description']);
+    // }
+    if (exercises.isEmpty) {
+      exercises.add(exerciseNames + baseExercisesNames);
+      exercises.add(exerciseDescription + baseExercisesDescriptions);
+    } else {
+      exercises[0] = exerciseNames + baseExercisesNames;
+      exercises[1] = exerciseDescription + baseExercisesDescriptions;
+    }
     return exercises;
   }
 
