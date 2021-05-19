@@ -10,6 +10,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 class ChooseExercise extends StatefulWidget {
+  final String currentPlanName;
+  ChooseExercise({Key key, @required this.currentPlanName}) : super(key: key);
   ExercisePage createState() => ExercisePage();
 }
 
@@ -58,6 +60,7 @@ class ExercisePage extends State<ChooseExercise> {
   }
 
   Widget projectWidget() {
+    print("This is currentPlanName: " + widget.currentPlanName);
     return FutureBuilder(
       builder: (context, projectSnap) {
         if (!projectSnap.hasData) {
@@ -100,7 +103,7 @@ class ExercisePage extends State<ChooseExercise> {
             .collection('UserInfo')
             .doc(getFirebaseUser)
             .collection('workoutPlans')
-            .doc(getNewPlanName)
+            .doc(widget.currentPlanName)
             .collection('Exercises')
             .doc(exercises[0][index])
             .delete();
@@ -108,18 +111,18 @@ class ExercisePage extends State<ChooseExercise> {
             context,
             exercises[0][index] +
                 'has been removed from ' +
-                getNewPlanName +
+                widget.currentPlanName +
                 '!');
         break;
       case SlidableAction.add:
         print(exercises[0][index]);
-        print(getNewPlanName);
+        print(widget.currentPlanName);
         print(getFirebaseUser);
         FirebaseFirestore.instance
             .collection('UserInfo')
             .doc(getFirebaseUser)
             .collection('workoutPlans')
-            .doc(getNewPlanName)
+            .doc(widget.currentPlanName)
             .collection('Exercises')
             .doc(exercises[0][index])
             .set({
@@ -129,8 +132,12 @@ class ExercisePage extends State<ChooseExercise> {
           ],
           'Finished': false,
         });
-        Utils.showSnackBar(context,
-            exercises[0][index] + 'has been added to ' + getNewPlanName + ' !');
+        Utils.showSnackBar(
+            context,
+            exercises[0][index] +
+                'has been added to ' +
+                widget.currentPlanName +
+                ' !');
         break;
       // case SlidableAction.details:
       //   print('pressed details');
@@ -156,7 +163,9 @@ class ExercisePage extends State<ChooseExercise> {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => CustomWorkoutExercise()),
+            MaterialPageRoute(
+                builder: (context) => CustomWorkoutExercise(
+                    currentPlanName: widget.currentPlanName)),
           );
         },
         tooltip: 'Create a custom Exercise',

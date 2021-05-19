@@ -754,9 +754,10 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
                 child: Text('Add new Exercise'),
                 onPressed: () {
                   Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ChooseExercise()),
-                  );
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ChooseExercise(
+                              currentPlanName: widget.currentWorkout)));
                 }),
           ),
           Container(
@@ -769,7 +770,9 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
     //setNewPlanName(currentWorkout);
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => ChooseExercise()),
+      MaterialPageRoute(
+          builder: (context) =>
+              ChooseExercise(currentPlanName: widget.currentWorkout)),
     );
   }
 }

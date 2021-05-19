@@ -51,7 +51,8 @@ class _editWorkouts extends State<currentPlanPage> {
           .collection('Exercise_List')
           .doc(exercises[i])
           .get();
-      exerciseDescriptions.add(result['description']);
+      if (result['description'] != null)
+        exerciseDescriptions.add(result['description']);
     }
     return exercises;
   }
