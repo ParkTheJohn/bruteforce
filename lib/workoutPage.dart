@@ -97,7 +97,7 @@ class _workoutPage extends State<workoutPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => createWorkoutPage()),
-                );
+                ).then((value) => setState(() {}));
               })),
       Container(
         child: projectWidget(),
