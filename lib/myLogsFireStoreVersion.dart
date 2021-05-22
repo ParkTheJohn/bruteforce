@@ -189,47 +189,47 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
     }
 
     else
-      {
-        return MaterialApp(
+    {
+      return MaterialApp(
 
-          home: Scaffold(
-            body: ListView(
+        home: Scaffold(
+          body: ListView(
 
-                children: <Widget>[
+              children: <Widget>[
 
-                  SizedBox(
-                      width: 50,
-                      height: 50,
-                      child: toggleExerciseDisplayed(context)
+                SizedBox(
+                    width: 50,
+                    height: 50,
+                    child: toggleExerciseDisplayed(context)
 
-                  ),
+                ),
 
-                  SizedBox(
-                      width: 320.0,
-                      height: 371.0,
-                      child: DefaultTabController(
-                          length: 2,
-                          child: Scaffold(
-                            appBar: AppBar(
-                              flexibleSpace: TabBar(
-                                indicatorColor: Color(0xff9962D0),
-                                tabs: [
-                                  Tab(
-                                    icon: Icon(FontAwesomeIcons.solidChartBar),
-                                  ),
-                                  Tab(icon: Icon(FontAwesomeIcons.chartLine)),
-                                ],
-                              ),
+                SizedBox(
+                    width: 320.0,
+                    height: 371.0,
+                    child: DefaultTabController(
+                        length: 2,
+                        child: Scaffold(
+                          appBar: AppBar(
+                            flexibleSpace: TabBar(
+                              indicatorColor: Color(0xff9962D0),
+                              tabs: [
+                                Tab(
+                                  icon: Icon(FontAwesomeIcons.solidChartBar),
+                                ),
+                                Tab(icon: Icon(FontAwesomeIcons.chartLine)),
+                              ],
                             ),
-                            body: Text("Select an exercise to display it here!"),
-                          )))
+                          ),
+                          body: Text("Select an exercise to display it here!"),
+                        )))
 
-                ]
-            ),
+              ]
           ),
+        ),
 
-        );
-      }
+      );
+    }
   }
 
   Widget _buildBodyLine(BuildContext context) {
@@ -270,7 +270,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
 
     }
 
-      return Padding(
+    return Padding(
       padding: EdgeInsets.all(8.0),
       child: Container(
         child: Center(
@@ -483,7 +483,3 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
 
 
 }
-
-
-
-
