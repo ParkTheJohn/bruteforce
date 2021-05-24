@@ -20,11 +20,11 @@ class WorkoutInfo {
       : assert(map['weight'] != null),
         assert(map['reps'] != null),
         assert(map['sets'] != null),
-        assert(map['realTimeStamp'] != null),
+        assert(map['time'] != null),
         weight = map['weight'],
         reps = map['reps'],
         sets = map['sets'],
-        realTimeStamp = map['realTimeStamp'].toDate();
+        realTimeStamp = map['time'].toDate();
 
   @override
   String toString() => "Record<$weight:$reps:$sets:$realTimeStamp>";
@@ -235,9 +235,9 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
   Widget _buildBodyLine(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
-          .collection('test_user_info')
-          .doc('placeholder_uid')
-          .collection('completedLogs')
+          .collection('UserInfo')
+          .doc(getFirebaseUser)
+          .collection('ExerciseInfo')
           .doc(selectedExercise)
           .collection('Details')
           .snapshots(),
@@ -305,9 +305,9 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
   Widget _buildBodyChart(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
-          .collection('test_user_info')
-          .doc('placeholder_uid')
-          .collection('completedLogs')
+          .collection('UserInfo')
+          .doc(getFirebaseUser)
+          .collection('ExerciseInfo')
           .doc(selectedExercise)
           .collection('Details')
           .snapshots(),
@@ -416,16 +416,16 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
   Future<void> getCompletedExercises() async {
 
     final QuerySnapshot result = await FirebaseFirestore.instance
-        .collection('test_user_info')
-        .doc('placeholder_uid')
-        .collection('completedLogs')
+        .collection('UserInfo')
+        .doc(getFirebaseUser)
+        .collection('ExerciseInfo')
         .get();
 
     final List<DocumentSnapshot> customDoc = result.docs;
 
     for (int i = 0; i < customDoc.length; i++) {
-      if (!completedExercises.contains(customDoc[i]["Name"])) {
-        completedExercises.add(customDoc[i]["Name"]);
+      if (!completedExercises.contains(customDoc[i]["name"])) {
+        completedExercises.add(customDoc[i]["name"]);
       }
     }
 
