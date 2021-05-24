@@ -15,12 +15,14 @@ class ChooseExercise extends StatefulWidget {
   ExercisePage createState() => ExercisePage();
 }
 
+List<List> exerciseList_ChooseExercise = [];
+Future<List<List>> exercises;
 String exercise = "nullChooseExercise";
 
 class ExercisePage extends State<ChooseExercise> {
-  List<List<String>> exercises = [];
-  Future<void> getExerciseData() async {
-    if (exercises.length != 0) return exercises;
+  Future<List<List>> getExerciseData() async {
+    exerciseList_ChooseExercise = [];
+    //if (exercises.length != 0) return exercises;
     List<String> exerciseNames = [];
     List<String> exerciseDescription = [];
     List<String> exerciseCategory = [];
@@ -64,31 +66,49 @@ class ExercisePage extends State<ChooseExercise> {
       exerciseCategory.add(documents[i]['category']['name']);
     }
 
-    exercises.add(exerciseNames);
-    exercises.add(exerciseDescription);
-    exercises.add(exerciseCategory);
+    exerciseList_ChooseExercise.add(exerciseNames);
+    exerciseList_ChooseExercise.add(exerciseDescription);
+    exerciseList_ChooseExercise.add(exerciseCategory);
 
-    return exercises;
+    return exerciseList_ChooseExercise;
+  }
+
+  void refresh() {
+    setState(() {
+      exercises = getExerciseData();
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    print("init state");
+    if (exercises == null) {
+      print("Reloading state");
+      exercises = getExerciseData();
+    }
+    //_sets[0].addListener(saveToExercise);
   }
 
   Widget projectWidget() {
     print("This is currentPlanName: " + widget.currentPlanName);
-    return FutureBuilder(
-      builder: (context, projectSnap) {
+    return new FutureBuilder<List<List>>(
+      future: exercises,
+      builder: (BuildContext context, AsyncSnapshot<List<List>> projectSnap) {
         if (!projectSnap.hasData) {
-          return Container();
+          return Text("Something wrong");
         } else {
           return ListView.builder(
-            itemCount: exercises[0].length,
+            itemCount: projectSnap.data[0].length,
             itemBuilder: (context, index) {
-              exercise = exercises[0][index];
+              exercise = projectSnap.data[0][index];
 
               return SlidableWidget(
                 child: Card(
                   child: ListTile(
-                    title: Text(exercises[0][index]),
+                    title: Text(projectSnap.data[0][index]),
                     onTap: () => Scaffold.of(context).showSnackBar(
-                        SnackBar(content: Text(exercises[1][index]))),
+                        SnackBar(content: Text(projectSnap.data[1][index]))),
                   ),
                 ),
                 onDismissed: (action) =>
@@ -99,7 +119,6 @@ class ExercisePage extends State<ChooseExercise> {
           );
         }
       },
-      future: getExerciseData(),
     );
   }
 
@@ -117,17 +136,17 @@ class ExercisePage extends State<ChooseExercise> {
             .collection('workoutPlans')
             .doc(widget.currentPlanName)
             .collection('Exercises')
-            .doc(exercises[0][index])
+            .doc(exerciseList_ChooseExercise[0][index])
             .delete();
         Utils.showSnackBar(
             context,
-            exercises[0][index] +
+            exerciseList_ChooseExercise[0][index] +
                 'has been removed from ' +
                 widget.currentPlanName +
                 '!');
         break;
       case SlidableAction.add:
-        print(exercises[0][index]);
+        print(exerciseList_ChooseExercise[0][index]);
         print(widget.currentPlanName);
         print(getFirebaseUser);
         FirebaseFirestore.instance
@@ -136,9 +155,9 @@ class ExercisePage extends State<ChooseExercise> {
             .collection('workoutPlans')
             .doc(widget.currentPlanName)
             .collection('Exercises')
-            .doc(exercises[0][index])
+            .doc(exerciseList_ChooseExercise[0][index])
             .set({
-          'Exercise Name': exercises[0][index],
+          'Exercise Name': exerciseList_ChooseExercise[0][index],
           'Exercise Data': [
             {"reps": 0, "sets": 0, "weight": 0, "finished": 0}
           ],
@@ -146,7 +165,7 @@ class ExercisePage extends State<ChooseExercise> {
         });
         Utils.showSnackBar(
             context,
-            exercises[0][index] +
+            exerciseList_ChooseExercise[0][index] +
                 'has been added to ' +
                 widget.currentPlanName +
                 ' !');
@@ -178,7 +197,7 @@ class ExercisePage extends State<ChooseExercise> {
             MaterialPageRoute(
                 builder: (context) => CustomWorkoutExercise(
                     currentPlanName: widget.currentPlanName)),
-          );
+          ).then((value) => refresh());
         },
         tooltip: 'Create a custom Exercise',
         child: const Icon(Icons.add),

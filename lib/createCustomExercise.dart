@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:uuid/uuid.dart';
+import 'package:cse_115a/chooseExercise.dart';
 
 class CustomWorkoutExercise extends StatelessWidget {
   final String currentPlanName;
@@ -43,11 +44,11 @@ class CustomWorkoutExercise extends StatelessWidget {
         Container(
             child: ElevatedButton(
                 child: Text('Create'),
-                onPressed: () {
+                onPressed: () async {
                   print(exerciseNameController.text);
                   print(exerciseField1.text);
                   //myPlanName = planNameController.text;
-                  FirebaseFirestore.instance
+                  await FirebaseFirestore.instance
                       .collection('UserInfo')
                       .doc(getFirebaseUser)
                       .collection('customExercises')
@@ -80,7 +81,7 @@ class CustomWorkoutExercise extends StatelessWidget {
                     "comments": [],
                     "variations": []
                   });
-                  FirebaseFirestore.instance
+                  await FirebaseFirestore.instance
                       .collection('UserInfo')
                       .doc(getFirebaseUser)
                       .collection('workoutPlans')
