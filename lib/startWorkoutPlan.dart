@@ -113,20 +113,29 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
         .get();
 
     if (snapShot == null || !snapShot.exists) {
+
       FirebaseFirestore.instance
           .collection('UserInfo')
           .doc(getFirebaseUser)
           .collection('ExerciseInfo')
           .doc(sol[0][index])
           .set({
-        'Data': FieldValue.arrayUnion([
-          {
-            "time": DateTime.now(),
-            "reps": int.parse(_reps[index].text),
-            "sets": int.parse(_sets[index].text),
-            "weight": int.parse(_weight[index].text),
-          }
-        ])
+        "name":sol[0][index].toString(),
+      });
+
+
+      FirebaseFirestore.instance
+          .collection('UserInfo')
+          .doc(getFirebaseUser)
+          .collection('ExerciseInfo')
+          .doc(sol[0][index])
+          .collection("Details")
+          .doc(uuid.v1().toString())
+          .set({
+        "time": DateTime.now(),
+        "reps": int.parse(_reps[index].text),
+        "sets": int.parse(_sets[index].text),
+        "weight": int.parse(_weight[index].text),
       });
     } else {
       FirebaseFirestore.instance
@@ -134,15 +143,13 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
           .doc(getFirebaseUser)
           .collection('ExerciseInfo')
           .doc(sol[0][index])
-          .update({
-        'Data': FieldValue.arrayUnion([
-          {
-            "time": DateTime.now(),
-            "reps": int.parse(_reps[index].text),
-            "sets": int.parse(_sets[index].text),
-            "weight": int.parse(_weight[index].text),
-          }
-        ])
+          .collection("Details")
+          .doc(uuid.v1().toString())
+          .set({
+        "time": DateTime.now(),
+        "reps": int.parse(_reps[index].text),
+        "sets": int.parse(_sets[index].text),
+        "weight": int.parse(_weight[index].text),
       });
     }
     refreshList(index, "finish");
