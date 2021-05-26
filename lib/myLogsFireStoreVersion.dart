@@ -137,7 +137,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
       return MaterialApp(
 
         home: Scaffold(
-          body: ListView(
+          body: ListView( padding: const EdgeInsets.all(8),
 
               children: <Widget>[
 
@@ -151,7 +151,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
 
                 SizedBox(
                     width: 320.0,
-                    height: 325.0,
+                    height: 300.0,
                     child: DefaultTabController(
                         length: 2,
                         child: Scaffold(
@@ -204,25 +204,6 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
 
                 ),
 
-                SizedBox(
-                    width: 320.0,
-                    height: 371.0,
-                    child: DefaultTabController(
-                        length: 2,
-                        child: Scaffold(
-                          appBar: AppBar(
-                            flexibleSpace: TabBar(
-                              indicatorColor: Color(0xff9962D0),
-                              tabs: [
-                                Tab(
-                                  icon: Icon(FontAwesomeIcons.solidChartBar),
-                                ),
-                                Tab(icon: Icon(FontAwesomeIcons.chartLine)),
-                              ],
-                            ),
-                          ),
-                          body: Text("Select an exercise to display it here!"),
-                        )))
 
               ]
           ),
@@ -240,6 +221,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
           .collection('ExerciseInfo')
           .doc(selectedExercise)
           .collection('Details')
+          .orderBy('time', descending: false)
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
@@ -286,10 +268,24 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
               Expanded(
                   child: charts.TimeSeriesChart(
                     _seriesData,
-                    defaultRenderer: new charts.LineRendererConfig(
-                        includeArea: true, stacked: true),
+
+
+                  defaultRenderer: new charts.LineRendererConfig(
+                        includeArea: true, stacked: true,
+                      includePoints: true
+                  ),
                     animate: true,
                     animationDuration: Duration(seconds: 1),
+
+                    dateTimeFactory: const charts.LocalDateTimeFactory(),
+                    domainAxis: charts.DateTimeAxisSpec(
+                      tickFormatterSpec: new charts.AutoDateTimeTickFormatterSpec(
+                        day: new charts.TimeFormatterSpec(
+                            format: 'd', transitionFormat: 'MM/dd/yyyy'
+                        ),
+                      ),
+                    ),
+
 
                   )
 
@@ -357,6 +353,18 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
                   defaultRenderer: new charts.BarRendererConfig<DateTime>(),
                   animate: true,
                   animationDuration: Duration(seconds: 1),
+
+                  dateTimeFactory: const charts.LocalDateTimeFactory(),
+                  domainAxis: charts.DateTimeAxisSpec(
+                    tickFormatterSpec: new charts.AutoDateTimeTickFormatterSpec(
+                      day: new charts.TimeFormatterSpec(
+                        format: 'd', transitionFormat: 'MM/dd/yyyy',
+                      ),
+
+
+                    ),
+                  ),
+
                 ),
               ),
             ],
