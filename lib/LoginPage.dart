@@ -72,6 +72,7 @@ class LoginPageState extends State<LoginPage> {
                   context.read<LoginService>().signIn(
                         email: emailController.text.trim(),
                         password: passwordController.text.trim(),
+                        context: context,
                       );
                 },
                 child: Text("Login"),
