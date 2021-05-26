@@ -20,11 +20,11 @@ class WorkoutInfo {
       : assert(map['weight'] != null),
         assert(map['reps'] != null),
         assert(map['sets'] != null),
-        assert(map['realTimeStamp'] != null),
+        assert(map['time'] != null),
         weight = map['weight'],
         reps = map['reps'],
         sets = map['sets'],
-        realTimeStamp = map['realTimeStamp'].toDate();
+        realTimeStamp = map['time'].toDate();
 
   @override
   String toString() => "Record<$weight:$reps:$sets:$realTimeStamp>";
@@ -137,7 +137,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
       return MaterialApp(
 
         home: Scaffold(
-          body: ListView(
+          body: ListView( padding: const EdgeInsets.all(8),
 
               children: <Widget>[
 
@@ -151,7 +151,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
 
                 SizedBox(
                     width: 320.0,
-                    height: 325.0,
+                    height: 300.0,
                     child: DefaultTabController(
                         length: 2,
                         child: Scaffold(
@@ -189,57 +189,39 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
     }
 
     else
-      {
-        return MaterialApp(
+    {
+      return MaterialApp(
 
-          home: Scaffold(
-            body: ListView(
+        home: Scaffold(
+          body: ListView( padding: const EdgeInsets.all(8),
 
-                children: <Widget>[
+              children: <Widget>[
 
-                  SizedBox(
-                      width: 50,
-                      height: 50,
-                      child: toggleExerciseDisplayed(context)
+                SizedBox(
+                    width: 50,
+                    height: 50,
+                    child: toggleExerciseDisplayed(context)
 
-                  ),
+                ),
 
-                  SizedBox(
-                      width: 320.0,
-                      height: 371.0,
-                      child: DefaultTabController(
-                          length: 2,
-                          child: Scaffold(
-                            appBar: AppBar(
-                              flexibleSpace: TabBar(
-                                indicatorColor: Color(0xff9962D0),
-                                tabs: [
-                                  Tab(
-                                    icon: Icon(FontAwesomeIcons.solidChartBar),
-                                  ),
-                                  Tab(icon: Icon(FontAwesomeIcons.chartLine)),
-                                ],
-                              ),
-                            ),
-                            body: Text("Select an exercise to display it here!"),
-                          )))
 
-                ]
-            ),
+              ]
           ),
+        ),
 
-        );
-      }
+      );
+    }
   }
 
   Widget _buildBodyLine(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
-          .collection('test_user_info')
-          .doc('placeholder_uid')
-          .collection('completedLogs')
+          .collection('UserInfo')
+          .doc(getFirebaseUser)
+          .collection('ExerciseInfo')
           .doc(selectedExercise)
           .collection('Details')
+          .orderBy('time', descending: false)
           .snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
@@ -270,7 +252,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
 
     }
 
-      return Padding(
+    return Padding(
       padding: EdgeInsets.all(8.0),
       child: Container(
         child: Center(
@@ -286,10 +268,24 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
               Expanded(
                   child: charts.TimeSeriesChart(
                     _seriesData,
-                    defaultRenderer: new charts.LineRendererConfig(
-                        includeArea: true, stacked: true),
+
+
+                  defaultRenderer: new charts.LineRendererConfig(
+                        includeArea: true, stacked: true,
+                      includePoints: true
+                  ),
                     animate: true,
                     animationDuration: Duration(seconds: 1),
+
+                    dateTimeFactory: const charts.LocalDateTimeFactory(),
+                    domainAxis: charts.DateTimeAxisSpec(
+                      tickFormatterSpec: new charts.AutoDateTimeTickFormatterSpec(
+                        day: new charts.TimeFormatterSpec(
+                            format: 'd', transitionFormat: 'MM/dd/yyyy'
+                        ),
+                      ),
+                    ),
+
 
                   )
 
@@ -305,9 +301,9 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
   Widget _buildBodyChart(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
-          .collection('test_user_info')
-          .doc('placeholder_uid')
-          .collection('completedLogs')
+          .collection('UserInfo')
+          .doc(getFirebaseUser)
+          .collection('ExerciseInfo')
           .doc(selectedExercise)
           .collection('Details')
           .snapshots(),
@@ -357,6 +353,18 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
                   defaultRenderer: new charts.BarRendererConfig<DateTime>(),
                   animate: true,
                   animationDuration: Duration(seconds: 1),
+
+                  dateTimeFactory: const charts.LocalDateTimeFactory(),
+                  domainAxis: charts.DateTimeAxisSpec(
+                    tickFormatterSpec: new charts.AutoDateTimeTickFormatterSpec(
+                      day: new charts.TimeFormatterSpec(
+                        format: 'd', transitionFormat: 'MM/dd/yyyy',
+                      ),
+
+
+                    ),
+                  ),
+
                 ),
               ),
             ],
@@ -416,16 +424,16 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
   Future<void> getCompletedExercises() async {
 
     final QuerySnapshot result = await FirebaseFirestore.instance
-        .collection('test_user_info')
-        .doc('placeholder_uid')
-        .collection('completedLogs')
+        .collection('UserInfo')
+        .doc(getFirebaseUser)
+        .collection('ExerciseInfo')
         .get();
 
     final List<DocumentSnapshot> customDoc = result.docs;
 
     for (int i = 0; i < customDoc.length; i++) {
-      if (!completedExercises.contains(customDoc[i]["Name"])) {
-        completedExercises.add(customDoc[i]["Name"]);
+      if (!completedExercises.contains(customDoc[i]["name"])) {
+        completedExercises.add(customDoc[i]["name"]);
       }
     }
 
@@ -483,7 +491,3 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
 
 
 }
-
-
-
-
