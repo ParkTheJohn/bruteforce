@@ -193,7 +193,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
       return MaterialApp(
 
         home: Scaffold(
-          body: ListView(
+          body: ListView( padding: const EdgeInsets.all(8),
 
               children: <Widget>[
 
