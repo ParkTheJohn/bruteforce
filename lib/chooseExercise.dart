@@ -21,6 +21,7 @@ String exercise = "nullChooseExercise";
 
 class ExercisePage extends State<ChooseExercise> {
   Future<List<List>> getExerciseData() async {
+    print("getExerciseData()");
     exerciseList_ChooseExercise = [];
     //if (exercises.length != 0) return exercises;
     List<String> exerciseNames = [];
@@ -29,24 +30,22 @@ class ExercisePage extends State<ChooseExercise> {
     final QuerySnapshot result =
         await FirebaseFirestore.instance.collection('Exercise_List').get();
     final List<DocumentSnapshot> documents = result.docs;
-
+    print("PRINTING DOCUMENT: " + documents[0]['name'].toString());
     final QuerySnapshot result2 = await FirebaseFirestore.instance
         .collection('UserInfo')
         .doc(getFirebaseUser)
         .collection('customExercises')
         .get();
     final List<DocumentSnapshot> customDoc = result2.docs;
-
+    print(customDoc);
     //debugPrint(customDoc[0].get('category'));
     for (int i = 0; i < customDoc.length; i++) {
       exerciseNames.add(customDoc[i]['name']);
     }
+
     for (int i = 0; i < documents.length; i++) {
       exerciseNames.add(documents[i]['name']);
     }
-    // for (int i = 0; i < customDoc.length; i++) {
-    //   exerciseDescription.add("Just testing names");
-    // }
 
     for (int i = 0; i < customDoc.length; i++) {
       exerciseDescription.add(customDoc[i]['description']);
@@ -55,8 +54,6 @@ class ExercisePage extends State<ChooseExercise> {
     for (int i = 0; i < documents.length; i++) {
       exerciseDescription.add(documents[i]['description']);
     }
-
-    debugPrint(customDoc[0]['category']['name']);
 
     for (int i = 0; i < customDoc.length; i++) {
       exerciseCategory.add(customDoc[i]['category']['name']);
@@ -69,7 +66,6 @@ class ExercisePage extends State<ChooseExercise> {
     exerciseList_ChooseExercise.add(exerciseNames);
     exerciseList_ChooseExercise.add(exerciseDescription);
     exerciseList_ChooseExercise.add(exerciseCategory);
-
     return exerciseList_ChooseExercise;
   }
 
@@ -96,7 +92,7 @@ class ExercisePage extends State<ChooseExercise> {
       future: exercises,
       builder: (BuildContext context, AsyncSnapshot<List<List>> projectSnap) {
         if (!projectSnap.hasData) {
-          return Text("Something wrong");
+          return Text("Loading...");
         } else {
           return ListView.builder(
             itemCount: projectSnap.data[0].length,
@@ -141,7 +137,7 @@ class ExercisePage extends State<ChooseExercise> {
         Utils.showSnackBar(
             context,
             exerciseList_ChooseExercise[0][index] +
-                'has been removed from ' +
+                ' has been removed from ' +
                 widget.currentPlanName +
                 '!');
         break;
@@ -166,7 +162,7 @@ class ExercisePage extends State<ChooseExercise> {
         Utils.showSnackBar(
             context,
             exerciseList_ChooseExercise[0][index] +
-                'has been added to ' +
+                ' has been added to ' +
                 widget.currentPlanName +
                 ' !');
         break;

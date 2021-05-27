@@ -57,7 +57,7 @@ class CustomWorkoutExercise extends StatelessWidget {
                     "id": -1,
                     "name": exerciseNameController.text,
                     "uuid": uuid.v4(),
-                    "description": "Temp Description",
+                    "description": "Custom Exercise",
                     "creation_date": DateTime.now(),
                     "category": {"id": -1, "name": exerciseField1.text},
                     "muscles": [],
