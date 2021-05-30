@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:uuid/uuid.dart';
 
 class startWorkoutPlan extends StatefulWidget {
@@ -405,6 +406,10 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
                           Row(children: <Widget>[
                             new Flexible(
                                 child: TextFormField(
+                              keyboardType: TextInputType.number,
+                              inputFormatters: <TextInputFormatter>[
+                                FilteringTextInputFormatter.digitsOnly
+                              ],
                               onChanged: (text) {
                                 if (num.tryParse(text) != null) {
                                   saveToExercise();
@@ -417,6 +422,10 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
                             )),
                             new Flexible(
                                 child: TextFormField(
+                              keyboardType: TextInputType.number,
+                              inputFormatters: <TextInputFormatter>[
+                                FilteringTextInputFormatter.digitsOnly
+                              ],
                               onChanged: (text1) {
                                 if (num.tryParse(text1) != null) {
                                   saveToExercise();
@@ -429,6 +438,10 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
                             )),
                             new Flexible(
                                 child: TextFormField(
+                              keyboardType: TextInputType.number,
+                              inputFormatters: <TextInputFormatter>[
+                                FilteringTextInputFormatter.digitsOnly
+                              ],
                               onChanged: (text2) {
                                 if (num.tryParse(text2) != null) {
                                   saveToExercise();
@@ -491,6 +504,10 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
                           Row(children: <Widget>[
                             new Flexible(
                                 child: TextFormField(
+                              keyboardType: TextInputType.number,
+                              inputFormatters: <TextInputFormatter>[
+                                FilteringTextInputFormatter.digitsOnly
+                              ],
                               controller: _sets[index],
                               decoration: InputDecoration(
                                   border: UnderlineInputBorder(),

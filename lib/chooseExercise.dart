@@ -186,7 +186,7 @@ class ExercisePage extends State<ChooseExercise> {
                 Icons.close,
               ))),
       body: projectWidget(),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Navigator.push(
             context,
@@ -195,8 +195,11 @@ class ExercisePage extends State<ChooseExercise> {
                     currentPlanName: widget.currentPlanName)),
           ).then((value) => refresh());
         },
-        tooltip: 'Create a custom Exercise',
-        child: const Icon(Icons.add),
+        label: const Text('Create'),
+        icon: const Icon(Icons.add),
+        backgroundColor: Colors.redAccent,
+        //tooltip: 'Create a custom Exercise',
+        //child: const Icon(Icons.add),
       ),
     );
   }

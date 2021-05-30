@@ -94,7 +94,10 @@ class startWorkoutPage extends StatelessWidget {
           child: ElevatedButton(
               child: Text('Select a Random Workout!'),
               onPressed: () {
-                navigatePlanPage(context, plans[Random().nextInt(plansCount)]);
+                if (plansCount != 0) {
+                  navigatePlanPage(
+                      context, plans[Random().nextInt(plansCount)]);
+                }
               })),
       Container(
         child: projectWidget(),
