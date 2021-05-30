@@ -1,14 +1,8 @@
 import 'package:cse_115a/main.dart';
-import 'package:cse_115a/slidable_widget.dart';
-import 'package:cse_115a/utils.dart';
-import 'package:cse_115a/workoutPage.dart';
-import 'package:cse_115a/createWorkout.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:uuid/uuid.dart';
-import 'package:cse_115a/chooseExercise.dart';
 
 class CustomWorkoutExercise extends StatelessWidget {
   final String currentPlanName;
@@ -29,7 +23,6 @@ class CustomWorkoutExercise extends StatelessWidget {
             controller: exerciseNameController,
             decoration: InputDecoration(
               labelText: "Enter Exercise Name",
-              //errorText: _validate ? 'Value Can\'t Be Empty' : null,
             ),
           ),
         ),
@@ -45,9 +38,6 @@ class CustomWorkoutExercise extends StatelessWidget {
             child: ElevatedButton(
                 child: Text('Create'),
                 onPressed: () async {
-                  print(exerciseNameController.text);
-                  print(exerciseField1.text);
-                  //myPlanName = planNameController.text;
                   await FirebaseFirestore.instance
                       .collection('UserInfo')
                       .doc(getFirebaseUser)
@@ -95,18 +85,6 @@ class CustomWorkoutExercise extends StatelessWidget {
                     ],
                     'Finished': false,
                   });
-                  // Utils.showSnackBar(
-                  //     context,
-                  //     exerciseNameController.text +
-                  //         'has been added to ' +
-                  //         getNewPlanName +
-                  //         '!');
-                  // FirebaseFirestore.instance
-                  //     .collection('UserInfo')
-                  //     .doc(getFirebaseUser)
-                  //     .collection('workoutPlans')
-                  //     .doc(planNameController.text)
-                  //     .collection('Exercises');
                   Navigator.pop(context);
                 })),
       ]),
