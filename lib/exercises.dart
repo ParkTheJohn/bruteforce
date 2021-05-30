@@ -18,35 +18,13 @@ class exercisesPage extends StatelessWidget {
         await FirebaseFirestore.instance.collection('Exercise_List').get();
     final List<DocumentSnapshot> documents = result.docs;
 
-    final QuerySnapshot result2 = await FirebaseFirestore.instance
-        .collection('UserInfo')
-        .doc(FirebaseAuth.instance.currentUser.uid)
-        .collection('customExercises')
-        .get();
-    final List<DocumentSnapshot> customDoc = result2.docs;
-
-    for (int i = 0; i < customDoc.length; i++) {
-      exerciseNames.add(customDoc[i]['name']);
-    }
-
     for (int i = 0; i < documents.length; i++) {
       exerciseNames.add(documents[i]['name']);
-    }
-
-    for (int i = 0; i < customDoc.length; i++) {
-      exerciseDescription.add(customDoc[i]['description']);
     }
 
     for (int i = 0; i < documents.length; i++) {
       exerciseDescription.add(documents[i]['description']);
     }
-
-    for (int i = 0; i < customDoc.length; i++) {
-      exerciseCategory.add("placeholder");
-    }
-    // for (int i = 0; i < customDoc.length; i++) {
-    //   exerciseCategory.add(customDoc[i]['category']['name']);
-    // }
 
     for (int i = 0; i < documents.length; i++) {
       exerciseCategory.add(documents[i]['category']['name']);
