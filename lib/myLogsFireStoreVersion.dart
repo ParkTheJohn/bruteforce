@@ -43,17 +43,6 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
 
   List<WorkoutInfo> myData;
 
-  /*
-  //To be implemented when exercises can be logged
-  Future <String> getExerciseInfo() async
-  {
-         await FirebaseFirestore.instance
-        .collection('UserInfo')
-        .doc(getFirebaseUser)
-        .collection('completedExercises')
-        .get();
-  }
-*/
   _generateDataWeight(myData) {
     _seriesData = <charts.Series<WorkoutInfo, DateTime>>[];
 
@@ -62,7 +51,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
         domainFn: (WorkoutInfo info, _) => info.realTimeStamp,
         measureFn: (WorkoutInfo info, _) => info.weight,
         colorFn: (_, __) =>
-        charts.MaterialPalette.blue.shadeDefault,
+        charts.MaterialPalette.deepOrange.shadeDefault,
         id: 'WorkoutDetails',
         data: myData,
       ),
@@ -77,7 +66,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
         domainFn: (WorkoutInfo info, _) => info.realTimeStamp,
         measureFn: (WorkoutInfo info, _) => info.reps,
         colorFn: (_, __) =>
-        charts.MaterialPalette.blue.shadeDefault,
+        charts.MaterialPalette.deepOrange.shadeDefault,
         id: 'WorkoutDetails',
         data: myData,
       ),
@@ -92,7 +81,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
         domainFn: (WorkoutInfo info, _) => info.realTimeStamp,
         measureFn: (WorkoutInfo info, _) => info.sets,
         colorFn: (_, __) =>
-        charts.MaterialPalette.blue.shadeDefault,
+        charts.MaterialPalette.deepOrange.shadeDefault,
         id: 'WorkoutDetails',
         data: myData,
       ),
@@ -103,8 +92,13 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
     return ListView(padding: const EdgeInsets.all(1), children: <Widget>[
       Container(
           child: ElevatedButton(
+
+              style: ElevatedButton.styleFrom(
+                  primary: Colors.deepOrange),
+
               child: Text('Display an exercise!'),
               onPressed: () {
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -118,6 +112,8 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
     return ListView(padding: const EdgeInsets.all(1), children: <Widget>[
       Container(
           child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  primary: Colors.deepOrange),
               child: Text('Toggle Y-Axis'),
               onPressed: () {
                 Navigator.push(
@@ -133,6 +129,9 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
   @override
   Widget build(BuildContext context) {
 
+    Size size = MediaQuery.of(context).size;
+
+
     if(selectedExercise != 'UNINITIALIZED') {
       return MaterialApp(
 
@@ -142,22 +141,21 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
               children: <Widget>[
 
                 SizedBox(
-                    width: 50,
-                    height: 50,
+                    height: size.height * .10,
                     child: toggleExerciseDisplayed(context)
 
                 ),
 
 
                 SizedBox(
-                    width: 320.0,
-                    height: 300.0,
+                    height: size.height * .55,
                     child: DefaultTabController(
                         length: 2,
                         child: Scaffold(
                           appBar: AppBar(
+                            backgroundColor: Colors.deepOrange,
                             flexibleSpace: TabBar(
-                              indicatorColor: Color(0xff9962D0),
+                              indicatorColor: Color(0xffb65f13),
                               tabs: [
                                 Tab(
                                   icon: Icon(FontAwesomeIcons.solidChartBar),
@@ -176,8 +174,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
                         ))),
 
                 SizedBox(
-                    width: 50,
-                    height: 50,
+                    height: size.height * .10,
                     child: toggleYAxis(context)
 
                 )
@@ -198,8 +195,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
               children: <Widget>[
 
                 SizedBox(
-                    width: 50,
-                    height: 50,
+                    height: size.height * .10,
                     child: toggleExerciseDisplayed(context)
 
                 ),
