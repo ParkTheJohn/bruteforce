@@ -56,5 +56,5 @@ class LoginService {
 }
 
 void onSignout() {
-  exercises = null;
+  futureExercisesList = null;
 }
