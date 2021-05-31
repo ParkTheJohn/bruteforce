@@ -5,7 +5,7 @@ Andy Le (Product Owner, Dev)\
 Avaneesh Samudrala (Scrum Master - Sprint 1, Dev)\
 Brad Kim (Scrum Master - Sprint 2, Dev)\
 Jongwoo Park (Scrum Master - Sprint 3, Dev)\
-Suhas Shekar (Scrum Master - Sprint 4, Dev)\
+Suhas Shekar (Scrum Master - Sprint 4, Dev)
 
 Release/Sprint Plans: https://miro.com/app/board/o9J_lKpSDjY=/
 
@@ -55,4 +55,4 @@ to try and diagnose the problem.
 Open up your desired sim (Xcode for iOS, Andriod Studio for Android)
 Navigate to the bruteforce folder (~/FitRecur/bruteforce)
 Type `flutter run` at the command prompt to open the app. This should take a few minutes.
-Once the app is open, use shift + r to reload the app if necessary.
+Once the app is open, use `shift + r` to reload the app if necessary.
