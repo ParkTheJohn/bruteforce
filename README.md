@@ -1,11 +1,11 @@
 # FitRecur
 CSE115A Project
 
-Andy Le (Product Owner, Dev)
-Avaneesh Samudrala (Scrum Master - Sprint 1, Dev)
-Brad Kim (Scrum Master - Sprint 2, Dev)
-Jongwoo Park (Scrum Master - Sprint 3, Dev)
-Suhas Shekar (Scrum Master - Sprint 4, Dev)
+Andy Le (Product Owner, Dev)\
+Avaneesh Samudrala (Scrum Master - Sprint 1, Dev)\
+Brad Kim (Scrum Master - Sprint 2, Dev)\
+Jongwoo Park (Scrum Master - Sprint 3, Dev)\
+Suhas Shekar (Scrum Master - Sprint 4, Dev)\
 
 Release/Sprint Plans: https://miro.com/app/board/o9J_lKpSDjY=/
 
