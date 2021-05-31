@@ -52,7 +52,7 @@ If there is an error when trying to run the application, type `flutter doctor` a
 to try and diagnose the problem.
 
 ##### Running the app locally
-Open up your desired sim (Xcode for iOS, Andriod Studio for Android)\
+Open up your desired sim (Xcode for iOS, Android Studio for Android)\
 Navigate to the bruteforce folder (~/FitRecur/bruteforce)\
 Type `flutter run` at the command prompt to open the app. This should take a few minutes.\
 Once the app is open, use `shift + r` to reload the app if necessary.
