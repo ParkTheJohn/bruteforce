@@ -3,8 +3,6 @@ import 'package:cse_115a/chooseExercise.dart';
 import 'package:cse_115a/main.dart';
 import 'package:flutter/material.dart';
 
-//String myPlanName = "reptest3";
-
 class createWorkoutPage extends StatelessWidget {
   final TextEditingController planNameController = TextEditingController();
   bool _validate = false;
@@ -21,7 +19,6 @@ class createWorkoutPage extends StatelessWidget {
             controller: planNameController,
             decoration: InputDecoration(
               labelText: "Enter Plan Name",
-              //errorText: _validate ? 'Value Can\'t Be Empty' : null,
             ),
           ),
         ),
@@ -29,8 +26,6 @@ class createWorkoutPage extends StatelessWidget {
             child: ElevatedButton(
                 child: Text('Add Exercises'),
                 onPressed: () {
-                  print(planNameController.text);
-                  //myPlanName = planNameController.text;
                   FirebaseFirestore.instance
                       .collection('UserInfo')
                       .doc(getFirebaseUser)
@@ -53,11 +48,3 @@ class createWorkoutPage extends StatelessWidget {
     );
   }
 }
-
-// String get getNewPlanName {
-//   return myPlanName;
-// }
-
-// set setNewPlanName(String string) {
-//   myPlanName = string;
-// }

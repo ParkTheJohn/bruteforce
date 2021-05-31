@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import 'chooseExercise.dart';
+
 class LoginService {
   final FirebaseAuth _firebaseAuth;
 
@@ -55,6 +57,11 @@ class LoginService {
   // Account Sign Out
   // Signs the user out of their current session
   Future<void> signOut() async {
+    onSignout();
     await _firebaseAuth.signOut();
   }
+}
+
+void onSignout() {
+  futureExercisesList = null;
 }

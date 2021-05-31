@@ -1,15 +1,17 @@
-//library pages;
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'searchBar.dart';
 
-class exercisesPage extends StatelessWidget {
+class exercisesPage extends StatefulWidget {
+  exercisesPage2 createState() => exercisesPage2();
+}
+
+class exercisesPage2 extends State<exercisesPage> {
   List<List<String>> exercises = [];
   Future<void> getExerciseData() async {
-    if (exercises.length != 0) return exercises;
+    //if (exercises.length != 0) return exercises;
     List<String> exerciseNames = [];
     List<String> exerciseDescription = [];
     List<String> exerciseCategory = [];
@@ -59,14 +61,23 @@ class exercisesPage extends StatelessWidget {
     return exercises;
   }
 
+  void refresh() {
+    setState(() {
+      getExerciseData();
+    });
+  }
+
   Widget projectWidget() {
     return FutureBuilder(
       builder: (context, projectSnap) {
         if (!projectSnap.hasData) {
-          return Container();
-        } else {
-          return ExerciseSearch(exercises);
+          getExerciseData();
+          return Center(child: CircularProgressIndicator());
         }
+
+        var temp = exercises;
+        exercises = [];
+        return ExerciseSearch(temp);
       },
       future: getExerciseData(),
     );
