@@ -90,9 +90,9 @@ class _HomePageState extends State<HomePage> {
   String exercise;
   int currentExer = 0;
   void bottomNavBarClick(int index) {
-    if (index == 0) {
-      toExercise.getExerciseData();
-    }
+    // if (index == 0) {
+    //   toExercise.getExerciseData();
+    // }
     setState(() {
       currentPage = index;
     });
