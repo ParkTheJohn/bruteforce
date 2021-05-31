@@ -8,6 +8,7 @@ import 'workoutPage.dart';
 
 String selectedExercise = "UNINITIALIZED";
 String selectedYAxisOption = "Weight";
+var fs_id;
 class WorkoutInfo {
   final int weight;
   final int reps;
@@ -132,7 +133,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
     Size size = MediaQuery.of(context).size;
 
 
-    if(selectedExercise != 'UNINITIALIZED') {
+    if(selectedExercise != 'UNINITIALIZED' && (fs_id == getFirebaseUser)) {
       return MaterialApp(
 
         home: Scaffold(
@@ -147,31 +148,22 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
                 ),
 
 
-                SizedBox(
-                    height: size.height * .55,
-                    child: DefaultTabController(
-                        length: 2,
-                        child: Scaffold(
-                          appBar: AppBar(
-                            backgroundColor: Colors.deepOrange,
-                            flexibleSpace: TabBar(
-                              indicatorColor: Color(0xffb65f13),
-                              tabs: [
-                                Tab(
-                                  icon: Icon(FontAwesomeIcons.solidChartBar),
-                                ),
-                                Tab(icon: Icon(FontAwesomeIcons.chartLine)),
-                              ],
-                            ),
-                          ),
-                          body: TabBarView(
-                              children: [
+                Container(
+                    height: size.height * .51,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.deepOrange,
+                    ),
+                    borderRadius: BorderRadius.circular(5.0),
+                  ),
 
-                                _buildBodyChart(context),
-                                _buildBodyLine(context)
+                      child:
+                    _buildBodyLine(context),
 
-                              ]),
-                        ))),
+
+                ),
+
+
 
                 SizedBox(
                     height: size.height * .10,
@@ -294,82 +286,6 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
   }
 
 
-  Widget _buildBodyChart(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: FirebaseFirestore.instance
-          .collection('UserInfo')
-          .doc(getFirebaseUser)
-          .collection('ExerciseInfo')
-          .doc(selectedExercise)
-          .collection('Details')
-          .snapshots(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return LinearProgressIndicator();
-        } else {
-          List<WorkoutInfo> info = snapshot.data.docs
-              .map((documentSnapshot) =>
-              WorkoutInfo.fromMap(documentSnapshot.data()))
-              .toList();
-          return _buildChart(context, info);
-        }
-      },
-    );
-  }
-
-  Widget _buildChart(BuildContext context, List<WorkoutInfo> infoData) {
-    myData = infoData;
-    if (selectedYAxisOption.toLowerCase() == "reps") {
-      _generateDataReps(myData);
-    }
-    else if (selectedYAxisOption.toLowerCase() == "sets") {
-      _generateDataSets(myData);
-
-    }
-    else {
-      _generateDataWeight(myData);
-
-    }
-    return Padding(
-      padding: EdgeInsets.all(8.0),
-      child: Container(
-        child: Center(
-          child: Column(
-            children: <Widget>[
-              Text(
-                'Progress of ' + selectedYAxisOption.toLowerCase() + ' for ' + selectedExercise,
-                style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
-              Expanded(
-                child: charts.TimeSeriesChart(
-                  _seriesData,
-                  defaultRenderer: new charts.BarRendererConfig<DateTime>(),
-                  animate: true,
-                  animationDuration: Duration(seconds: 1),
-
-                  dateTimeFactory: const charts.LocalDateTimeFactory(),
-                  domainAxis: charts.DateTimeAxisSpec(
-                    tickFormatterSpec: new charts.AutoDateTimeTickFormatterSpec(
-                      day: new charts.TimeFormatterSpec(
-                        format: 'd', transitionFormat: 'MM/dd/yyyy',
-                      ),
-
-
-                    ),
-                  ),
-
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   final List<String> optionsYAxis = ["Weight", "Reps", "Sets"];
 
 
@@ -478,6 +394,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
             Scaffold.of(context).showSnackBar(
                 SnackBar(content: Text( "Selected exercise to be displayed: " +completedExercises[index])));
             selectedExercise = completedExercises[index];
+            fs_id = getFirebaseUser;
             setState(() {
 
             });  }
