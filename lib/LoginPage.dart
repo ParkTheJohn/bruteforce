@@ -134,21 +134,7 @@ class LoginPageState extends State<LoginPage> {
                                                                   "Password",
                                                               border:
                                                                   OutlineInputBorder(),
-                                                              suffixIcon:
-                                                                  IconButton(
-                                                                      icon: Icon(hidePassword
-                                                                          ? Icons
-                                                                              .visibility
-                                                                          : Icons
-                                                                              .visibility_off),
-                                                                      onPressed:
-                                                                          () {
-                                                                        setState(
-                                                                            () {
-                                                                          hidePassword =
-                                                                              !hidePassword;
-                                                                        });
-                                                                      })),
+                                                          ),
                                                     ),
                                                   ),
                                                   SizedBox(
