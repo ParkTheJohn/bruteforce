@@ -1,12 +1,7 @@
 import 'package:cse_115a/main.dart';
-import 'package:cse_115a/slidable_widget.dart';
-import 'package:cse_115a/utils.dart';
-import 'package:cse_115a/workoutPage.dart';
-import 'package:cse_115a/createWorkout.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:uuid/uuid.dart';
 
 class CustomWorkoutExercise extends StatelessWidget {
@@ -28,7 +23,6 @@ class CustomWorkoutExercise extends StatelessWidget {
             controller: exerciseNameController,
             decoration: InputDecoration(
               labelText: "Enter Exercise Name",
-              //errorText: _validate ? 'Value Can\'t Be Empty' : null,
             ),
           ),
         ),
@@ -43,11 +37,8 @@ class CustomWorkoutExercise extends StatelessWidget {
         Container(
             child: ElevatedButton(
                 child: Text('Create'),
-                onPressed: () {
-                  print(exerciseNameController.text);
-                  print(exerciseField1.text);
-                  //myPlanName = planNameController.text;
-                  FirebaseFirestore.instance
+                onPressed: () async {
+                  await FirebaseFirestore.instance
                       .collection('UserInfo')
                       .doc(getFirebaseUser)
                       .collection('customExercises')
@@ -56,7 +47,7 @@ class CustomWorkoutExercise extends StatelessWidget {
                     "id": -1,
                     "name": exerciseNameController.text,
                     "uuid": uuid.v4(),
-                    "description": "Temp Description",
+                    "description": "Custom Exercise",
                     "creation_date": DateTime.now(),
                     "category": {"id": -1, "name": exerciseField1.text},
                     "muscles": [],
@@ -80,7 +71,7 @@ class CustomWorkoutExercise extends StatelessWidget {
                     "comments": [],
                     "variations": []
                   });
-                  FirebaseFirestore.instance
+                  await FirebaseFirestore.instance
                       .collection('UserInfo')
                       .doc(getFirebaseUser)
                       .collection('workoutPlans')
@@ -94,18 +85,6 @@ class CustomWorkoutExercise extends StatelessWidget {
                     ],
                     'Finished': false,
                   });
-                  // Utils.showSnackBar(
-                  //     context,
-                  //     exerciseNameController.text +
-                  //         'has been added to ' +
-                  //         getNewPlanName +
-                  //         '!');
-                  // FirebaseFirestore.instance
-                  //     .collection('UserInfo')
-                  //     .doc(getFirebaseUser)
-                  //     .collection('workoutPlans')
-                  //     .doc(planNameController.text)
-                  //     .collection('Exercises');
                   Navigator.pop(context);
                 })),
       ]),

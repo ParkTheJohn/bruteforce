@@ -72,6 +72,7 @@ class LoginPageState extends State<LoginPage> {
                   context.read<LoginService>().signIn(
                         email: emailController.text.trim(),
                         password: passwordController.text.trim(),
+                        context: context,
                       );
                 },
                 child: Text("Login"),
@@ -133,21 +134,7 @@ class LoginPageState extends State<LoginPage> {
                                                                   "Password",
                                                               border:
                                                                   OutlineInputBorder(),
-                                                              suffixIcon:
-                                                                  IconButton(
-                                                                      icon: Icon(hidePassword
-                                                                          ? Icons
-                                                                              .visibility
-                                                                          : Icons
-                                                                              .visibility_off),
-                                                                      onPressed:
-                                                                          () {
-                                                                        setState(
-                                                                            () {
-                                                                          hidePassword =
-                                                                              !hidePassword;
-                                                                        });
-                                                                      })),
+                                                          ),
                                                     ),
                                                   ),
                                                   SizedBox(

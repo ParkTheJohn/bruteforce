@@ -1,5 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+
+import 'chooseExercise.dart';
 
 class LoginService {
   final FirebaseAuth _firebaseAuth;
@@ -15,12 +18,18 @@ class LoginService {
   // Email and password Sign In
   // Checks the firebaseAuth with inputs email and password to see if they are
   // inside the authentication database
-  Future<String> signIn({String email, String password}) async {
+  Future<String> signIn({String email, String password, BuildContext context}) async {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
       return "Signed in";
     } on FirebaseAuthException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.message),
+          backgroundColor: Colors.red,
+        ),
+      );
       print("Invalid Login Information");
       return e.message;
     }
@@ -48,6 +57,11 @@ class LoginService {
   // Account Sign Out
   // Signs the user out of their current session
   Future<void> signOut() async {
+    onSignout();
     await _firebaseAuth.signOut();
   }
+}
+
+void onSignout() {
+  futureExercisesList = null;
 }
