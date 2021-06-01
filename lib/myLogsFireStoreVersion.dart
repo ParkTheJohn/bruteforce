@@ -8,7 +8,8 @@ import 'workoutPage.dart';
 
 String selectedExercise = "UNINITIALIZED";
 String selectedYAxisOption = "Weight";
-var fs_id;
+var fsID;
+
 class WorkoutInfo {
   final int weight;
   final int reps;
@@ -41,7 +42,6 @@ class WorkoutInfoHomePage extends StatefulWidget {
 class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
   List<charts.Series<WorkoutInfo, DateTime>> _seriesData;
 
-
   List<WorkoutInfo> myData;
 
   _generateDataWeight(myData) {
@@ -51,8 +51,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
       charts.Series(
         domainFn: (WorkoutInfo info, _) => info.realTimeStamp,
         measureFn: (WorkoutInfo info, _) => info.weight,
-        colorFn: (_, __) =>
-        charts.MaterialPalette.deepOrange.shadeDefault,
+        colorFn: (_, __) => charts.MaterialPalette.deepOrange.shadeDefault,
         id: 'WorkoutDetails',
         data: myData,
       ),
@@ -66,8 +65,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
       charts.Series(
         domainFn: (WorkoutInfo info, _) => info.realTimeStamp,
         measureFn: (WorkoutInfo info, _) => info.reps,
-        colorFn: (_, __) =>
-        charts.MaterialPalette.deepOrange.shadeDefault,
+        colorFn: (_, __) => charts.MaterialPalette.deepOrange.shadeDefault,
         id: 'WorkoutDetails',
         data: myData,
       ),
@@ -81,8 +79,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
       charts.Series(
         domainFn: (WorkoutInfo info, _) => info.realTimeStamp,
         measureFn: (WorkoutInfo info, _) => info.sets,
-        colorFn: (_, __) =>
-        charts.MaterialPalette.deepOrange.shadeDefault,
+        colorFn: (_, __) => charts.MaterialPalette.deepOrange.shadeDefault,
         id: 'WorkoutDetails',
         data: myData,
       ),
@@ -90,16 +87,12 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
   }
 
   Widget toggleExerciseDisplayed(BuildContext context) {
-    return ListView(padding: const EdgeInsets.all(1), children: <Widget>[
+    return ListView(padding: const EdgeInsets.all(0), children: <Widget>[
       Container(
           child: ElevatedButton(
-
-              style: ElevatedButton.styleFrom(
-                  primary: Colors.deepOrange),
-
+              style: ElevatedButton.styleFrom(primary: Colors.deepOrange),
               child: Text('Display an exercise!'),
               onPressed: () {
-
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -113,8 +106,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
     return ListView(padding: const EdgeInsets.all(1), children: <Widget>[
       Container(
           child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  primary: Colors.deepOrange),
+              style: ElevatedButton.styleFrom(primary: Colors.deepOrange),
               child: Text('Toggle Y-Axis'),
               onPressed: () {
                 Navigator.push(
@@ -126,83 +118,43 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
     ]);
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     Size size = MediaQuery.of(context).size;
 
-
-    if(selectedExercise != 'UNINITIALIZED' && (fs_id == getFirebaseUser)) {
+    if (selectedExercise != 'UNINITIALIZED' && (fsID == getFirebaseUser)) {
       return MaterialApp(
-
         home: Scaffold(
-          body: ListView( padding: const EdgeInsets.all(8),
-
-              children: <Widget>[
-
-                SizedBox(
-                    height: size.height * .10,
-                    child: toggleExerciseDisplayed(context)
-
+          body: ListView(padding: const EdgeInsets.all(8), children: <Widget>[
+            SizedBox(
+                height: size.height * .10,
+                child: toggleExerciseDisplayed(context)),
+            Container(
+              height: size.height * .51,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.deepOrange,
                 ),
-
-
-                Container(
-                    height: size.height * .51,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.deepOrange,
-                    ),
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-
-                      child:
-                    _buildBodyLine(context),
-
-
-                ),
-
-
-
-                SizedBox(
-                    height: size.height * .10,
-                    child: toggleYAxis(context)
-
-                )
-              ]
-          ),
+                borderRadius: BorderRadius.circular(5.0),
+              ),
+              child: _buildBodyLine(context),
+            ),
+            SizedBox(height: size.height * .10, child: toggleYAxis(context))
+          ]),
         ),
-
       );
-    }
-
-    else
-    {
+    } else {
       return MaterialApp(
-
         home: Scaffold(
-          body: ListView( padding: const EdgeInsets.all(8),
-
-              children: <Widget>[
-
-                SizedBox(
-                    height: size.height * .10,
-                    child: toggleExerciseDisplayed(context)
-
-                ),
-
-                Container(
-
-                  child: Center(child: Text("You currently have no exercises displayed!"))
-
-      )
-
-
-              ]
-          ),
+          body: ListView(padding: const EdgeInsets.all(8), children: <Widget>[
+            SizedBox(
+                height: size.height * .09,
+                child: toggleExerciseDisplayed(context)),
+            Container(
+                child: Center(
+                    child: Text("You currently have no exercises displayed!")))
+          ]),
         ),
-
       );
     }
   }
@@ -223,7 +175,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
         } else {
           List<WorkoutInfo> info = snapshot.data.docs
               .map((documentSnapshot) =>
-              WorkoutInfo.fromMap(documentSnapshot.data()))
+                  WorkoutInfo.fromMap(documentSnapshot.data()))
               .toList();
           return _buildLine(context, info);
         }
@@ -236,14 +188,10 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
 
     if (selectedYAxisOption.toLowerCase() == "reps") {
       _generateDataReps(myData);
-    }
-    else if (selectedYAxisOption.toLowerCase() == "sets") {
+    } else if (selectedYAxisOption.toLowerCase() == "sets") {
       _generateDataSets(myData);
-
-    }
-    else {
+    } else {
       _generateDataWeight(myData);
-
     }
 
     return Padding(
@@ -253,7 +201,10 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
           child: Column(
             children: <Widget>[
               Text(
-                'Progress of ' + selectedYAxisOption.toLowerCase() + ' for ' + selectedExercise,
+                'Progress of ' +
+                    selectedYAxisOption.toLowerCase() +
+                    ' for ' +
+                    selectedExercise,
                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
               ),
               SizedBox(
@@ -261,29 +212,19 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
               ),
               Expanded(
                   child: charts.TimeSeriesChart(
-                    _seriesData,
-
-
-                  defaultRenderer: new charts.LineRendererConfig(
-                        includeArea: true, stacked: true,
-                      includePoints: true
+                _seriesData,
+                defaultRenderer: new charts.LineRendererConfig(
+                    includeArea: true, stacked: true, includePoints: true),
+                animate: true,
+                animationDuration: Duration(seconds: 1),
+                dateTimeFactory: const charts.LocalDateTimeFactory(),
+                domainAxis: charts.DateTimeAxisSpec(
+                  tickFormatterSpec: new charts.AutoDateTimeTickFormatterSpec(
+                    day: new charts.TimeFormatterSpec(
+                        format: 'd', transitionFormat: 'MM/dd/yyyy'),
                   ),
-                    animate: true,
-                    animationDuration: Duration(seconds: 1),
-
-                    dateTimeFactory: const charts.LocalDateTimeFactory(),
-                    domainAxis: charts.DateTimeAxisSpec(
-                      tickFormatterSpec: new charts.AutoDateTimeTickFormatterSpec(
-                        day: new charts.TimeFormatterSpec(
-                            format: 'd', transitionFormat: 'MM/dd/yyyy'
-                        ),
-                      ),
-                    ),
-
-
-                  )
-
-              ),
+                ),
+              )),
             ],
           ),
         ),
@@ -291,56 +232,9 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
     );
   }
 
-
-  final List<String> optionsYAxis = ["Weight", "Reps", "Sets"];
-
-
-
-  Widget displayYAxisOptionPage(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Select a measurement"),
-
-      ),
-      body:
-      Container(
-          child: ListView.builder(
-              itemBuilder: displayYAxisCards,
-              itemCount: 3
-          )
-      ),
-
-
-    );
-
-
-  }
-
-
-  Widget displayYAxisCards( BuildContext context, int index ){
-    return Card(
-      child: ListTile(
-          title: Text(optionsYAxis[index]),
-          onTap: ()
-          {
-            Scaffold.of(context).showSnackBar(
-                SnackBar(content: Text( "Selected measurement to be displayed: " +optionsYAxis[index])));
-            selectedYAxisOption = optionsYAxis[index];
-            selectedYAxisOption.toLowerCase();
-            setState(() {
-
-            });
-          }
-      ),
-    );
-  }
-
-
   final List<String> completedExercises = [];
 
-
   Future<void> getCompletedExercises() async {
-
     final QuerySnapshot result = await FirebaseFirestore.instance
         .collection('UserInfo')
         .doc(getFirebaseUser)
@@ -356,15 +250,12 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
     }
 
     return completedExercises;
-
   }
-
 
   Widget buildLoggedExerciseList(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Select a logged exercise"),
-
       ),
       body: FutureBuilder(
         builder: (context, projectSnap) {
@@ -374,39 +265,54 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
             return Container(
                 child: ListView.builder(
                     itemBuilder: displayLogCards,
-                    itemCount: completedExercises.length
-                )
-            );
+                    itemCount: completedExercises.length));
           }
         },
         future: getCompletedExercises(),
       ),
-
-
-
-
     );
-
-
   }
 
-
-  Widget displayLogCards( BuildContext context, int index ){
+  Widget displayLogCards(BuildContext context, int index) {
     return Card(
       child: ListTile(
           title: Text(completedExercises[index]),
-          onTap: ()
-          {
-            Scaffold.of(context).showSnackBar(
-                SnackBar(content: Text( "Selected exercise to be displayed: " +completedExercises[index])));
+          onTap: () {
+            Scaffold.of(context).showSnackBar(SnackBar(
+                content: Text("Selected exercise to be displayed: " +
+                    completedExercises[index])));
             selectedExercise = completedExercises[index];
-            fs_id = getFirebaseUser;
-            setState(() {
-
-            });  }
-      ),
+            fsID = getFirebaseUser;
+            setState(() {});
+          }),
     );
   }
 
+  final List<String> optionsYAxis = ["Weight", "Reps", "Sets"];
 
+  Widget displayYAxisOptionPage(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Select a measurement"),
+      ),
+      body: Container(
+          child:
+              ListView.builder(itemBuilder: displayYAxisCards, itemCount: 3)),
+    );
+  }
+
+  Widget displayYAxisCards(BuildContext context, int index) {
+    return Card(
+      child: ListTile(
+          title: Text(optionsYAxis[index]),
+          onTap: () {
+            Scaffold.of(context).showSnackBar(SnackBar(
+                content: Text("Selected measurement to be displayed: " +
+                    optionsYAxis[index])));
+            selectedYAxisOption = optionsYAxis[index];
+            selectedYAxisOption.toLowerCase();
+            setState(() {});
+          }),
+    );
+  }
 }
