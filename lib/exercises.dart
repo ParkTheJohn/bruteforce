@@ -100,6 +100,7 @@ class ExerciseSearch extends Search {
 
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Search Bar App',
       home: HomePage(exerciseList),
     );
