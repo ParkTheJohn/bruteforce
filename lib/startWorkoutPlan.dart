@@ -75,16 +75,14 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
         .get();
 
     if (snapShot == null || !snapShot.exists) {
-
       FirebaseFirestore.instance
           .collection('UserInfo')
           .doc(getFirebaseUser)
           .collection('ExerciseInfo')
           .doc(sol[0][index])
           .set({
-        "name":sol[0][index].toString(),
+        "name": sol[0][index].toString(),
       });
-
 
       FirebaseFirestore.instance
           .collection('UserInfo')
@@ -293,7 +291,8 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
                           Row(children: <Widget>[
                             new Flexible(
                                 child: TextFormField(
-                              keyboardType: TextInputType.number,
+                              keyboardType: TextInputType.numberWithOptions(
+                                  signed: true, decimal: true),
                               inputFormatters: <TextInputFormatter>[
                                 FilteringTextInputFormatter.digitsOnly
                               ],

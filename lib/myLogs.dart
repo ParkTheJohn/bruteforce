@@ -22,7 +22,6 @@ class _LogPageState extends State<LogPage> {
   List<charts.Series<Workouts, int>> _seriesLineData;
 
   _generateData() {
-
     var workout_data = [
       new Workouts(0, 0),
       new Workouts(1, 1),
@@ -31,7 +30,6 @@ class _LogPageState extends State<LogPage> {
       new Workouts(3, 3),
       new Workouts(4, 4),
     ];
-
 
     _seriesLineData.add(
       charts.Series(
@@ -42,7 +40,6 @@ class _LogPageState extends State<LogPage> {
         measureFn: (Workouts workouts, _) => workouts.workouts_completed,
       ),
     );
-
   }
 
   @override
@@ -72,7 +69,6 @@ class _LogPageState extends State<LogPage> {
           ),
           body: TabBarView(
             children: [
-
               Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Container(
@@ -80,13 +76,15 @@ class _LogPageState extends State<LogPage> {
                     child: Column(
                       children: <Widget>[
                         Text(
-                          'Heaviest Weight Lifted for: Bench Press',style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.bold),),
+                          'Heaviest Weight Lifted for: Bench Press',
+                          style: TextStyle(
+                              fontSize: 24.0, fontWeight: FontWeight.bold),
+                        ),
                         Expanded(
                           child: charts.LineChart(
-                              _seriesLineData,
-                              animate: true,
-                              animationDuration: Duration(seconds: 1),
-
+                            _seriesLineData,
+                            animate: true,
+                            animationDuration: Duration(seconds: 1),
                           ),
                         ),
                       ],
@@ -94,9 +92,6 @@ class _LogPageState extends State<LogPage> {
                   ),
                 ),
               ),
-
-
-
               Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Container(
@@ -104,23 +99,28 @@ class _LogPageState extends State<LogPage> {
                     child: Column(
                       children: <Widget>[
                         Text(
-                          'Timeframe of Workouts Completed',style: TextStyle(fontSize: 24.0,fontWeight: FontWeight.bold),),
+                          'Timeframe of Workouts Completed',
+                          style: TextStyle(
+                              fontSize: 24.0, fontWeight: FontWeight.bold),
+                        ),
                         Expanded(
-                          child: charts.LineChart(
-                              _seriesLineData,
+                          child: charts.LineChart(_seriesLineData,
                               defaultRenderer: new charts.LineRendererConfig(
                                   includeArea: true, stacked: true),
                               animate: true,
                               animationDuration: Duration(seconds: 1),
                               behaviors: [
                                 new charts.ChartTitle('Weeks',
-                                    behaviorPosition: charts.BehaviorPosition.bottom,
-                                    titleOutsideJustification:charts.OutsideJustification.middleDrawArea),
+                                    behaviorPosition:
+                                        charts.BehaviorPosition.bottom,
+                                    titleOutsideJustification: charts
+                                        .OutsideJustification.middleDrawArea),
                                 new charts.ChartTitle('Workouts',
-                                    behaviorPosition: charts.BehaviorPosition.start,
-                                    titleOutsideJustification: charts.OutsideJustification.middleDrawArea),
-                              ]
-                          ),
+                                    behaviorPosition:
+                                        charts.BehaviorPosition.start,
+                                    titleOutsideJustification: charts
+                                        .OutsideJustification.middleDrawArea),
+                              ]),
                         ),
                       ],
                     ),
@@ -134,7 +134,6 @@ class _LogPageState extends State<LogPage> {
     );
   }
 }
-
 
 class Workouts {
   int workouts_completed;
