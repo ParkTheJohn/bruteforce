@@ -192,6 +192,12 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
 
                 ),
 
+                Container(
+
+                  child: Center(child: Text("You currently have no exercises displayed!"))
+
+      )
+
 
               ]
           ),
