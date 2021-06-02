@@ -308,7 +308,8 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
                             )),
                             new Flexible(
                                 child: TextFormField(
-                              keyboardType: TextInputType.number,
+                              keyboardType: TextInputType.numberWithOptions(
+                                  signed: true, decimal: true),
                               inputFormatters: <TextInputFormatter>[
                                 FilteringTextInputFormatter.digitsOnly
                               ],
@@ -324,7 +325,8 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
                             )),
                             new Flexible(
                                 child: TextFormField(
-                              keyboardType: TextInputType.number,
+                              keyboardType: TextInputType.numberWithOptions(
+                                  signed: true, decimal: true),
                               inputFormatters: <TextInputFormatter>[
                                 FilteringTextInputFormatter.digitsOnly
                               ],
@@ -376,7 +378,8 @@ class _startWorkoutPlan extends State<startWorkoutPlan> {
                           Row(children: <Widget>[
                             new Flexible(
                                 child: TextFormField(
-                              keyboardType: TextInputType.number,
+                              keyboardType: TextInputType.numberWithOptions(
+                                  signed: true, decimal: true),
                               inputFormatters: <TextInputFormatter>[
                                 FilteringTextInputFormatter.digitsOnly
                               ],
