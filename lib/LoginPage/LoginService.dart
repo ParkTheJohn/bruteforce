@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'chooseExercise.dart';
+import '../widgets/chooseExercise.dart';
 
 class LoginService {
   final FirebaseAuth _firebaseAuth;
@@ -18,7 +18,8 @@ class LoginService {
   // Email and password Sign In
   // Checks the firebaseAuth with inputs email and password to see if they are
   // inside the authentication database
-  Future<String> signIn({String email, String password, BuildContext context}) async {
+  Future<String> signIn(
+      {String email, String password, BuildContext context}) async {
     try {
       await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
@@ -39,7 +40,7 @@ class LoginService {
   // Creates a new user with inputs email and password and add them to the
   // User Info collection in Firestore
   // The email must not already be used in the database
-  Future<String> signUp({String email, String password}) async {
+  Future<String> signUp({String email, String password, BuildContext context}) async {
     try {
       await _firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
@@ -47,8 +48,15 @@ class LoginService {
           .collection('UserInfo')
           .doc(await getCurrentUID())
           .set({});
+      Navigator.pop(context);
       return "Signed Up";
     } on FirebaseAuthException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.message),
+          backgroundColor: Colors.red,
+        ),
+      );
       print("Unsuccessfully Signed Up");
       return e.message;
     }

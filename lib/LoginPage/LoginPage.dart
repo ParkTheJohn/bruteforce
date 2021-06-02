@@ -130,11 +130,10 @@ class LoginPageState extends State<LoginPage> {
                                                           passwordController,
                                                       decoration:
                                                           InputDecoration(
-                                                              labelText:
-                                                                  "Password",
-                                                              border:
-                                                                  OutlineInputBorder(),
-                                                          ),
+                                                        labelText: "Password",
+                                                        border:
+                                                            OutlineInputBorder(),
+                                                      ),
                                                     ),
                                                   ),
                                                   SizedBox(
@@ -159,8 +158,8 @@ class LoginPageState extends State<LoginPage> {
                                                                 passwordController
                                                                     .text
                                                                     .trim(),
+                                                            context: context,
                                                           );
-                                                      Navigator.pop(context);
                                                     },
                                                     child:
                                                         Text("Create Account"),

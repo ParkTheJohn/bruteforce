@@ -1,12 +1,10 @@
-import 'package:cse_115a/utils.dart';
+import 'package:cse_115a/widgets/chooseExercise.dart';
+import 'package:cse_115a/widgets/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-
-import 'chooseExercise.dart';
-import 'main.dart';
 
 enum SlidableAction { delete }
 
@@ -73,7 +71,7 @@ class _editWorkouts extends State<currentPlanPage> {
           return Row(children: [
             Expanded(
                 child: SizedBox(
-                    height: 100000.0,
+                    height: 1000.0,
                     child: ListView.builder(
                       itemCount: projectSnap.data.length,
                       itemBuilder: (BuildContext context, int index) {

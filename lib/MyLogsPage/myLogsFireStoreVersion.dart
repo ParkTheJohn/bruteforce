@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cse_115a/createWorkout.dart';
+import 'package:cse_115a/MyLogsPage/createWorkout.dart';
 import 'package:cse_115a/main.dart';
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'workoutPage.dart';
+import '../MyPlansPage/workoutPage.dart';
 
 String selectedExercise = "UNINITIALIZED";
 String selectedYAxisOption = "Weight";
