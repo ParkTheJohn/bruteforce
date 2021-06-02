@@ -10,14 +10,14 @@ class settingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: Container(
+        height: size.height,
+        width: double.infinity,
         padding: EdgeInsets.only(left: 16, top:25, right: 16),
         child: ListView(
           children: [
-            SizedBox(
-              height: 450,
-            ),
             ElevatedButton(
               style: ButtonStyle(
                 minimumSize: MaterialStateProperty.all(Size(300, 50)),
