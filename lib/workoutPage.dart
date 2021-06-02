@@ -57,7 +57,7 @@ class _workoutPage extends State<workoutPage> {
         } else {
           print(projectSnap.data);
           if (projectSnap.data.length == 0)
-            return Text("You currently have no exercises!");
+            return Center (child : Text("You currently have no exercises!"));
           return Row(children: [
             Expanded(
                 child: SizedBox(

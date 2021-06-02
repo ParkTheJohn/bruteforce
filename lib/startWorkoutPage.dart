@@ -33,7 +33,7 @@ class startWorkoutPage extends StatelessWidget {
           return Container();
         } else {
           if (projectSnap.data.length == 0)
-            return Text("You currently have no plans");
+            return Center(child: Text("You currently have no plans!"));
           return Row(children: [
             Expanded(
               child: SizedBox(
