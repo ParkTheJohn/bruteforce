@@ -8,7 +8,8 @@ import 'workoutPage.dart';
 
 String selectedExercise = "UNINITIALIZED";
 String selectedYAxisOption = "Weight";
-var fs_id;
+var fsID;
+
 
 class WorkoutInfo {
   final int weight;
@@ -87,7 +88,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
   }
 
   Widget toggleExerciseDisplayed(BuildContext context) {
-    return ListView(padding: const EdgeInsets.all(1), children: <Widget>[
+    return ListView(padding: const EdgeInsets.all(0), children: <Widget>[
       Container(
           child: ElevatedButton(
               style: ElevatedButton.styleFrom(primary: Colors.deepOrange),
@@ -122,7 +123,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    if (selectedExercise != 'UNINITIALIZED' && (fs_id == getFirebaseUser)) {
+    if (selectedExercise != 'UNINITIALIZED' && (fsID == getFirebaseUser)) {
       return MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
@@ -150,8 +151,11 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
         home: Scaffold(
           body: ListView(padding: const EdgeInsets.all(8), children: <Widget>[
             SizedBox(
-                height: size.height * .10,
+                height: size.height * .09,
                 child: toggleExerciseDisplayed(context)),
+            Container(
+                child: Center(
+                    child: Text("You currently have no exercises displayed!")))
           ]),
         ),
       );
@@ -309,7 +313,35 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
                 content: Text("Selected exercise to be displayed: " +
                     completedExercises[index])));
             selectedExercise = completedExercises[index];
-            fs_id = getFirebaseUser;
+            fsID = getFirebaseUser;
+            setState(() {});
+          }),
+    );
+  }
+
+  final List<String> optionsYAxis = ["Weight", "Reps", "Sets"];
+
+  Widget displayYAxisOptionPage(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Select a measurement"),
+      ),
+      body: Container(
+          child:
+              ListView.builder(itemBuilder: displayYAxisCards, itemCount: 3)),
+    );
+  }
+
+  Widget displayYAxisCards(BuildContext context, int index) {
+    return Card(
+      child: ListTile(
+          title: Text(optionsYAxis[index]),
+          onTap: () {
+            Scaffold.of(context).showSnackBar(SnackBar(
+                content: Text("Selected measurement to be displayed: " +
+                    optionsYAxis[index])));
+            selectedYAxisOption = optionsYAxis[index];
+            selectedYAxisOption.toLowerCase();
             setState(() {});
           }),
     );
