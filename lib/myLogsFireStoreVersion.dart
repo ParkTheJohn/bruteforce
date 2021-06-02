@@ -154,7 +154,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
                 child: toggleExerciseDisplayed(context)),
             Container(
                 child: Center(
-                    child: Text("You currently have no exercises displayed!")))
+                    child: Text("You currently have no exercise displayed!")))
           ]),
         ),
       );
@@ -234,17 +234,6 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
     );
   }
 
-  Widget displayYAxisOptionPage(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Select a measurement"),
-      ),
-      body: Container(
-          child:
-              ListView.builder(itemBuilder: displayYAxisCards, itemCount: 3)),
-    );
-  }
-
   final List<String> completedExercises = [];
 
   Future<void> getCompletedExercises() async {
@@ -302,6 +291,17 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
   }
 
   final List<String> optionsYAxis = ["Weight", "Reps", "Sets"];
+
+  Widget displayYAxisOptionPage(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Select a measurement"),
+      ),
+      body: Container(
+          child:
+              ListView.builder(itemBuilder: displayYAxisCards, itemCount: 3)),
+    );
+  }
 
   Widget displayYAxisCards(BuildContext context, int index) {
     return Card(
