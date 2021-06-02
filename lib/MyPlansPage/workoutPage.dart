@@ -1,12 +1,11 @@
-import 'package:cse_115a/currentPlan.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'createWorkout.dart';
+import '../MyLogsPage/createWorkout.dart';
+import '../widgets/utils.dart';
 import 'currentPlan.dart';
-import 'utils.dart';
 
 enum _SlidableAction { delete }
 
@@ -33,7 +32,7 @@ class _workoutPage extends State<workoutPage> {
 
   Future<List<String>> getUserWorkoutPlans() async {
     List<String> workoutPlans = [];
-    print("This is currentUID: ${currentUID}");
+    print("This is currentUID on page workoutPage.dart: ${currentUID}");
     final QuerySnapshot result = await FirebaseFirestore.instance
         .collection('UserInfo')
         .doc(currentUID)
@@ -57,11 +56,11 @@ class _workoutPage extends State<workoutPage> {
         } else {
           print(projectSnap.data);
           if (projectSnap.data.length == 0)
-            return Center (child : Text("You currently have no exercises!"));
+            return Center(child: Text("You currently have no exercises!"));
           return Row(children: [
             Expanded(
                 child: SizedBox(
-                    height: 100000.0,
+                    height: 1000.0,
                     child: ListView.builder(
                       itemCount: projectSnap.data.length,
                       itemBuilder: (BuildContext context, int index) {

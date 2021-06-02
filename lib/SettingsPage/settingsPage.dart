@@ -4,7 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
-import 'LoginService.dart';
+import '../LoginPage/LoginService.dart';
 
 class settingsPage extends StatelessWidget {
   @override
@@ -15,7 +15,7 @@ class settingsPage extends StatelessWidget {
       body: Container(
         height: size.height,
         width: double.infinity,
-        padding: EdgeInsets.only(left: 16, top:25, right: 16),
+        padding: EdgeInsets.only(left: 16, top: 25, right: 16),
         child: ListView(
           children: [
             ElevatedButton(

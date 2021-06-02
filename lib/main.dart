@@ -1,17 +1,14 @@
-import 'package:cse_115a/searchBar.dart';
-import 'package:cse_115a/settingsPage.dart';
-import 'package:cse_115a/startWorkoutPage.dart';
+import 'package:cse_115a/SettingsPage/settingsPage.dart';
+import 'package:cse_115a/StartWorkoutPage/startWorkoutPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
-import 'chooseExercise.dart';
-import 'exercises.dart';
-import 'LoginPage.dart';
-import 'LoginService.dart';
-import 'WorkoutPage.dart';
-import 'myLogsFireStoreVersion.dart';
+import 'MyPlansPage/workoutPage.dart';
+import 'ExcersisePage/exercises.dart';
+import 'LoginPage/LoginPage.dart';
+import 'LoginPage/LoginService.dart';
+import 'MyLogsPage/myLogsFireStoreVersion.dart';
 
 String fireBaseUID = "null";
 Future<void> main() async {

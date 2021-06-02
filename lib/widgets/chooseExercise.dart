@@ -1,7 +1,7 @@
-import 'package:cse_115a/createCustomExercise.dart';
+import 'package:cse_115a/widgets/createCustomExercise.dart';
 import 'package:cse_115a/main.dart';
-import 'package:cse_115a/slidable_widget.dart';
-import 'package:cse_115a/utils.dart';
+import 'package:cse_115a/widgets/slidable_widget.dart';
+import 'package:cse_115a/widgets/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';

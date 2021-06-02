@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cse_115a/chooseExercise.dart';
+import 'package:cse_115a/widgets/chooseExercise.dart';
 import 'package:cse_115a/main.dart';
 import 'package:flutter/material.dart';
 

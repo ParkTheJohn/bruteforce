@@ -130,11 +130,10 @@ class LoginPageState extends State<LoginPage> {
                                                           passwordController,
                                                       decoration:
                                                           InputDecoration(
-                                                              labelText:
-                                                                  "Password",
-                                                              border:
-                                                                  OutlineInputBorder(),
-                                                          ),
+                                                        labelText: "Password",
+                                                        border:
+                                                            OutlineInputBorder(),
+                                                      ),
                                                     ),
                                                   ),
                                                   SizedBox(
