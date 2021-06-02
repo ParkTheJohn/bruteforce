@@ -1,3 +1,4 @@
+import 'package:cse_115a/chooseExercise.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -15,6 +16,7 @@ class exercisesPage2 extends State<exercisesPage> {
     List<String> exerciseNames = [];
     List<String> exerciseDescription = [];
     List<String> exerciseCategory = [];
+    List<String> exerciseEquipment = [];
 
     final QuerySnapshot result =
         await FirebaseFirestore.instance.collection('Exercise_List').get();
@@ -29,34 +31,23 @@ class exercisesPage2 extends State<exercisesPage> {
 
     for (int i = 0; i < customDoc.length; i++) {
       exerciseNames.add(customDoc[i]['name']);
+      exerciseDescription.add(customDoc[i]['description']);
+      exerciseCategory.add("");
+      exerciseEquipment.add("");
     }
 
     for (int i = 0; i < documents.length; i++) {
       exerciseNames.add(documents[i]['name']);
-    }
-
-    for (int i = 0; i < customDoc.length; i++) {
-      exerciseDescription.add(customDoc[i]['description']);
-    }
-
-    for (int i = 0; i < documents.length; i++) {
       exerciseDescription.add(documents[i]['description']);
-    }
-
-    for (int i = 0; i < customDoc.length; i++) {
-      exerciseCategory.add("placeholder");
-    }
-    // for (int i = 0; i < customDoc.length; i++) {
-    //   exerciseCategory.add(customDoc[i]['category']['name']);
-    // }
-
-    for (int i = 0; i < documents.length; i++) {
       exerciseCategory.add(documents[i]['category']['name']);
+      if (documents[i]['equipment'].length > 1)
+        exerciseEquipment.add(documents[i]['equipment'][0]['name']);
     }
 
     await exercises.add(exerciseNames);
     await exercises.add(exerciseDescription);
     await exercises.add(exerciseCategory);
+    await exercises.add(exerciseEquipment);
 
     return exercises;
   }
@@ -77,7 +68,7 @@ class exercisesPage2 extends State<exercisesPage> {
 
         var temp = exercises;
         exercises = [];
-        return ExerciseSearch(temp);
+        return SearchBar(searchableList: temp);
       },
       future: getExerciseData(),
     );
@@ -91,18 +82,3 @@ class exercisesPage2 extends State<exercisesPage> {
   }
 }
 
-class ExerciseSearch extends Search {
-  List<List<String>> exerciseList;
-
-  ExerciseSearch(List<List<String>> _exerciseList) {
-    this.exerciseList = _exerciseList;
-  }
-
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Search Bar App',
-      home: HomePage(exerciseList),
-    );
-  }
-}
