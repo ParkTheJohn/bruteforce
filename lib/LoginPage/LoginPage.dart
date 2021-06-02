@@ -158,8 +158,8 @@ class LoginPageState extends State<LoginPage> {
                                                                 passwordController
                                                                     .text
                                                                     .trim(),
+                                                            context: context,
                                                           );
-                                                      Navigator.pop(context);
                                                     },
                                                     child:
                                                         Text("Create Account"),
