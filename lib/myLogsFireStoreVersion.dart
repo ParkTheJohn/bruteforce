@@ -10,6 +10,7 @@ String selectedExercise = "UNINITIALIZED";
 String selectedYAxisOption = "Weight";
 var fsID;
 
+
 class WorkoutInfo {
   final int weight;
   final int reps;
@@ -124,6 +125,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
 
     if (selectedExercise != 'UNINITIALIZED' && (fsID == getFirebaseUser)) {
       return MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: Scaffold(
           body: ListView(padding: const EdgeInsets.all(8), children: <Widget>[
             SizedBox(
@@ -145,6 +147,7 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
       );
     } else {
       return MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: Scaffold(
           body: ListView(padding: const EdgeInsets.all(8), children: <Widget>[
             SizedBox(
@@ -229,6 +232,34 @@ class _WorkoutInfoHomePageState extends State<WorkoutInfoHomePage> {
           ),
         ),
       ),
+    );
+  }
+
+  final List<String> optionsYAxis = ["Weight", "Reps", "Sets"];
+
+  Widget displayYAxisOptionPage(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Select a measurement"),
+      ),
+      body: Container(
+          child:
+              ListView.builder(itemBuilder: displayYAxisCards, itemCount: 3)),
+    );
+  }
+
+  Widget displayYAxisCards(BuildContext context, int index) {
+    return Card(
+      child: ListTile(
+          title: Text(optionsYAxis[index]),
+          onTap: () {
+            Scaffold.of(context).showSnackBar(SnackBar(
+                content: Text("Selected measurement to be displayed: " +
+                    optionsYAxis[index])));
+            selectedYAxisOption = optionsYAxis[index];
+            selectedYAxisOption.toLowerCase();
+            setState(() {});
+          }),
     );
   }
 

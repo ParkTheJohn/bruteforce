@@ -33,6 +33,7 @@ class App extends StatelessWidget {
           ),
         ],
         child: MaterialApp(
+          debugShowCheckedModeBanner: false,
           title: 'FitRecur v1',
           theme: ThemeData(
             primarySwatch: Colors.deepOrange,
