@@ -322,6 +322,7 @@ class SearchResultsListView extends StatelessWidget {
                     builder: (context) => Scaffold(
                           appBar: new AppBar(
                             title: Text(amendedSearchList[0][index]),
+                            backgroundColor: Colors.deepOrange,
                           ),
                           body: Text(amendedSearchList[1][index]),
                         )),
