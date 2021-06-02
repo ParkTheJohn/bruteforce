@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
-class Search extends StatelessWidget {
+
+class SearchBar extends StatelessWidget {
   final List<List<String>> searchableList;
 
-  const Search({
+  const SearchBar({
     @required this.searchableList,
   });
 
@@ -203,7 +204,6 @@ class _HomePageState extends State<HomePage> {
 class SearchResultsListView extends StatelessWidget {
   String searchTerm;
   List<List<String>> searchableList;
-  List<String> itemDescriptions;
 
   SearchResultsListView({
     Key key,
@@ -250,7 +250,7 @@ class SearchResultsListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget constructFullResults(BuildContext context, int index) {
+    Widget constructFullResults( BuildContext context, int index ){
       return Card(
         child: ListTile(
             title: Text(searchableList[0][index]),
